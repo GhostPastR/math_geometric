@@ -4,7 +4,7 @@
 #include "structs/circle_impl.h"
 #include "structs/line_impl.h"
 #include "structs/point_impl.h"
-#include "angle.h"
+#include "unit/angle.h"
 #include "structs/polygon_impl.h"
 #include "structs/struct_geo_imp.h"
 
@@ -37,5 +37,8 @@ using PointGeo4d = PointGeo4d_Impl<Angle, Angle, double, double>;
 
 using HalfLineGeo = half_line_geo_impl<double, PointGeo, Angle>;
 using LineSectionGeo = line_section_geo_impl<PointGeo>;
+
+using CircleGeo = circle_geo_impl<double, PointGeo>;
+using ArcGeo  = arc_geo_impl<double, PointGeo, Angle>;
 
 #endif // USER_TYPE_H

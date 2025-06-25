@@ -1,8 +1,8 @@
 #ifndef ANGLE_H
 #define ANGLE_H
 
-#include "algorithm/math_algorithm.h"
-#include "system/system_concept.h"
+#include "../algorithm/math_algorithm.h"
+#include "../system/system_concept.h"
 
 template<std::floating_point Type, c_function_angle<Type> ClassFunc = algorithm::function_angle<Type>>
 class angle_impl{

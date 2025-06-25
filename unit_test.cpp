@@ -1195,6 +1195,36 @@ void Unit_Test::test_geo_algorithm()
         auto line = geo_algo::convert<LineSectionGeo>(LineSection(Point(1, 0), Point(100000, 550000)), PointGeo(0_deg, 0_deg));
         QVERIFY(line == LineSectionGeo(PointGeo(0, 0), PointGeo(0.086229, 0.015823)));
     }
+
+    {//convert(arc -> arc_geo)
+        auto arc = geo_algo::convert<ArcGeo, Arc>(Arc(Point(10000.,10000.), 1000., 5_deg, 34_deg), PointGeo(0_deg, 0_deg));
+        QVERIFY(arc.center() == PointGeo(0.00156786, 0.00157842));
+        QVERIFY(arc.radius() == 1000.);
+        QVERIFY(arc.start_angle() == 5_deg);
+        QVERIFY(arc.stop_angle() == 34_deg);
+    }
+
+    {//convert(arc_geo -> arc)
+        auto arc = geo_algo::convert<Arc>(ArcGeo(PointGeo(0.00156786, 0.00157842), 1000., 5_deg, 34_deg), PointGeo(0_deg, 0_deg));
+        QVERIFY(arc.center() == Point(9999.847348,10000.028406));
+        QVERIFY(arc.radius() == 1000.);
+        QVERIFY(arc.start_angle() == 5_deg);
+        QVERIFY(arc.stop_angle() == 34_deg);
+    }
+
+    {
+        auto arc = geo_algo::convert<CircleGeo>(Circle(Point(10000.,10000.), 1000.), PointGeo(0_deg, 0_deg));
+    }
+
+    {
+        auto points = std::vector{Point(0,0), Point(0,10), Point(10,10), Point(10,0)};
+        auto geo_points = geo_algo::convert<PointGeo>(points, PointGeo(0_deg, 0_deg));
+    }
+
+    {
+        auto points = std::vector{LineSection{Point(0,0), Point(0,10)}, LineSection{Point(10,10), Point(10,0)}};
+        auto geo_points = geo_algo::convert<LineSectionGeo>(points, PointGeo(0_deg, 0_deg));
+    }
 }
 
 // for(auto i : polygon.points){

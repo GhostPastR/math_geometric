@@ -115,6 +115,7 @@ struct point_geo2d_impl final : point_geo2d_abstract<Type, Type>{
 
 template<std::floating_point Type, c_point2d_geo PointGeo, c_angle Angle>
 struct half_line_geo_impl final {
+    using type_point = PointGeo;
     constexpr half_line_geo_impl(const PointGeo &start, Type direction)
         : start_(start), direction_(direction){}
     constexpr half_line_geo_impl(const PointGeo &start, const Angle &angle)
@@ -141,6 +142,8 @@ private:
 
 template<c_point2d_geo PointGeo>
 struct line_section_geo_impl final{
+    using type_point = PointGeo;
+
     constexpr line_section_geo_impl(const PointGeo &start, const PointGeo &stop)
         : start_(start), stop_(stop){}
 
@@ -163,6 +166,8 @@ private:
 
 template<std::floating_point Type, c_point2d_geo PointGeo>
 struct circle_geo_impl final {
+    using figure = std::true_type;
+
     constexpr circle_geo_impl(const PointGeo &center, Type radius)
         : center_(center), radius_(radius){}
 
@@ -178,8 +183,10 @@ private:
     Type radius_{};
 };
 
-template<std::floating_point Type, c_point2d_decard PointGeo, c_angle Angle>
+template<std::floating_point Type, c_point2d_geo PointGeo, c_angle Angle>
 struct arc_geo_impl final {
+    using figure = std::false_type;
+
     constexpr arc_geo_impl(const PointGeo &center, Type radius, Type start, Type stop)
         : center_(center), radius_(radius), start_(start), stop_(stop){}
     constexpr arc_geo_impl(const PointGeo &center, Type radius, const Angle &start, const Angle &stop)
@@ -211,6 +218,5 @@ private:
     Type start_{};
     Type stop_{};
 };
-
 
 #endif // STRUCT_GEO_IMP_H

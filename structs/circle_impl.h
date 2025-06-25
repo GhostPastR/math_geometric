@@ -7,6 +7,7 @@ template<std::floating_point Type, c_point2d_decard Point>
 struct circle_impl final {
     using type_coefficients = Type;
     using type_point = Point;
+    using figure = std::true_type;
 
     constexpr circle_impl(const Point &center, Type radius)
         : center_(center), radius_(radius){}
@@ -27,6 +28,7 @@ template<std::floating_point Type, c_point2d_decard Point, c_angle Angle>
 struct arc_impl final {
     using type_coefficients = Type;
     using type_point = Point;
+    using figure = std::false_type;
 
     constexpr arc_impl(const Point &center, Type radius, Type start, Type stop)
         : center_(center), radius_(radius), start_(start), stop_(stop){}

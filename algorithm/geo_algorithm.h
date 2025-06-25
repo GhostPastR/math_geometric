@@ -4,6 +4,8 @@
 #include "../system/system_concept.h"
 #include "../algorithm/point_algorithm.h"
 #include "math_algorithm.h"
+#include <algorithm>
+#include <vector>
 
 namespace geo_algo {
 
@@ -197,20 +199,16 @@ constexpr LineOut convert(const LineIn &line_section, const PointGeo &reference_
 
 template<c_arc ArcOut, c_arc ArcIn, c_point2d_geo PointGeo>
 constexpr ArcOut convert(const ArcIn &arc, const PointGeo &reference_poin){
-    using Type = decltype(arc.center());
-    return ArcOut(convert<Type>(arc.center(), reference_poin), arc.radius(), arc.start(), arc.stop());
+    using TypeIn = decltype(arc.center());
+    using TypeOut = decltype(std::declval<ArcOut>().center());
+    return ArcOut(convert<TypeOut, TypeIn>(arc.center(), reference_poin), arc.radius(), arc.start(), arc.stop());
 }
 
 template<c_circle CircleOut, c_circle CircleIn, c_point2d_geo PointGeo>
 constexpr CircleOut convert(const CircleIn &circle, const PointGeo &reference_poin){
-    using Type = decltype(circle.center());
-    return CircleOut(convert<Type>(circle.center(), reference_poin), circle.radius());
-}
-
-template<c_polugon PolygonOut, c_polugon PolygonIn, c_point2d_geo PointGeo>
-constexpr PolygonOut convert(const PolygonIn &polygon, const PointGeo &reference_poin){
-    using Type = decltype(polygon.get_points().front());
-    return PolygonOut(convert<Type>(polygon.get_points(), reference_poin));
+    using TypeIn = decltype(circle.center());
+    using TypeOut = decltype(std::declval<CircleOut>().center());
+    return CircleOut(convert<TypeOut, TypeIn>(circle.center(), reference_poin), circle.radius());
 }
 
 template<c_point2d PointOut, c_point2d PointIn, c_point2d_geo PointGeo>
@@ -229,16 +227,6 @@ constexpr std::vector<LineOut> convert(const std::vector<LineIn> &points, const 
     temp.reserve(points.size());
     std::transform(std::begin(points), std::end(points), std::back_inserter(temp),[&reference_poin](const auto &item){
         return convert<LineOut>(item, reference_poin);
-    });
-    return temp;
-}
-
-template<c_polugon PolygonOut, c_polugon PolygonIn, c_point2d_geo PointGeo>
-constexpr std::vector<PolygonOut> convert(const std::vector<PolygonIn> &points, const PointGeo &reference_poin){
-    std::vector<PolygonOut> temp;
-    temp.reserve(points.size());
-    std::transform(std::begin(points), std::end(points), std::back_inserter(temp),[&reference_poin](const auto &item){
-        return convert<PolygonOut>(item, reference_poin);
     });
     return temp;
 }

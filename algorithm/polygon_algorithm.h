@@ -1,9 +1,11 @@
 #ifndef POLYGON_ALGORITHM_H
 #define POLYGON_ALGORITHM_H
 
+#include <algorithm>
+#include <vector>
+
 #include "line_algorithm.h"
 #include "point_algorithm.h"
-#include <iostream>
 
 namespace polygon_algo{
 

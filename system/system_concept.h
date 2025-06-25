@@ -86,30 +86,31 @@ concept c_straight_line = requires(Type temp){
 
 template<typename Type>
 concept c_half_line = requires(Type temp){
-    temp.start();
+    typename Type::type_point;
+    {temp.start()} -> std::same_as<typename Type::type_point>;
     temp.direction();
 };
 
 template<typename Type>
 concept c_line_section = requires(Type temp){
-    temp.start();
-    temp.stop();
+    typename Type::type_point;
+    {temp.start()} -> std::same_as<typename Type::type_point>;
+    {temp.stop()} -> std::same_as<typename Type::type_point>;
 };
 
 template<typename Type>
 concept c_arc = requires(Type temp){
     temp.center();
     temp.radius();
-    temp.start();
-    temp.stop();
-};
+    {temp.start()} -> std::floating_point;
+    {temp.stop()} -> std::floating_point;
+} && std::is_same_v<typename Type::figure, std::false_type>;
 
 template<typename Type>
 concept c_circle = requires(Type temp){
-    typename Type::type_coefficients;
     temp.center();
     temp.radius();
-};
+} && std::is_same_v<typename Type::figure, std::true_type>;
 
 template<typename Type>
 concept c_polugon = requires(Type temp){

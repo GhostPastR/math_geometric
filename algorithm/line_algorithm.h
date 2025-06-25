@@ -237,15 +237,6 @@ auto point_on_line(const View &line, Type distance) -> std::optional<typename Vi
     return point_algo::new_point(line.view_begin.value, point_algo::angle(line.view_begin.value, line.view_end.value), distance);
 }
 
-
-
-// template<c_line Line, c_line_section LineSection, c_point2d_geo PointGeo>
-// constexpr Line convert_to_line_geo(const LineSection &line_section, const PointGeo &reference_point){
-//     return {point_algo::convert_point_geo(line_section.start, reference_point),
-//             point_algo::convert_point_geo(line_section.stop, reference_point)};
-// }
-
-
 }
 
 #endif // LINE_ALGORITHM_H
