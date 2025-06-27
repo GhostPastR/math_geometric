@@ -33,12 +33,12 @@ constexpr Point new_point(const Point &point, const TypeAngle &angle, const Type
 template<c_point2d_decard Point, std::floating_point TypeAngle,
          c_function_angle<typename Point::type_coordinate> ClassFunc = algorithm::function_angle<typename Point::type_coordinate>>
 constexpr Point rotate(const Point &point, const TypeAngle &angle, const Point &reference){
-    auto dx = point.x() - reference.x();
-    auto dy = point.y() - reference.y();
-    auto sinAngle = -ClassFunc::sin(angle);
-    auto cosAngle = ClassFunc::cos(angle);
-    auto x = dx * cosAngle - dy * sinAngle;
-    auto y = dx * sinAngle + dy * cosAngle;
+    const auto dx = point.x() - reference.x();
+    const auto dy = point.y() - reference.y();
+    const auto sinAngle = -ClassFunc::sin(angle);
+    const auto cosAngle = ClassFunc::cos(angle);
+    const auto x = dx * cosAngle - dy * sinAngle;
+    const auto y = dx * sinAngle + dy * cosAngle;
     return {x + reference.x(), y + reference.y()};
 }
 

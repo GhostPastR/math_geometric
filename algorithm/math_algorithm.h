@@ -112,14 +112,14 @@ inline constexpr Type discriminant(const quadratic<Type> &temp){
 }
 
 template<std::floating_point Type>
-roots_equation<Type> get_roots_equation(const quadratic<Type> &equations){
+constexpr roots_equation<Type> get_roots_equation(const quadratic<Type> &equations){
     if(compare(equations.a, 0.)){
         if(compare(equations.b, 0.)){
             return {};
         }
         return {-equations.c / equations.b, std::nullopt};
     }
-    auto d = discriminant(equations);
+    const auto d = discriminant(equations);
     if(d < 0){
         return {};
     }

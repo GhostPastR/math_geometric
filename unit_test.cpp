@@ -1,5 +1,6 @@
 #include "unit_test.h"
 #include <QtTest/QTest>
+#include "algorithm/approximation_algorithm.h"
 #include "algorithm/circle_algorithm.h"
 #include "algorithm/geo_algorithm.h"
 #include "algorithm/point_algorithm.h"
@@ -1224,6 +1225,123 @@ void Unit_Test::test_geo_algorithm()
     {
         auto points = std::vector{LineSection{Point(0,0), Point(0,10)}, LineSection{Point(10,10), Point(10,0)}};
         auto geo_points = geo_algo::convert<LineSectionGeo>(points, PointGeo(0_deg, 0_deg));
+    }
+}
+
+void Unit_Test::test_approximation()
+{
+    {
+        auto points = approximation_algo::splitting_evenly(Point(0,0), Point(4,3), 5);
+        // for(auto i : points){
+        //     std::cout << std::format("{} {}", i.x(), i.y()) << std::endl;
+        // }
+        // 0.8 0.6
+        // 1.6 1.2
+        // 2.4000000000000004 1.7999999999999998
+        // 3.2 2.4
+        // 4 3
+    }
+
+    {
+        auto line = LineSection(Point(1,1), Point(5,4));
+        auto points = approximation_algo::splitting_evenly(view_line(line), 5);
+        // for(auto i : points){
+        //     std::cout << std::format("{} {}", i.x(), i.y()) << std::endl;
+        // }
+        // 1.8 1.6
+        // 2.6 2.2
+        // 3.4000000000000004 2.8
+        // 4.2 3.4
+        // 5 4
+    }
+
+    {
+        auto arc = Arc(Point(0,0), 10, 0, 90_deg);
+        auto points = approximation_algo::splitting_evenly(arc, 5);
+        // for(auto i : points){
+        //     std::cout << std::format("{} {}", i.x(), i.y()) << std::endl;
+        // }
+        // 1.8 1.6
+        // 2.6 2.2
+        // 3.4000000000000004 2.8
+        // 4.2 3.4
+        // 5 4
+    }
+
+    {
+        auto arc = Circle(Point(0,0), 10);
+        auto points = approximation_algo::splitting_evenly(arc, 4);
+        // for(auto i : points){
+        //     std::cout << std::format("{} {}", i.x(), i.y()) << std::endl;
+        // }
+        // 1.8 1.6
+        // 2.6 2.2
+        // 3.4000000000000004 2.8
+        // 4.2 3.4
+        // 5 4
+    }
+
+
+
+    {
+        double prior = 0;
+        auto points = approximation_algo::splitting_evenly(Point(0,0), Point(40,30), 5., prior);
+        // for(auto i : points){
+        //     std::cout << std::format("{} {}", i.x(), i.y()) << std::endl;
+        // }
+        // 0 0
+        // 4 3
+        // 8 6
+        // 12 9
+        // 16 12
+        // 20 15
+        // 24 18
+        // 28 21
+        // 32 24
+        // 36 27
+    }
+
+    {
+        double prior = 0;
+        auto line = LineSection(Point(1,1), Point(41,31));
+        auto points = approximation_algo::splitting_evenly(view_line(line), 5., prior);
+        // for(auto i : points){
+        //     std::cout << std::format("{} {}", i.x(), i.y()) << std::endl;
+        // }
+        // 0 0
+        // 4.1 3.1
+        // 8.2 6.2
+        // 12.299999999999999 9.3
+        // 16.4 12.4
+        // 20.5 15.5
+        // 24.599999999999998 18.6
+        // 28.699999999999996 21.7
+        // 32.8 24.8
+        // 36.9 27.900000000000002
+    }
+
+    {
+        double prior = 0;
+        auto arc = Arc(Point(0,0), 50, 0, 90_deg);
+        auto points = approximation_algo::splitting_evenly(arc, 5., prior);
+        // for(auto i : points){
+        //     std::cout << std::format("{} {}", i.x(), i.y()) << std::endl;
+        // }
+        // 0 50
+        // 5.226423163382673 49.72609476841367
+        // 10.395584540887965 48.907380036690284
+        // 15.450849718747369 47.552825814757675
+        // 20.336832153790006 45.67727288213004
+        // 24.999999999999996 43.30127018922194
+        // 29.389262614623657 40.45084971874737
+        // 33.45653031794291 37.157241273869715
+        // 37.15724127386971 33.456530317942914
+        // 40.45084971874737 29.389262614623657
+        // 43.30127018922193 25.000000000000007
+        // 45.67727288213004 20.33683215379002
+        // 47.552825814757675 15.450849718747373
+        // 48.90738003669028 10.395584540887972
+        // 49.72609476841367 5.226423163382684
     }
 }
 

@@ -25,6 +25,8 @@ private slots:
     void test_polygon_algorithm();
 
     void test_geo_algorithm();
+
+    void test_approximation();
 };
 
 #endif // UNIT_TEST_H
