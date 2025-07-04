@@ -9,6 +9,7 @@
 
 
 #include "qtestcase.h"
+#include "structs/matrix.h"
 #include "user_type.h"
 
 #include <iostream>
@@ -1343,6 +1344,385 @@ void Unit_Test::test_approximation()
         // 48.90738003669028 10.395584540887972
         // 49.72609476841367 5.226423163382684
     }
+}
+
+void Unit_Test::test_matrix()
+{
+    {
+        {
+            matrix<int, 3, 3> m1;
+            matrix<int, 3, 3> m2;
+            QVERIFY(m1 == m2);
+        }
+
+        {
+            matrix<int, 3, 3> m1({1,2,3,4,5,6});
+            matrix<int, 3, 3> m2({1,2,3,4,5,6,0,0,0});
+            QVERIFY(m1 == m2);
+        }
+
+        {
+            matrix<int, 3, 3> m({1,2,3,4,5,6,7,8,9});
+            std::array<int, 3> row = m.row(0);
+            std::array<int, 3> ar({1,2,3});
+            QVERIFY(std::ranges::equal(row, ar));
+        }
+
+        {
+            matrix<int, 3, 3> m({1,2,3,4,5,6,7,8,9});
+            std::array<int, 3> row = m.column(1);
+            std::array<int, 3> ar({2,5,8});
+            QVERIFY(std::ranges::equal(row, ar));
+        }
+
+        {
+            matrix<int, 3, 3> m1({1,2,3,4,5,6,7,8,9});
+            m1.swap_row(0,1);
+            matrix<int, 3, 3> m2({4,5,6,1,2,3,7,8,9});
+            QVERIFY(m1 == m2);
+        }
+        {
+            matrix<int, 3, 3> m({1,2,3,4,5,6,7,8,9});
+            QVERIFY(m.value(1,1) == 5);
+        }
+        {
+            matrix<int, 3, 3> m({1,2,3,4,5,6,7,8,9});
+            QVERIFY(m.value(2,0) == 7);
+        }
+    }
+
+    {//operator
+        {
+            matrix<double, 4, 3> m1{1,2,3,
+                                    4,5,6,
+                                    7,8,9,
+                                    10,11,12};
+
+            matrix<double, 4, 3> m2{10,20,30,
+                                    40,50,60,
+                                    70,80,90,
+                                    100,110,120};
+            matrix<double, 4, 3> m3{11,22,33,
+                                    44,55,66,
+                                    77,88,99,
+                                    110,121,132};
+            QVERIFY((m1 + m2) == m3);
+        }
+        {
+            matrix<double, 4, 3> m1{1,2,3,
+                                    4,5,6,
+                                    7,8,9,
+                                    10,11,12};
+
+            matrix<double, 4, 3> m2{10,20,30,
+                                    40,50,60,
+                                    70,80,90,
+                                    100,110,120};
+            matrix<double, 4, 3> m3{9,18,27,
+                                    36,45,54,
+                                    63,72,81,
+                                    90,99,108};
+            QVERIFY((m2 - m1) == m3);
+        }
+        {
+            matrix<double, 4, 3> m1{1,2,3,
+                                    4,5,6,
+                                    7,8,9,
+                                    10,11,12};
+
+            matrix<double, 4, 3> m2{10,20,30,
+                                    40,50,60,
+                                    70,80,90,
+                                    100,110,120};
+            QVERIFY((10 * m1) == m2);
+            QVERIFY((m1 * 10) == m2);
+        }
+
+        {
+            {
+                matrix<double, 3, 3> m1({1,2,3,
+                                         4,5,6,
+                                         7,8,9});
+
+                matrix<double, 3, 4> m2{1,2,3,4,
+                                        5,6,7,8,
+                                        9,10,11,12};
+                matrix<double, 3, 4> m3{38,	44,	50,	56,
+                                        83, 98, 113, 128,
+                                        128, 152, 176, 200};
+                QVERIFY((m1 * m2) == m3);
+            }
+            {
+                matrix<double, 2, 3> m1({1,2,3,
+                                         4,5,6});
+
+                matrix<double, 3, 2> m2{1,2,
+                                        4,5,
+                                        7,8};
+                matrix<double, 2, 2> m3{30,	36,
+                                        66, 81};
+                QVERIFY((m1 * m2) == m3);
+            }
+            {
+                matrix<double, 6, 1> m1({1,3,5,7,9,11});
+                matrix<double, 1, 6> m2{1,2,3,4,5,6};
+                matrix<double, 6, 6> m3{1,2,3,4,5,6,
+                                        3,	6,	9,	12,	15,	18,
+                                        5,	10,	15,	20,	25,	30,
+                                        7,	14,	21,	28,	35,	42,
+                                        9,	18,	27,	36,	45,	54,
+                                        11,	22,	33,	44,	55,	66};
+                QVERIFY((m1 * m2) == m3);
+            }
+        }
+    }
+
+    {//determinant
+        {
+            matrix<double, 2, 2> m{1,2,
+                                   3,4};
+            QVERIFY(algorithm::compare(m.determinant(), -2));
+        }
+        {
+            matrix<double, 3, 3> m{1,2,3,
+                                   4,5,6,
+                                   7,8,9};
+            // std::cout << "---------------" << std::endl;
+            // std::cout << m.determinant() << std::endl;
+            QVERIFY(algorithm::compare(m.determinant(), 0));
+        }
+        {
+            matrix<double, 3, 3> m{1,2,3,
+                                4,5,6,
+                                7,5,1};
+            QVERIFY(algorithm::compare(m.determinant(), 6));
+        }
+        {
+            matrix<double, 4, 4> m{1,2,3,4,
+                                5,6,7,8,
+                                1,4,5,3,
+                                13,56,5,16};
+            QVERIFY(algorithm::compare(m.determinant(), 1624));
+        }
+
+        {
+            matrix<double, 7, 7> m{
+                1,2,3,2,3,4,5,
+                4,5,6,3,2,2,4,
+                7,5,1,5,5,0,0,
+                4,2,3,4,5,4,0,
+                5,3,4,5,4,4,3,
+                7,6,5,6,5,6,4,
+                1,1,9,0,7,9,0
+            };
+            QVERIFY(algorithm::compare(m.determinant(), -6660));
+        }
+    }
+    {//transposed
+        {
+            matrix<double, 2, 2> m1{
+                1,2,
+                3,4
+            };
+            matrix<double, 2, 2> m2{
+                1,3,
+                2,4
+            };
+            QVERIFY(m1.transposed() == m2);
+        }
+        {
+            matrix<double, 3, 3> m1{
+                1,2,3,
+                4,5,6,
+                7,8,9
+            };
+            matrix<double, 3, 3> m2{
+                1,4,7,
+                2,5,8,
+                3,6,9
+            };
+            QVERIFY(m1.transposed() == m2);
+        }
+        {
+            matrix<double, 4, 5> m1{
+                1,2,3,4,5,
+                5,6,7,8,6,
+                1,4,5,3,7,
+                13,56,5,16,8
+            };
+            matrix<double, 5, 4> m2{
+                1,5,1,13,
+                2,6,4,56,
+                3,7,5,5,
+                4,8,3,16,
+                5,6,7,8
+            };
+            QVERIFY(m1.transposed() == m2);
+        }
+
+        {
+            matrix<double, 2, 7> m1{
+                1,2,3,2,3,4,5,
+                4,5,6,3,2,2,4,
+            };
+            matrix<double, 7, 2> m2{
+                1,4,
+                2,5,
+                3,6,
+                2,3,
+                3,2,
+                4,2,
+                5,4,
+            };
+            QVERIFY(m1.transposed() == m2);
+        }
+    }
+
+    {//identity_matrix
+        {
+            matrix<double, 2, 2> m1{
+                1,0,
+                0,1
+            };
+            auto m = matrix_algo::identity_matrix<matrix,double,2>();
+            QVERIFY(m1 == m);
+        }
+        {
+            matrix<double, 3, 3> m2{
+                1,0,0,
+                0,1,0,
+                0,0,1
+            };
+            auto m = matrix_algo::identity_matrix<matrix,double,3>();
+            QVERIFY(m2 == m);
+        }
+    }
+
+    {//identity_matrix
+        {
+            matrix<double, 3, 3> m{
+                1,2,3,
+                4,5,6,
+                7,8,9
+            };
+            {
+                auto minor = matrix_algo::minor(m, 0, 0);
+                matrix<double, 2, 2> m2{
+                    5,6,
+                    8,9,
+                };
+                QVERIFY(minor == m2);
+            }
+            {
+                auto minor = matrix_algo::minor(m, 0, 1);
+                matrix<double, 2, 2> m2{
+                    4,6,
+                    7,9,
+                };
+                QVERIFY(minor == m2);
+            }
+            {
+                auto minor = matrix_algo::minor(m, 0, 2);
+                matrix<double, 2, 2> m2{
+                    4,5,
+                    7,8,
+                };
+                QVERIFY(minor == m2);
+            }
+            {
+                auto minor = matrix_algo::minor(m, 1, 0);
+                matrix<double, 2, 2> m2{
+                    2,3,
+                    8,9,
+                };
+                QVERIFY(minor == m2);
+            }
+            {
+                auto minor = matrix_algo::minor(m, 1, 1);
+                matrix<double, 2, 2> m2{
+                    1,3,
+                    7,9,
+                };
+                QVERIFY(minor == m2);
+            }
+            {
+                auto minor = matrix_algo::minor(m, 1, 2);
+                matrix<double, 2, 2> m2{
+                    1,2,
+                    7,8,
+                };
+                QVERIFY(minor == m2);
+            }
+            {
+                auto minor = matrix_algo::minor(m, 2, 0);
+                matrix<double, 2, 2> m2{
+                    2,3,
+                    5,6,
+                };
+                QVERIFY(minor == m2);
+            }
+            {
+                auto minor = matrix_algo::minor(m, 2, 1);
+                matrix<double, 2, 2> m2{
+                    1,3,
+                    4,6,
+                };
+                QVERIFY(minor == m2);
+            }
+            {
+                auto minor = matrix_algo::minor(m, 2, 2);
+                matrix<double, 2, 2> m2{
+                    1,2,
+                    4,5,
+                };
+                QVERIFY(minor == m2);
+            }
+        }
+    }
+
+    {//matrix_algebraic_additions
+        {
+            matrix<double, 3, 3> m1{
+                1,2,3,
+                4,5,6,
+                7,8,9
+            };
+
+            auto adj = matrix_algo::matrix_algebraic_additions(m1);
+            matrix<double, 3, 3> m2{
+                -3,6,-3,
+                6,-12,6,
+                -3,6,-3
+            };
+
+            QVERIFY(adj == m2);
+        }
+    }
+
+    {//inverse_matrix
+        {
+            matrix<double, 3, 3> m{
+                1,2,3,
+                4,5,6,
+                7,8,9
+            };
+            auto inv = matrix_algo::inverse_matrix(m);
+            QVERIFY(!inv.has_value());
+        }
+        {
+            matrix<double, 3, 3> m{
+                1,1,1,
+                2,3,4,
+                4,4,5
+            };
+            auto inv = matrix_algo::inverse_matrix(m);
+            auto iden = matrix_algo::identity_matrix<matrix,double,3>();
+            QVERIFY(inv.value() * m == iden);
+        }
+    }
+
+
+
 }
 
 // for(auto i : polygon.points){

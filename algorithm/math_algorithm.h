@@ -80,14 +80,21 @@ inline constexpr bool compare_common(const Value &value1, const Value &value2, c
     // return std::abs((value1 - value2) / value2) < epsilon;
 }
 
+template<std::floating_point Value1, std::integral Value2>
+inline constexpr bool compare_common(const Value1 &value1, const Value2 &value2, const Value1 &epsilon){
+    static_assert(std::is_floating_point_v<typename std::remove_reference<Value1>::type>, "Not floating point type");
+    static_assert(std::is_integral_v<typename std::remove_reference<Value2>::type>, "Not floating point type");
+    return std::abs(value1 - static_cast<Value1>(value2)) < epsilon;
+}
+
 template<std::floating_point Value>
 inline constexpr bool compare(const Value& value1, const Value& value2) {
-    if constexpr(std::floating_point<Value>){
-        return algorithm::compare_common(value1, value2, algorithm::epsilon<Value>);
-    }
-    else{
-        return value1 == value2;
-    }
+    return algorithm::compare_common(value1, value2, algorithm::epsilon<Value>);
+}
+
+template<std::floating_point Value1, std::integral Value2>
+inline constexpr bool compare(const Value1& value1, const Value2& value2) {
+    return algorithm::compare_common(value1, value2, algorithm::epsilon<Value1>);
 }
 
 template<compare_intervel Value>

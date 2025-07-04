@@ -27,6 +27,8 @@ private slots:
     void test_geo_algorithm();
 
     void test_approximation();
+
+    void test_matrix();
 };
 
 #endif // UNIT_TEST_H

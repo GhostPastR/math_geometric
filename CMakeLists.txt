@@ -24,7 +24,6 @@ qt_add_executable(math_geometric
     structs/struct_geo_imp.h
     system/system_concept.h
     system/system_function.h
-    unit/angle.h
     user_type.h
     system/system_unit.h
     unit/angle.h
@@ -32,6 +31,7 @@ qt_add_executable(math_geometric
     unit/speed.h
     unit/time.h
     unit/weight.h
+    iterator/matrix_iterator.h
 )
 
 target_link_libraries(math_geometric PRIVATE Qt::Core Qt6::Test)
