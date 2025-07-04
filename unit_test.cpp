@@ -1382,6 +1382,41 @@ void Unit_Test::test_matrix()
             QVERIFY(m1 == m2);
         }
         {
+            matrix<int, 3, 3> m1({
+                                  1,2,3,
+                                  4,5,6,
+                                  7,8,9});
+            m1.swap_column(0,1);
+            matrix<int, 3, 3> m2({2,1,3,
+                                  5,4,6,
+                                  8,7,9});
+            QVERIFY(m1 == m2);
+        }
+        {
+            matrix<int, 3, 3> m1({
+                                  1,2,3,
+                                  4,5,6,
+                                  7,8,9});
+            m1.copy_row(1,2);
+            matrix<int, 3, 3> m2({
+                                  1,2,3,
+                                  7,8,9,
+                                  7,8,9});
+            QVERIFY(m1 == m2);
+        }
+        {
+            matrix<int, 3, 3> m1({
+                                  1,2,3,
+                                  4,5,6,
+                                  7,8,9});
+            m1.copy_column(1,2);
+            matrix<int, 3, 3> m2({
+                                  1,3,3,
+                                  4,6,6,
+                                  7,9,9});
+            QVERIFY(m1 == m2);
+        }
+        {
             matrix<int, 3, 3> m({1,2,3,4,5,6,7,8,9});
             QVERIFY(m.value(1,1) == 5);
         }
@@ -1721,22 +1756,48 @@ void Unit_Test::test_matrix()
         }
     }
 
-
-
+    {//rang
+        {
+            matrix<double, 3, 3> m{
+                1,2,3,
+                4,5,6,
+                7,8,9
+            };
+            QVERIFY(matrix_algo::rang(m) == 2);
+        }
+        {
+            matrix<double, 3, 3> m{
+                2,2,2,
+                4,4,4,
+                5,5,6
+            };
+            QVERIFY(matrix_algo::rang(m) == 2);
+        }
+        {
+            matrix<double, 4, 3> m{
+                2,2,2,
+                4,4,4,
+                5,5,5,
+                6,6,6,
+            };
+            QVERIFY(matrix_algo::rang(m) == 1);
+        }
+        {
+            matrix<double, 4, 3> m{
+                2,2,3,
+                4,4,7,
+                5,5,11,
+                6,6,13,
+            };
+            QVERIFY(matrix_algo::rang(m) == 2);
+        }
+        {
+            matrix<double, 3, 3> m{
+                3,2,3,
+                7,4,5,
+                11,5,7
+            };
+            QVERIFY(matrix_algo::rang(m) == 3);
+        }
+    }
 }
-
-// for(auto i : polygon.points){
-//     std::cout << std::format("{} {}", i.x(), i.y()) << std::endl;
-// }
-// std::cout << std::format("{} {}", point.x(), point.y()) << std::endl;
-
-
-// std::cout << std::format("{}",value.latitude().degrees()) << std::endl;
-// std::cout << std::format("{}",value.longitude().degrees()) << std::endl;
-
-// std::cout << std::format("{}", point.latitude()) << std::endl;
-// std::cout << std::format("{}", point.longitude()) << std::endl;
-
-// std::cout << std::format("{}", point.latitude()) << std::endl;
-// std::cout << std::format("{}", point.longitude()) << std::endl;
-

@@ -129,6 +129,35 @@ public:
         }
         data_[row1].swap(data_[row2]);
     }
+    void swap_column(size_t col1, size_t col2){
+        if(col1 >= Col){
+            throw std::logic_error(std::format("Index error row = {}", col1));
+        }
+        if(col2 >= Col){
+            throw std::logic_error(std::format("Index error row = {}", col2));
+        }
+        std::swap_ranges(begin_row(col1), end_row(col1), begin_row(col2));
+    }
+
+    void copy_row(size_t row1, size_t row2){
+        if(row1 >= Row){
+            throw std::logic_error(std::format("Index error row = {}", row1));
+        }
+        if(row2 >= Row){
+            throw std::logic_error(std::format("Index error row = {}", row2));
+        }
+        data_[row1] = data_[row2];
+    }
+    void copy_column(size_t col1, size_t col2){
+        if(col1 >= Col){
+            throw std::logic_error(std::format("Index error row = {}", col1));
+        }
+        if(col2 >= Col){
+            throw std::logic_error(std::format("Index error row = {}", col2));
+        }
+        std::ranges::copy(begin_row(col2), end_row(col2), begin_row(col1));
+    }
+
 
     Type &value(size_t r, size_t c){
         if((r >= Row) || (c >= Col)){

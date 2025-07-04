@@ -17,11 +17,13 @@ qt_add_executable(math_geometric
     algorithm/math_algorithm.h
     algorithm/point_algorithm.h
     algorithm/polygon_algorithm.h
+    algorithm/matrix_algorithm.h
     structs/circle_impl.h
     structs/line_impl.h
     structs/point_impl.h
     structs/polygon_impl.h
     structs/struct_geo_imp.h
+    structs/matrix.h
     system/system_concept.h
     system/system_function.h
     user_type.h

@@ -176,6 +176,40 @@ auto inverse_matrix(const Matrix<Value, N, N> &matrix) -> std::optional<Matrix<V
     return (1.0 / det) * transposed(matrix_algebraic_additions(matrix));
 }
 
+template<template<typename, size_t, size_t>  class Matrix, typename Value, size_t R, size_t C>
+    requires c_matrix<Matrix, Value, R, C> && (std::is_floating_point_v<Value> || std::is_integral_v<Value>)
+size_t rang(Matrix<Value, R, C> matrix){
+    int rank = C;
+    for (int row = 0; row < rank; row++){
+        if (!algorithm::compare(matrix.value(row,row), 0)){
+            for(auto item = matrix.begin_row(row); item < matrix.end_row(row); ++item){
+                auto col = std::distance(matrix.begin_row(row), item);
+                if (col != row){
+                    auto factor = *item / matrix.value(row,row);
+                    auto out = matrix.begin_column(col);
+                    std::transform(matrix.begin_column(row), matrix.end_column(row), out, out, [factor](const auto &a, const auto &b){
+                        return b - factor * a;
+                    });
+                }
+            }
+        }
+        else{
+            auto reduse = std::ranges::find_if(std::next(matrix.begin_row(row), row + 1), matrix.end_row(row), [](const auto &i){
+                return !algorithm::compare(i, 0);
+            });
+            if(reduse != matrix.end_row(row)){
+                matrix.swap_row(row, std::distance(matrix.begin_row(row), reduse));
+            }
+            else{
+                rank--;
+                matrix.copy_column(row, rank);
+            }
+            row--;
+        }
+    }
+    return rank;
+}
+
 }
 
 #endif // MATRIX_ALGORITHM_H
