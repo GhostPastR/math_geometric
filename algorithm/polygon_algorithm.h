@@ -8,7 +8,7 @@
 #include "line_algorithm.h"
 #include "point_algorithm.h"
 
-namespace polygon_algo{
+namespace agl::polygon_algo{
 
 template<c_point2d Point>
 constexpr bool is_convex_polygone(const std::vector<Point> &points){

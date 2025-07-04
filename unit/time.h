@@ -3,7 +3,7 @@
 
 #include "../system/system_unit.h"
 
-namespace unit {
+namespace agl::unit {
 
 using _time = enum_unit<0,0,1,0>;
 
@@ -31,20 +31,20 @@ using time = unit::Value<unit::_time, double>;
 
 }
 
-OPERATOR_QM(unit::time, second, unit::second)
-OPERATOR_QM(unit::time, minute, unit::minute)
-OPERATOR_QM(unit::time, hour, unit::hour)
-OPERATOR_QM(unit::time, day, unit::day)
+OPERATOR_QM(agl::unit::time, second, agl::unit::second)
+OPERATOR_QM(agl::unit::time, minute, agl::unit::minute)
+OPERATOR_QM(agl::unit::time, hour, agl::unit::hour)
+OPERATOR_QM(agl::unit::time, day, agl::unit::day)
 
-constexpr unit::time operator +(const unit::time &value1, const unit::time &value2){
-    return unit::time(value1.value() + value2.value()) ;
+constexpr agl::unit::time operator +(const agl::unit::time &value1, const agl::unit::time &value2){
+    return agl::unit::time(value1.value() + value2.value()) ;
 }
 
-constexpr unit::time operator *(const double &value1, const unit::time &value2){
-    return unit::time(value1 * value2.value()) ;
+constexpr agl::unit::time operator *(const double &value1, const agl::unit::time &value2){
+    return agl::unit::time(value1 * value2.value()) ;
 }
 
-constexpr unit::time operator *(const unit::time &value1, const double &value2){
+constexpr agl::unit::time operator *(const agl::unit::time &value1, const double &value2){
     return value2 * value1;
 }
 

@@ -8,6 +8,8 @@
 #include "structs/polygon_impl.h"
 #include "structs/struct_geo_imp.h"
 
+namespace agl{
+
 using Lenght = double;
 using Angle = angle_impl<double>;
 using Point = point2d_impl<double>;
@@ -40,5 +42,7 @@ using LineSectionGeo = line_section_geo_impl<PointGeo>;
 
 using CircleGeo = circle_geo_impl<double, PointGeo>;
 using ArcGeo  = arc_geo_impl<double, PointGeo, Angle>;
+
+}
 
 #endif // USER_TYPE_H

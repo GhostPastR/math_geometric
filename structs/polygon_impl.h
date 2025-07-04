@@ -35,6 +35,8 @@
 //     std::vector<Point> points_;
 // };
 
+namespace agl {
+
 template<c_point2d Point>
 struct convex_polygone_impl{
     using type_point = Point;
@@ -227,26 +229,6 @@ private:
     size_t count_{};
 };
 
-
-// template<std::floating_point Type>
-// using convex_polygone_impl = convex_polygone_abstract<Type, point2d_impl<Type>>;
-
-// template<std::floating_point Type>
-// using rectangle_impl = rectangle_abstract<Type, point2d_impl<Type>>;
-
-// template<std::floating_point Type>
-// using square_impl = square_abstract<Type, point2d_impl<Type>>;
-
-// template<std::floating_point Type>
-// using triangle_impl = triangle_abstract<Type, point2d_impl<Type>>;
-
-// template<std::floating_point Type>
-// using regular_polygon_impl = regular_polygon_abstract<Type, point2d_impl<Type>>;
-
-// template<std::floating_point Type>
-// using polygon_impl = polygon_abstract<Type, point2d_impl<Type>>;
-
-// template<std::floating_point Type>
-// using polygon_geo_impl = polygon_abstract<Type, point_geo2d_impl<angle_impl<Type>>>;
+}
 
 #endif // POLYGON_IMPL_H

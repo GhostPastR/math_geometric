@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <tuple>
 
+namespace agl{
+
 template<typename ...Args>
 struct Carcass{
 protected:
@@ -22,6 +24,8 @@ bool conjunction_tuple(const Tuple &tuple1, const Tuple &tuple2, Func &&func){
     else{
         static_assert(false, "L < 0");
     }
+}
+
 }
 
 #endif // SYSTEM_FUNCTION_H

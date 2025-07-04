@@ -6,7 +6,8 @@
 #include "../system/system_concept.h"
 #include "math_algorithm.h"
 
-namespace point_algo{
+
+namespace agl::point_algo{
 
 // возвращает направление отрезка от текущей точки до заданной точки(входной параметр методы).
 template<c_point2d_decard Point, c_function_angle<typename Point::type_coordinate> ClassFunc = algorithm::function_angle<typename Point::type_coordinate>>

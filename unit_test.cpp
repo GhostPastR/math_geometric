@@ -7,12 +7,16 @@
 #include "algorithm/line_algorithm.h"
 #include "algorithm/polygon_algorithm.h"
 
+#include "unit/distance.h"
+
 
 #include "qtestcase.h"
 #include "structs/matrix.h"
 #include "user_type.h"
 
 #include <iostream>
+
+using namespace agl;
 
 Unit_Test::Unit_Test(QObject *parent)
     : QObject{parent}
@@ -103,6 +107,14 @@ void Unit_Test::test_angle()
             QVERIFY(angle.atan(angle.tan()) == 0._deg);
             QVERIFY(angle.actan(angle.ctan()) == 0._deg);
         }
+    }
+}
+
+void Unit_Test::test_unit()
+{
+    {
+        unit::distance d(100);
+        std::cout << d.value<unit::millimeter>() << std::endl;
     }
 }
 

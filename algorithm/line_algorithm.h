@@ -3,6 +3,8 @@
 
 #include "point_algorithm.h"
 
+namespace agl{
+
 template<c_point2d_decard Point>
 struct line_view{
     using type_point = Point::type_coordinate;
@@ -32,7 +34,6 @@ concept c_line_view = requires(Type temp){
     temp.view_begin;
     temp.view_end;
 };
-
 
 namespace line_algo{
 
@@ -236,6 +237,8 @@ constexpr auto point_on_line(const View &line, Type distance) -> std::optional<t
         return std::nullopt;
     }
     return point_algo::new_point(line.view_begin.value, point_algo::angle(line.view_begin.value, line.view_end.value), distance);
+}
+
 }
 
 }

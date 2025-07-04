@@ -3,6 +3,8 @@
 
 #include <iterator>
 
+namespace agl{
+
 template<typename View>
 struct view{
     View value{};
@@ -159,7 +161,7 @@ concept c_regular_polygon = requires(Type temp){
     temp.get_count();
 };
 
-
+}
 
 
 #endif // SYSTEM_CONCEPT_H

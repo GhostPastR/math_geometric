@@ -3,7 +3,7 @@
 
 #include "../system/system_unit.h"
 
-namespace unit {
+namespace agl::unit {
 
 using _speed = enum_unit<1,0,-1,0>;
 
@@ -29,18 +29,18 @@ using speed = unit::Value<unit::_speed, double>;
 
 }
 
-OPERATOR_QM(unit::speed, m_s, unit::meter_secund)
-OPERATOR_QM(unit::speed, km_h, unit::kilometer_hour)
+OPERATOR_QM(agl::unit::speed, m_s, agl::unit::meter_secund)
+OPERATOR_QM(agl::unit::speed, km_h, agl::unit::kilometer_hour)
 
-constexpr unit::speed operator +(const unit::speed &value1, const unit::speed &value2){
-    return unit::speed(value1.value() + value2.value()) ;
+constexpr agl::unit::speed operator +(const agl::unit::speed &value1, const agl::unit::speed &value2){
+    return agl::unit::speed(value1.value() + value2.value()) ;
 }
 
-constexpr unit::speed operator *(const double &value1, const unit::speed &value2){
-    return unit::speed(value1 * value2.value()) ;
+constexpr agl::unit::speed operator *(const double &value1, const agl::unit::speed &value2){
+    return agl::unit::speed(value1 * value2.value()) ;
 }
 
-constexpr unit::speed operator *(const unit::speed &value1, const double &value2){
+constexpr agl::unit::speed operator *(const agl::unit::speed &value1, const double &value2){
     return value2 * value1;
 }
 

@@ -8,7 +8,7 @@
 #include "circle_algorithm.h"
 #include "line_algorithm.h"
 
-namespace approximation_algo{
+namespace agl::approximation_algo{
 
 template<c_point2d_decard Point>
 constexpr std::vector<Point> splitting_evenly(const Point &start, const Point &stop, size_t count_point){

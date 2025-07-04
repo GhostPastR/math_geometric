@@ -28,7 +28,7 @@ concept c_matrix = requires(Type<T,N,M> temp){
     temp.cend_column();
 };
 
-namespace matrix_algo{
+namespace agl::matrix_algo{
 
 template<template<typename, size_t, size_t> class Matrix, std::floating_point Type> requires c_matrix<Matrix, Type, 1,1>
 auto determinant(Matrix<Type,1,1> m) -> Matrix<Type,1,1>::type{

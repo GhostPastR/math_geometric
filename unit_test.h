@@ -11,6 +11,7 @@ public:
 
 private slots:
     void test_angle();
+    void test_unit();
 
     void test_point();
     void test_point_algorithm();

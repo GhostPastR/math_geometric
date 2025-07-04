@@ -5,6 +5,8 @@
 #include "../system/system_function.h"
 #include "../algorithm/math_algorithm.h"
 
+namespace agl {
+
 namespace {
 
 constexpr bool compare_point(const auto &property1, const auto &property2){
@@ -183,5 +185,7 @@ struct polar2d_impl final : polar2d_abstract<Type, Type>{
         polar2d_abstract<Type, Type>::set_fi(angle.radian());
     }
 };
+
+}
 
 #endif // POINT_IMPL_H

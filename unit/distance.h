@@ -3,50 +3,50 @@
 
 #include "../system/system_unit.h"
 
-namespace unit {
+namespace agl::unit {
 
-using _length = enum_unit<1,0,0,0>;
+using _distance = enum_unit<1,0,0,0>;
 
-using millimeter = measure_unit<_length, 0.001>;
-using centimeter = measure_unit<_length, 0.01>;
-using decimeter = measure_unit<_length, 0.1>;
-using meter = measure_unit<_length, 1.>;
-using kilometer = measure_unit<_length, 1000.>;
+using millimeter = measure_unit<_distance, 0.001>;
+using centimeter = measure_unit<_distance, 0.01>;
+using decimeter = measure_unit<_distance, 0.1>;
+using meter = measure_unit<_distance, 1.>;
+using kilometer = measure_unit<_distance, 1000.>;
 
-using length_prefix = std::tuple<millimeter, centimeter, decimeter, meter, kilometer>;
+using distance_prefix = std::tuple<millimeter, centimeter, decimeter, meter, kilometer>;
 
-template<class LengthPrefix, c_type_value Type, c_basic_value BasicValue>
-    requires(c_unit_prefix<LengthPrefix, _length> && find_type<LengthPrefix>(length_prefix()))
-struct Convert<LengthPrefix, Type, _length, BasicValue>{
+template<class DistancePrefix, c_type_value Type, c_basic_value BasicValue>
+    requires(c_unit_prefix<DistancePrefix, _distance> && find_type<DistancePrefix>(distance_prefix()))
+struct Convert<DistancePrefix, Type, _distance, BasicValue>{
     constexpr static Type convert(Type value) {
         if constexpr(std::is_same_v<BasicValue, basic>){
-            return value * LengthPrefix::unit_value;
+            return value * DistancePrefix::unit_value;
         }
         else{
-            return value / LengthPrefix::unit_value;
+            return value / DistancePrefix::unit_value;
         }
     }
 };
 
-using length = unit::Value<unit::_length, double>;
+using distance = unit::Value<unit::_distance, double>;
 
 }
 
-OPERATOR_QM(unit::length, mm, unit::millimeter)
-OPERATOR_QM(unit::length, cm, unit::centimeter)
-OPERATOR_QM(unit::length, dm, unit::decimeter)
-OPERATOR_QM(unit::length, m, unit::meter)
-OPERATOR_QM(unit::length, km, unit::kilometer)
+OPERATOR_QM(agl::unit::distance, mm, agl::unit::millimeter)
+OPERATOR_QM(agl::unit::distance, cm, agl::unit::centimeter)
+OPERATOR_QM(agl::unit::distance, dm, agl::unit::decimeter)
+OPERATOR_QM(agl::unit::distance, m, agl::unit::meter)
+OPERATOR_QM(agl::unit::distance, km, agl::unit::kilometer)
 
-constexpr unit::length operator +(const unit::length &value1, const unit::length &value2){
-    return unit::length(value1.value() + value2.value()) ;
+constexpr agl::unit::distance operator +(const agl::unit::distance &value1, const agl::unit::distance &value2){
+    return agl::unit::distance(value1.value() + value2.value()) ;
 }
 
-constexpr unit::length operator *(const double &value1, const unit::length &value2){
-    return unit::length(value1 * value2.value()) ;
+constexpr agl::unit::distance operator *(const double &value1, const agl::unit::distance &value2){
+    return agl::unit::distance(value1 * value2.value()) ;
 }
 
-constexpr unit::length operator *(const unit::length &value1, const double &value2){
+constexpr agl::unit::distance operator *(const agl::unit::distance &value1, const double &value2){
     return value2 * value1;
 }
 
@@ -54,7 +54,7 @@ constexpr unit::length operator *(const unit::length &value1, const double &valu
 /* Для добавления новой единицы измерения:
  * using <name> = measure_unit<_length, <value>>; value - на сколько нужно умножить чтобы получились метры
  * В list_prefix новый тип
- * Добавляем оператор OPERATOR(unit::length, <префикс>, <name>)
+ * Добавляем оператор OPERATOR(unit::distance, <префикс>, <name>)
  * */
 
 

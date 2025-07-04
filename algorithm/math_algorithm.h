@@ -8,7 +8,7 @@
 #include <numbers>
 #include <utility>
 
-namespace algorithm {
+namespace agl::algorithm {
 
 template <std::floating_point Type> inline constexpr Type epsilon;
 template<> inline constexpr long double epsilon<long double> = 0.000001;

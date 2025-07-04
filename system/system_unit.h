@@ -4,7 +4,7 @@
 #include <utility>
 #include <tuple>
 
-namespace unit {
+namespace agl::unit {
 
 template <int M, int K, int S, int T>
 struct enum_unit{
@@ -116,7 +116,7 @@ constexpr bool find_type(const Tuple &tuple){
 
 #define OPERATOR_QM(VALUE, PREFIX, UNIT_PREFIX) \
 inline constexpr VALUE operator ""_##PREFIX (long double value){ \
-        return VALUE(unit::Convert<UNIT_PREFIX, VALUE::type_value, VALUE::unit_value, unit::basic>::convert(value)); \
+        return VALUE(agl::unit::Convert<UNIT_PREFIX, VALUE::type_value, VALUE::unit_value, agl::unit::basic>::convert(value)); \
 } \
 
 #endif // UNIT_SYSTEM_H

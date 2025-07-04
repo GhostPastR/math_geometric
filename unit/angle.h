@@ -4,6 +4,8 @@
 #include "../algorithm/math_algorithm.h"
 #include "../system/system_concept.h"
 
+namespace agl {
+
 template<std::floating_point Type, c_function_angle<Type> ClassFunc = algorithm::function_angle<Type>>
 class angle_impl{
 public:
@@ -189,5 +191,7 @@ template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi_on_6
 template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi = angle_impl<Type>(algorithm::pi<Type>);
 template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi_in_3_on_2 = angle_impl<Type>(algorithm::pi_in_3_on_2<Type>);
 template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi_in_2 = angle_impl<Type>(algorithm::pi_in_2<Type>);
+
+}
 
 #endif // ANGLE_H

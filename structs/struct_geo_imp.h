@@ -5,6 +5,8 @@
 #include "../system/system_function.h"
 #include "../algorithm/math_algorithm.h"
 
+namespace agl {
+
 template<typename ...Args>
 class point_geo2d_abstract : public Carcass<Args...>{
 public:
@@ -218,5 +220,7 @@ private:
     Type start_{};
     Type stop_{};
 };
+
+}
 
 #endif // STRUCT_GEO_IMP_H

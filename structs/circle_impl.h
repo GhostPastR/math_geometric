@@ -3,6 +3,8 @@
 
 #include "../system/system_concept.h"
 
+namespace agl {
+
 template<std::floating_point Type, c_point2d_decard Point>
 struct circle_impl final {
     using type_coefficients = Type;
@@ -62,16 +64,6 @@ private:
     Type stop_{};
 };
 
-// template<std::floating_point Type>
-// using arc_impl = arc_abstract<Type, point2d_impl<Type>>;
-
-// template<std::floating_point Type>
-// using arc_geo_impl = arc_abstract<Type, point_geo2d_impl<Type>>;
-
-// template<std::floating_point Type>
-// using circle_impl = circle_abstract<Type, point2d_impl<Type>>;
-
-// template<std::floating_point Type, c_angle Angle>
-// using circle_geo_impl = circle_abstract<Type, point_geo2d_impl<Angle>>;
+}
 
 #endif // CIRCLE_IMPL_H

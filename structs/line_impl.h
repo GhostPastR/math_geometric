@@ -5,6 +5,8 @@
 #include "../system/system_concept.h"
 #include "../algorithm/math_algorithm.h"
 
+namespace agl {
+
 template<std::floating_point Type, c_point2d Point>
 struct straight_line_impl final {
     using type_coefficients = Type;
@@ -104,5 +106,7 @@ private:
     Point start_;
     Point stop_;
 };
+
+}
 
 #endif // LINE_IMPL_H

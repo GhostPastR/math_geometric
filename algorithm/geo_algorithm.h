@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace geo_algo {
+namespace agl::geo_algo {
 
 namespace {
 

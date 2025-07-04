@@ -3,7 +3,7 @@
 
 #include "../system/system_unit.h"
 
-namespace unit {
+namespace agl::unit {
 
 using _weight = enum_unit<0,1,0,0>;
 
@@ -30,19 +30,19 @@ using weight = unit::Value<unit::_weight, double>;
 
 }
 
-OPERATOR_QM(unit::weight, g, unit::gram)
-OPERATOR_QM(unit::weight, kg, unit::kilogram)
-OPERATOR_QM(unit::weight, t, unit::tonne)
+OPERATOR_QM(agl::unit::weight, g, agl::unit::gram)
+OPERATOR_QM(agl::unit::weight, kg, agl::unit::kilogram)
+OPERATOR_QM(agl::unit::weight, t, agl::unit::tonne)
 
-constexpr unit::weight operator +(const unit::weight &value1, const unit::weight &value2){
-    return unit::weight(value1.value() + value2.value()) ;
+constexpr agl::unit::weight operator +(const agl::unit::weight &value1, const agl::unit::weight &value2){
+    return agl::unit::weight(value1.value() + value2.value()) ;
 }
 
-constexpr unit::weight operator *(const double &value1, const unit::weight &value2){
-    return unit::weight(value1 * value2.value()) ;
+constexpr agl::unit::weight operator *(const double &value1, const agl::unit::weight &value2){
+    return agl::unit::weight(value1 * value2.value()) ;
 }
 
-constexpr unit::weight operator *(const unit::weight &value1, const double &value2){
+constexpr agl::unit::weight operator *(const agl::unit::weight &value1, const double &value2){
     return value2 * value1;
 }
 

@@ -10,6 +10,8 @@
 #include "../iterator/matrix_iterator.h"
 #include "../algorithm/matrix_algorithm.h"
 
+namespace agl {
+
 template<typename Type, size_t Row, size_t Col> requires std::is_floating_point_v<Type> || std::is_integral_v<Type>
 class matrix{
 public:
@@ -231,6 +233,6 @@ private:
     matrix_array data_;
 };
 
-
+}
 
 #endif // MATRIX_H

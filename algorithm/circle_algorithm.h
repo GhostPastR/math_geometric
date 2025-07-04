@@ -4,7 +4,7 @@
 #include "line_algorithm.h"
 #include "point_algorithm.h"
 
-namespace circle_algo{
+namespace agl::circle_algo{
 
 namespace {
 
