@@ -31,8 +31,8 @@ using time = unit::Value<unit::_time, double>;
 
 }
 
-OPERATOR_QM(agl::unit::time, second, agl::unit::second)
-OPERATOR_QM(agl::unit::time, minute, agl::unit::minute)
+OPERATOR_QM(agl::unit::time, sec, agl::unit::second)
+OPERATOR_QM(agl::unit::time, min, agl::unit::minute)
 OPERATOR_QM(agl::unit::time, hour, agl::unit::hour)
 OPERATOR_QM(agl::unit::time, day, agl::unit::day)
 

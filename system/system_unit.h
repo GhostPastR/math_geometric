@@ -34,10 +34,19 @@ concept c_unit_prefix = std::is_same_v<UnitValue, typename Prefix::Type>;
 
 
 template<class UnitValue, double unit>
-    requires c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
-struct measure_unit final : std::integer_sequence<decltype(unit),  unit>{
+    requires c_unit_value<UnitValue,UnitValue::length, UnitValue::mass, UnitValue::time, UnitValue::temperature>
+struct measure_unit final : std::integer_sequence<double,  unit>{
     using Type = UnitValue;
-    inline static decltype(unit) unit_value = unit;
+    inline constexpr static double unit_value = unit;
+};
+
+template<class UnitValue, double unit1, double unit2, double unit3>
+    requires c_unit_value<UnitValue,UnitValue::length, UnitValue::mass, UnitValue::time, UnitValue::temperature>
+struct measure_unit_2 final : std::integer_sequence<double,  unit1, unit2, unit3>{
+    using Type = UnitValue;
+    inline constexpr static double unit_value_1 = unit1;
+    inline constexpr static double unit_value_2 = unit2;
+    inline constexpr static double unit_value_3 = unit3;
 };
 
 template<typename UnitPrefix, c_type_value TypeValue, typename UnitValue, c_basic_value BasicValue>
@@ -56,6 +65,16 @@ struct Value final{
     constexpr Value() {}
     constexpr explicit Value(TypeValue value) : value_(value){}
 
+    template<typename UnitPrefix>
+    constexpr void set_value(TypeValue value){
+        if constexpr(std::is_same_v<UnitValue, typename UnitPrefix::Type>){
+            value_ = Convert<UnitPrefix, TypeValue, UnitValue, basic>::convert(value);
+        }
+        else{
+            static_assert(false, "Error UnitPrefix");
+        }
+    }
+
     constexpr auto value() const{
         return value_;
     }
@@ -64,6 +83,9 @@ struct Value final{
     constexpr auto value() const{
         if constexpr(std::is_same_v<UnitValue, typename UnitPrefix::Type>){
             return Convert<UnitPrefix, TypeValue, UnitValue, derivative>::convert(value_);
+        }
+        else{
+            static_assert(false, "Error UnitPrefix");
         }
     }
 
@@ -116,6 +138,10 @@ constexpr bool find_type(const Tuple &tuple){
 
 #define OPERATOR_QM(VALUE, PREFIX, UNIT_PREFIX) \
 inline constexpr VALUE operator ""_##PREFIX (long double value){ \
+        return VALUE(agl::unit::Convert<UNIT_PREFIX, VALUE::type_value, VALUE::unit_value, agl::unit::basic>::convert(value)); \
+} \
+\
+inline constexpr VALUE operator ""_##PREFIX (unsigned long long value){ \
         return VALUE(agl::unit::Convert<UNIT_PREFIX, VALUE::type_value, VALUE::unit_value, agl::unit::basic>::convert(value)); \
 } \
 

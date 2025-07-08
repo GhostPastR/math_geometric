@@ -12,8 +12,32 @@ using centimeter = measure_unit<_distance, 0.01>;
 using decimeter = measure_unit<_distance, 0.1>;
 using meter = measure_unit<_distance, 1.>;
 using kilometer = measure_unit<_distance, 1000.>;
+using inches = measure_unit<_distance, 0.0254>;             //Дюймы -> метры
+using foot = measure_unit<_distance, 0.3048>;               //Футы -> метры
+using foot_usa = measure_unit<_distance, 0.3048006>;        //Футы(США) -> метры
+using mile = measure_unit<_distance, 1609.344>;             //Миля(междунаровдная) -> метры
+using mile_overland = measure_unit<_distance, 1609.3>;      //Миля(сухопутная) -> метры
+using mile_usa = measure_unit<_distance, 1609.347>;         //Миля(США) -> метры
+using mile_nautical = measure_unit<_distance, 1852.>;       //Миля(международная, морская) -> метры
+using mile_britain_n = measure_unit<_distance, 1853.184>;   //Миля(морская, Великобритания) -> метры
+using yard = measure_unit<_distance, 0.9144>;               //Ярды -> метры
 
-using distance_prefix = std::tuple<millimeter, centimeter, decimeter, meter, kilometer>;
+
+using distance_prefix = std::tuple<
+    millimeter,
+    centimeter,
+    decimeter,
+    meter,
+    kilometer,
+    inches,
+    foot,
+    foot_usa,
+    mile,
+    mile_overland,
+    mile_usa,
+    mile_nautical,
+    mile_britain_n,
+    yard>;
 
 template<class DistancePrefix, c_type_value Type, c_basic_value BasicValue>
     requires(c_unit_prefix<DistancePrefix, _distance> && find_type<DistancePrefix>(distance_prefix()))
@@ -37,6 +61,15 @@ OPERATOR_QM(agl::unit::distance, cm, agl::unit::centimeter)
 OPERATOR_QM(agl::unit::distance, dm, agl::unit::decimeter)
 OPERATOR_QM(agl::unit::distance, m, agl::unit::meter)
 OPERATOR_QM(agl::unit::distance, km, agl::unit::kilometer)
+OPERATOR_QM(agl::unit::distance, in, agl::unit::inches)
+OPERATOR_QM(agl::unit::distance, ft, agl::unit::foot)
+OPERATOR_QM(agl::unit::distance, ft_usa, agl::unit::foot_usa)
+OPERATOR_QM(agl::unit::distance, mile, agl::unit::mile)
+OPERATOR_QM(agl::unit::distance, mile_ov, agl::unit::mile_overland)
+OPERATOR_QM(agl::unit::distance, mile_usa, agl::unit::mile_usa)
+OPERATOR_QM(agl::unit::distance, mile_n, agl::unit::mile_nautical)
+OPERATOR_QM(agl::unit::distance, mile_bn, agl::unit::mile_britain_n)
+OPERATOR_QM(agl::unit::distance, yd, agl::unit::yard)
 
 constexpr agl::unit::distance operator +(const agl::unit::distance &value1, const agl::unit::distance &value2){
     return agl::unit::distance(value1.value() + value2.value()) ;

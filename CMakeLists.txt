@@ -33,6 +33,7 @@ qt_add_executable(math_geometric
     unit/speed.h
     unit/time.h
     unit/weight.h
+    unit/temperature.h
     iterator/matrix_iterator.h
 )
 
