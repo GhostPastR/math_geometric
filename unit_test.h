@@ -30,6 +30,7 @@ private slots:
     void test_approximation();
 
     void test_matrix();
+    void test_vector();
 };
 
 #endif // UNIT_TEST_H

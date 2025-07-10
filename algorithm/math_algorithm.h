@@ -113,6 +113,11 @@ inline constexpr bool is_valid(Value &&value){
     return !std::isnan(value) && !std::isinf(value);
 }
 
+template<typename Type> requires (std::is_floating_point_v<Type> || std::is_integral_v<Type>)
+inline constexpr Type determine(const Type &a11, const Type &a12, const Type &a21, const Type &a22){
+    return a11 * a22 - a12 * a21;
+}
+
 template<std::floating_point Type>
 inline constexpr Type discriminant(const quadratic<Type> &temp){
     return temp.b * temp.b - 4.0 * temp.a * temp.c;

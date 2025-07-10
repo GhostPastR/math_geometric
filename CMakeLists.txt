@@ -24,6 +24,7 @@ qt_add_executable(math_geometric
     structs/polygon_impl.h
     structs/struct_geo_imp.h
     structs/matrix.h
+    structs/vector.h
     system/system_concept.h
     system/system_function.h
     user_type.h
@@ -35,6 +36,7 @@ qt_add_executable(math_geometric
     unit/weight.h
     unit/temperature.h
     iterator/matrix_iterator.h
+
 )
 
 target_link_libraries(math_geometric PRIVATE Qt::Core Qt6::Test)

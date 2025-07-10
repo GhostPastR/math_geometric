@@ -58,7 +58,7 @@ using speed = unit::Value<unit::_speed, double>;
 
 OPERATOR_QM(agl::unit::speed, m_s, agl::unit::meter_secund)
 OPERATOR_QM(agl::unit::speed, m_m, agl::unit::meter_minute)
-OPERATOR_QM(agl::unit::speed, m_h, agl::unit::kilometer_hour)
+OPERATOR_QM(agl::unit::speed, m_h, agl::unit::meter_hour)
 OPERATOR_QM(agl::unit::speed, km_s, agl::unit::kilometer_secund)
 OPERATOR_QM(agl::unit::speed, km_m, agl::unit::kilometer_minute)
 OPERATOR_QM(agl::unit::speed, km_h, agl::unit::kilometer_hour)

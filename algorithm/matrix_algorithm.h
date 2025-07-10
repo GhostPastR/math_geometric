@@ -9,6 +9,8 @@
 #include "../iterator/matrix_iterator.h"
 #include "math_algorithm.h"
 
+#include <iostream>
+
 template<template<typename, size_t, size_t> class Type, typename T, size_t N, size_t M>
 concept c_matrix = requires(Type<T,N,M> temp){
     typename Type<T,N,M>::type;
@@ -28,6 +30,13 @@ concept c_matrix = requires(Type<T,N,M> temp){
     temp.cend_column();
 };
 
+template<template<typename, size_t> class Type, typename T, size_t N>
+concept c_vector = requires(Type<T,N> temp){
+    typename Type<T,N>::type;
+    temp.begin();
+    temp.end();
+};
+
 namespace agl::matrix_algo{
 
 template<template<typename, size_t, size_t> class Matrix, std::floating_point Type> requires c_matrix<Matrix, Type, 1,1>
@@ -42,35 +51,47 @@ auto determinant(Matrix<Type,2,2> m) -> Matrix<Type,2,2>::type{
     return (*begin) * (*std::prev(end)) - (*std::next(begin)) * (*std::prev(end,2));
 }
 
-template<std::floating_point Type>
-Type determinant(const Type &a11, const Type &a12, const Type &a21, const Type &a22){
-    return a11 * a22 - a12 * a21;
+template<template<typename, size_t> class Vector, std::floating_point Type> requires c_vector<Vector, Type, 3>
+auto vector_product(const Vector<Type, 3> &vector_1, const Vector<Type, 3> &vector_2) -> Vector<Type, 3>{
+    Vector<Type, 3> temp;
+    std::ranges::transform(std::ranges::iota_view(0, 3), temp.begin(), [&vector_1,&vector_2](auto i){
+        return algorithm::determine(vector_1.get((i+1)%3), vector_1.get((i+2)%3), vector_2.get((i+1)%3), vector_2.get((i+2)%3));
+    });
+    return temp;
 }
 
-// Type det = 1.0;
-// for (int i = 0; i < m.rows(); i++) {
-//     int pivot = i;
-//     for (int j = i + 1; j < m.rows(); j++) {
-//         if (abs(m.value(j,i)) > abs(m.value(pivot, i))) {
-//             pivot = j;
-//         }
-//     }
-//     if (pivot != i) {
-//         m.swap_row(i, pivot);
-//         det *= -1;
-//     }
-//     if (m.value(i, i) == 0) {
-//         return 0;
-//     }
-//     det *= m.value(i, i);
-//     for (int j = i + 1; j < m.rows(); j++) {
-//         Type factor = m.value(j, i) / m.value(i, i);
-//         for (int k = i + 1; k < m.rows(); k++) {
-//             m.value(j, k) -= factor * m.value(i, k);
-//         }
-//     }
-// }
-// return det;
+template<template<typename, size_t> class Vector, std::floating_point Type, size_t N> requires c_vector<Vector, Type, N>
+auto module(const Vector<Type, N> &vector) -> Vector<Type, N>::type{
+    return std::sqrt(std::inner_product(vector.begin(), vector.end(), vector.begin(), Type{}));
+}
+
+template<std::floating_point Type, size_t N>
+auto module(const std::array<Type, N> &vector) -> Type{
+    return std::sqrt(std::inner_product(vector.begin(), vector.end(), vector.begin(), Type{}));
+}
+
+template<template<typename, size_t> class Vector, std::floating_point Type, size_t N> requires c_vector<Vector, Type, N>
+auto scalar_product(const Vector<Type, N> &vector_1, const Vector<Type, N> &vector_2){
+    return std::inner_product(vector_1.begin(), vector_1.end(), vector_2.begin(), Type{});
+}
+
+template<template<typename, size_t> class Vector, std::floating_point Type, size_t N> requires c_vector<Vector, Type, N>
+auto vector_projection(const Vector<Type, N> &vector_1, const Vector<Type, N> &vector_2) -> Vector<Type, N>::type{
+    return scalar_product(vector_1, vector_2) / module(vector_2);
+}
+
+template<template<typename, size_t> class Vector, std::floating_point Type, size_t N> requires c_vector<Vector, Type, N>
+auto normal(const Vector<Type, N> &vector) -> Vector<Type, N>{
+    auto m = module(vector);
+    if(algorithm::compare(m,0)){
+        return {};
+    }
+    Vector<Type, 3> temp;
+    std::ranges::transform(vector, temp.begin(), [m](const auto &i){
+        return i / m;
+    });
+    return temp;
+}
 
 template<template<typename, size_t, size_t> class Matrix, std::floating_point Type, size_t N> requires c_matrix<Matrix, Type, N, N>
 auto determinant(Matrix<Type,N,N> m) -> Matrix<Type,N,N>::type{    
@@ -99,14 +120,6 @@ auto determinant(Matrix<Type,N,N> m) -> Matrix<Type,N,N>::type{
     });
 }
 
-
-// for (int i = 0; i < R1; i++) {
-//     for (int j = 0; j < C2; j++) {
-//         for (int k = 0; k < R2; k++) {
-//             temp.value(i, j) += m1.value(i, k) * m2.value(k, j);
-//         }
-//     }
-// }
 template<template<typename, size_t, size_t> class Matrix, typename Value1, typename Value2, size_t R1, size_t C1, size_t R2, size_t C2>
     requires c_matrix<Matrix, Value1, R1, C1> && c_matrix<Matrix, Value2, R2, C2> && (C1 == R2)
              && (std::is_floating_point_v<Value1> || std::is_integral_v<Value1>)
@@ -117,6 +130,30 @@ auto mul(const Matrix<Value1, R1, C1> &m1, const Matrix<Value2, R2, C2> &m2) -> 
         std::ranges::transform(std::ranges::iota_view(size_t(), C2), temp.begin_column(i), [&m1,&m2,i](auto j){
             return std::inner_product(m1.begin_column(i), m1.end_column(i), m2.begin_row(j), 0);
         });
+    });
+    return temp;
+}
+
+template<template<typename, size_t, size_t> class Matrix, template<typename, size_t> class Vector,
+         typename Value1, typename Value2, size_t R>
+    requires c_matrix<Matrix, Value1, R, R> && c_vector<Vector, Value2, R>
+             && (std::is_floating_point_v<Value1> || std::is_integral_v<Value1>)
+             && (std::is_floating_point_v<Value2> || std::is_integral_v<Value2>)
+auto mul(const Matrix<Value1, R, R> &m1, const Vector<Value2, R> &m2) -> Vector<Value2, R>{
+    Vector<Value2, R> temp;
+    std::ranges::transform(std::ranges::iota_view(size_t(), R), temp.begin(), [&m1,&m2](auto j){
+        return std::inner_product(m1.begin_column(j), m1.end_column(j), m2.begin(), 0);
+    });
+    return temp;
+}
+
+template<typename Type, size_t N>
+    requires (std::is_floating_point_v<Type> || std::is_integral_v<Type>)
+auto mul(const std::array<Type, N * N> &matrix, const std::array<Type, N> &vector) -> std::array<Type, N>{
+    std::array<Type, N> temp;
+    auto begin = matrix.begin();
+    std::ranges::transform(std::ranges::iota_view(size_t(), N), temp.begin(), [&begin, &vector](auto i){
+        return std::inner_product(std::next(begin, i * N), std::next(begin, (i + 1) * N), vector.begin(), Type{});
     });
     return temp;
 }

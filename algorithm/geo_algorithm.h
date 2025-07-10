@@ -68,19 +68,19 @@ constexpr PointGeo common_survey_comp(Type range, TypeAngle omnibearing, const P
 
     auto _q = range / (_kA * semiminor_axis<Type>);
     const auto _qD = _q;
-    auto _cos2q1_q = _cos2q1 * ClassFunc::cos(_q) - _sin2q1 * ClassFunc::sin(_q);
+    auto _cos2q1_q = algorithm::determine(_cos2q1, _sin2q1, ClassFunc::sin(_q), ClassFunc::cos(_q));
     _q = _qD + _kBA * ClassFunc::sin(_q) * _cos2q1_q;
-    _cos2q1_q = _cos2q1 * ClassFunc::cos(_q) - _sin2q1 * ClassFunc::sin(_q);
+    _cos2q1_q = algorithm::determine(_cos2q1, _sin2q1, ClassFunc::sin(_q), ClassFunc::cos(_q));
     const auto _cos4q1_2q = 2 * _cos2q1_q * _cos2q1_q - 1;
     _q = _qD + _kBA * ClassFunc::sin(_q) * _cos2q1_q + (_kC / _kA) * ClassFunc::sin(2 * _q) * _cos4q1_2q;
-    _cos2q1_q = _cos2q1 * ClassFunc::cos(_q) - _sin2q1 * ClassFunc::sin(_q);
+    _cos2q1_q = algorithm::determine(_cos2q1, _sin2q1, ClassFunc::sin(_q), ClassFunc::cos(_q));
 
     const auto _cosQ = ClassFunc::cos(_q);
     const auto _sinQ = ClassFunc::sin(_q) * _cosOmn;
 
-    const auto _cosU2 = _cosU1 * _cosQ - _sinU1 * _sinQ;
+    const auto _cosU2 = algorithm::determine(_cosU1, _sinU1, _sinQ, _cosQ);
     const auto _dY = ClassFunc::atan2(ClassFunc::sin(_q) * _sinOmn , _cosU2);
-    const auto _sinU2 = _sinU1 * _cosQ + _cosU1 * _sinQ;
+    const auto _sinU2 = algorithm::determine(_sinU1, -_cosU1, _sinQ, _cosQ);
 
     const auto latitude = ClassFunc::atan(_sinU2 * ClassFunc::cos(_dY) / (_sqrtE2 * _cosU2));
     auto longitude = reference_point.longitude() + _dY - ClassFunc::sin(_a0) * ((0.5 + _e2 / 8.0 - (_e2 / 16.0) * _cos2a0)
@@ -121,8 +121,8 @@ constexpr auto geographic_inverse(const PointGeo &start, const PointGeo &stop)
     const auto _dL = (stop.longitude() - start.longitude());
 
     auto _p = _cosU2 * ClassFunc::sin( _dL );
-    auto _q = _cosU1 * _sinU2 - _sinU1 * _cosU2 * ClassFunc::cos(_dL);
-    auto _n = _sinU1 * _sinU2 + _cosU1 * _cosU2 * ClassFunc::cos(_dL);
+    auto _q = algorithm::determine(_cosU1, _sinU1, _cosU2 * ClassFunc::cos(_dL), _sinU2);
+    auto _n = algorithm::determine(_sinU1, -_cosU1, _cosU2 * ClassFunc::cos(_dL), _sinU2);
     auto _omnibearing = ClassFunc::atan2( _p , _q );
     auto _g = acos( _n );
     const auto _sinA0 = _cosU1 * ClassFunc::sin(_omnibearing);
@@ -131,8 +131,8 @@ constexpr auto geographic_inverse(const PointGeo &start, const PointGeo &stop)
     const auto _dY = _dL + _sinA0 * ( 0.5 + _e2 / 8.0 - ( _e2 / 16.0 ) * _a0 ) * _e2 * _g;
 
     _p = _cosU2 * ClassFunc::sin(_dY);
-    _q = _cosU1 * _sinU2 - _sinU1 * _cosU2 * ClassFunc::cos(_dY);
-    _n = _sinU1 * _sinU2 + _cosU1 * _cosU2 * ClassFunc::cos(_dY);
+    _q = algorithm::determine(_cosU1, _sinU1, _cosU2 * ClassFunc::cos(_dY), _sinU2);
+    _n = algorithm::determine(_sinU1, -_cosU1, _cosU2 * ClassFunc::cos(_dY), _sinU2);
     _omnibearing = ClassFunc::atan2(_p , _q);
     _g = ClassFunc::acos(_n);
     _a0 = ClassFunc::cos(ClassFunc::asin(ClassFunc::sin(_omnibearing) * _cosU1));
@@ -153,8 +153,6 @@ constexpr auto geographic_inverse(const PointGeo &start, const PointGeo &stop)
 
     return {_range, _omnibearing};
 }
-
-
 
 template<c_point2d_geo PointGeo, c_point2d_decard Point>
 constexpr PointGeo convert(const Point &point, const PointGeo &reference_poin){

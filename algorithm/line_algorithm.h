@@ -137,13 +137,12 @@ constexpr std::pair<Point,Point> point_line(const Point &point, Angle angle){
     return {point, point_algo::new_point(point, angle, 1.)};
 }
 
-
 template<c_point2d_decard Point>
 constexpr auto equation_line_quick(const Point &point1, const Point &point2)
     -> std::tuple<typename Point::type_coordinate, typename Point::type_coordinate, typename Point::type_coordinate>{
     const auto a = point1.y() - point2.y();
     const auto b = point2.x() - point1.x();
-    return {a, b, -b * point1.y() - a * point1.x()};
+    return {a, b, algorithm::determine(-b, a, point1.x(), point1.y())};
 }
 
 template<c_point2d_decard Point, std::floating_point TypeAngle,
@@ -152,14 +151,14 @@ constexpr auto equation_line_quick(const Point &point, TypeAngle direction)
     -> std::tuple<typename Point::type_coordinate, typename Point::type_coordinate, typename Point::type_coordinate>{
     const auto a = -ClassFunc::cos(direction);
     const auto b = ClassFunc::sin(direction);
-    return {a, b, -b * point.y() - a * point.x()};
+    return {a, b, algorithm::determine(-b, a, point.x(), point.y())};
 }
 
 //Функция возвращает кратчайшие расстояние от точки до прямой, если значение меньше 0 то точка находится слева, если больше то справа
 template<c_line_view View, c_point2d_decard Point>
 constexpr auto distance_to_line(const View &line, const Point &point) -> View::type_point{
     const auto [a,b,c] = equation_line_quick(line.view_begin.value, line.view_end.value);
-    const auto distance = (a * point.x() + b * point.y() + c) / sqrt(a * a + b * b);
+    const auto distance = (algorithm::determine(a, -b, point.y(), point.x()) + c) / sqrt(algorithm::determine(a, -b, b, a));
     if(!line.view_begin.is_view && !line.view_end.is_view){
         return distance;
     }
@@ -175,9 +174,8 @@ constexpr auto distance_to_line(const View &line, const Point &point) -> View::t
 template<c_line_view View, c_point2d_decard Point>
 constexpr auto value_function(const View &line, const Point &point){
     const auto [a,b,c] = equation_line_quick(line.view_begin.value, line.view_end.value);
-    return point.x() * a + point.y() * b + c;
+    return algorithm::determine(a, -b, point.y(), point.x()) + c;
 }
-
 
 //Функция возвращает точку пересечения 2-х линий
 template<c_line_view View>
@@ -187,9 +185,9 @@ constexpr auto intersection_line(const View &line1, const View &line2) ->  std::
     const auto [a2,b2,c2] = equation_line_quick(line2.view_begin.value, line2.view_end.value);
 
     std::optional<Point> point;
-    const auto c = a1 * b2 - a2 * b1;
+    const auto c = algorithm::determine(a1, a2, b1, b2);
     if(!algorithm::compare(c, 0.)){
-        point = {(b1 * c2 - b2 * c1) / c, (c1 * a2 - c2 * a1) / c};
+        point = {algorithm::determine(b1, b2, c1, c2) / c, algorithm::determine(c1, c2, a1, a2) / c};
     }
 
     if(point.has_value() && belongs_to_area_of_line(line1, point.value()) && belongs_to_area_of_line(line2, point.value())){
@@ -212,7 +210,7 @@ constexpr bool check_point_on_line(const View &line, const Point &point){
 template<c_line_view View, std::floating_point Type>
 constexpr View parallel_line(const View &line, Type distance){
     const auto [a,b,c] = equation_line_quick(line.view_begin.value, line.view_end.value);
-    const auto points = point_line<typename View::point>(a, b, c - distance * (-sqrt(a * a + b * b)));
+    const auto points = point_line<typename View::point>(a, b, c - distance * (-sqrt(algorithm::determine(a, -b, b, a))));
     return {{points.first, false}, {points.second, false}};
 }
 
@@ -220,7 +218,7 @@ constexpr View parallel_line(const View &line, Type distance){
 template<c_line_view View, c_point2d_decard Point>
 constexpr std::optional<Point> point_perpendicular(const View &line, const Point &point){
     const auto [a,b,_] = equation_line_quick(line.view_begin.value, line.view_end.value);
-    const auto points = point_line<typename View::point>(-b, a, b * point.x() - a * point.y());
+    const auto points = point_line<typename View::point>(-b, a, algorithm::determine(b, a, point.y(), point.x()));
     return intersection_line(line, View({{points.first, false}, {points.second, false}}));
 }
 

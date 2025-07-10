@@ -4,6 +4,7 @@
 #include <numeric>
 
 #include "../system/system_concept.h"
+#include "../algorithm/matrix_algorithm.h"
 #include "math_algorithm.h"
 
 
@@ -20,7 +21,7 @@ constexpr auto angle(const Point &point1, const Point &point2){
 //возвращает длину между 2-мя точками.
 template<c_point2d_decard Point>
 constexpr auto distance(const Point &point1, const Point &point2){
-    return std::sqrt(std::pow(point2.x() - point1.x(), 2) + std::pow(point2.y() - point1.y(), 2));
+    return matrix_algo::module<typename Point::type_coordinate,2>({point2.x() - point1.x(), point2.y() - point1.y()});
 }
 
 //метод расчитывает координаты новой точки
@@ -34,13 +35,12 @@ constexpr Point new_point(const Point &point, const TypeAngle &angle, const Type
 template<c_point2d_decard Point, std::floating_point TypeAngle,
          c_function_angle<typename Point::type_coordinate> ClassFunc = algorithm::function_angle<typename Point::type_coordinate>>
 constexpr Point rotate(const Point &point, const TypeAngle &angle, const Point &reference){
-    const auto dx = point.x() - reference.x();
-    const auto dy = point.y() - reference.y();
+    using Type = Point::type_coordinate;
     const auto sinAngle = -ClassFunc::sin(angle);
     const auto cosAngle = ClassFunc::cos(angle);
-    const auto x = dx * cosAngle - dy * sinAngle;
-    const auto y = dx * sinAngle + dy * cosAngle;
-    return {x + reference.x(), y + reference.y()};
+    auto vector = matrix_algo::mul<Type, 2>({cosAngle, -sinAngle, sinAngle, cosAngle},
+                                            {point.x() - reference.x(), point.y() - reference.y()});
+    return {vector[0] + reference.x(), vector[1] + reference.y()};
 }
 
 // метод возвращает среднию точку между точками.

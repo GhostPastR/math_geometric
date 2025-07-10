@@ -12,6 +12,7 @@
 
 #include "qtestcase.h"
 #include "structs/matrix.h"
+#include "structs/vector.h"
 #include "unit/speed.h"
 #include "unit/temperature.h"
 #include "unit/time.h"
@@ -1653,10 +1654,34 @@ void Unit_Test::test_matrix()
                                   1,2,3,
                                   4,5,6,
                                   7,8,9});
+            m1.copy_row(1,{9,9,9});
+            matrix<int, 3, 3> m2({
+                                  1,2,3,
+                                  9,9,9,
+                                  7,8,9});
+            QVERIFY(m1 == m2);
+        }
+        {
+            matrix<int, 3, 3> m1({
+                                  1,2,3,
+                                  4,5,6,
+                                  7,8,9});
             m1.copy_column(1,2);
             matrix<int, 3, 3> m2({
                                   1,3,3,
                                   4,6,6,
+                                  7,9,9});
+            QVERIFY(m1 == m2);
+        }
+        {
+            matrix<int, 3, 3> m1({
+                                  1,2,3,
+                                  4,5,6,
+                                  7,8,9});
+            m1.copy_column(1,{9,9,9});
+            matrix<int, 3, 3> m2({
+                                  1,9,3,
+                                  4,9,6,
                                   7,9,9});
             QVERIFY(m1 == m2);
         }
@@ -2042,6 +2067,84 @@ void Unit_Test::test_matrix()
                 11,5,7
             };
             QVERIFY(matrix_algo::rang(m) == 3);
+        }
+    }
+}
+
+void Unit_Test::test_vector()
+{
+    {//vector_product
+        {
+            vector<double, 3> v1{1,2,3};
+            vector<double, 3> v2{3,7,5};
+            vector<double, 3> temp{-11,4,1};
+            QVERIFY(matrix_algo::vector_product(v1, v2) == temp);
+        }
+        {
+            vector<double, 3> v1{1,2,3};
+            vector<double, 3> v2{3,7,5};
+            vector<double, 3> temp{11,-4,-1};
+            QVERIFY(matrix_algo::vector_product(v2, v1) == temp);
+        }
+    }
+    {//module
+        {
+            vector<double, 2> v1{3,4};
+            QVERIFY(algorithm::compare(matrix_algo::module(v1), 5));
+        }
+        {
+            vector<double, 4> v1{1,2,3,4};
+            QVERIFY(algorithm::compare(matrix_algo::module(v1), 5.477226));
+        }
+    }
+    {//scalar_product
+        {
+            vector<double, 3> v1{1,2,3};
+            vector<double, 3> v2{3,7,5};
+            QVERIFY(algorithm::compare(matrix_algo::scalar_product(v1, v2), 32));
+        }
+        {
+            vector<double, 5> v1{1,2,3,4,5};
+            vector<double, 5> v2{3,5,7,11,13};
+            QVERIFY(algorithm::compare(matrix_algo::scalar_product(v1, v2), 143));
+        }
+    }
+    {//vector_projection
+        {
+            vector<double, 3> v1{1,2,3};
+            vector<double, 3> v2{3,7,5};
+            QVERIFY(algorithm::compare(matrix_algo::vector_projection(v1, v2), 3.512456));
+        }
+        {
+            vector<double, 3> v1{1,2,3};
+            vector<double, 3> v2{1,0,0};
+            QVERIFY(algorithm::compare(matrix_algo::vector_projection(v1, v2), 1));
+        }
+    }
+    {//normal
+        {
+            vector<double, 3> v1{1,2,3};
+            vector<double, 3> v2{0.267261, 0.534522, 0.801784};
+            QVERIFY(matrix_algo::normal(v1) == v2);
+        }
+        {
+            vector<double, 3> v1{1,0,0};
+            vector<double, 3> v2{1,0,0};
+            QVERIFY(matrix_algo::normal(v1) == v2);
+        }
+    }
+    {//mul
+        {
+            matrix<double, 3, 3> m({1,2,3,4,5,6,7,8,9});
+            vector<double, 3> v{3,5,7};
+            vector<double, 3> temp{34,79,124};
+            QVERIFY(matrix_algo::mul(m, v) == temp);
+        }
+        {
+            auto t = matrix_algo::mul<double, 3>({1,2,3,4,5,6,7,8,9}, {3,5,7});
+            QVERIFY(std::ranges::equal(t, std::array<double,3>{34,79,124}, [](const auto &i, const auto &j){
+                return algorithm::compare(i, j);
+            }));
         }
     }
 }

@@ -18,7 +18,7 @@ constexpr bool is_convex_polygone(const std::vector<Point> &points){
     auto calc_direct = [](const Point &p1, const Point &p2, const Point &p3){
         const Point v1 = {p2.x() - p1.x(), p2.y() - p1.y()};
         const Point v2 = {p3.x() - p2.x(), p3.y() - p2.y()};
-        return v1.x() * v2.y() - v1.y() * v2.x();
+        return algorithm::determine(v1.x(), v1.y(), v2.x(), v2.y());
     };
 
     int direct = calc_direct(*std::prev(points.end()), *points.begin(), *std::next(points.begin())) > 0 ? 1 : -1;
@@ -39,7 +39,7 @@ constexpr bool is_rectangle(const std::vector<Point> &points){
         && (point_algo::distance(points[1], points[2]) == point_algo::distance(points[0], points[3]))){
         const Point point1 = {points[0].x() - points[1].x(), points[0].y() - points[1].y()};
         const Point point2 = {points[2].x() - points[1].x(), points[2].y() - points[1].y()};
-        return algorithm::compare(point1.x() * point2.x() + point1.y() * point2.y(), 0.);
+        return algorithm::compare(algorithm::determine(point1.x(), point1.y(), point2.y(), point2.x()), 0.);
     }
     return false;
 }
@@ -56,7 +56,7 @@ constexpr bool is_square(const std::vector<Point> &points){
     if((l1 == l2) && (l3 == l4) && (l1 == l3)){
         const Point point1 = {points[0].x() - points[1].x(), points[0].y() - points[1].y()};
         const Point point2 = {points[2].x() - points[1].x(), points[2].y() - points[1].y()};
-        return algorithm::compare(point1.x() * point2.x() + point1.y() * point2.y(), 0.);
+        return algorithm::compare(algorithm::determine(point1.x(), point1.y(), point2.y(), point2.x()), 0.);
     }
     return false;
 }

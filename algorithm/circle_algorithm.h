@@ -34,9 +34,8 @@ constexpr auto point_on_arc(const Arc &arc, Type distance) -> std::optional<type
     if(distance > length_arc(arc)){
         return {};
     }
-    const auto angle = distance / arc.radius();
     return point_algo::rotate(point_algo::new_point(arc.center(), arc.start(), arc.radius()),
-                              angle, arc.center());
+                              distance / arc.radius(), arc.center());
 }
 
 //Функция возвращает координаты средней точки на дуге
