@@ -51,6 +51,10 @@ enum class direct{
     RIGHT = 1,
 };
 
+constexpr direct inversion(direct dir){
+    return dir == direct::LEFT ? direct::RIGHT : direct::LEFT;
+}
+
 template<compare_intervel Value>
 inline constexpr bool interval_strict(const Value &value, const Value &left, const Value &right) noexcept{
     return ((left <= value) && (value <= right));
@@ -105,6 +109,14 @@ inline constexpr bool less_than_equal(const Value& value1, const Value& value2) 
 template<compare_intervel Value>
 inline constexpr bool greater_than_equal(const Value& value1, const Value& value2) {
     return ((value1 > value2) || compare(value1, value2));
+}
+
+template<typename Value> requires std::is_floating_point_v<Value> || std::is_integral_v<Value>
+inline constexpr int is_same_sign(const Value& value1, const Value& value2){
+    if((value1 < 0) && (value2 >= 0) || (value1 >= 0) && (value2 < 0)){
+        return 0;
+    }
+    return (value1 < 0) ? -1 : 1;
 }
 
 

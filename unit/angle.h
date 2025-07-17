@@ -168,30 +168,31 @@ constexpr bool operator==(const angle_impl<Type1, Algo1> &value1, const angle_im
     }
 }
 
+}
+
 constexpr auto operator "" _deg(unsigned long long deg){
-    return angle_impl<long double>(deg * algorithm::pi_on_180<long double>);
+    return agl::angle_impl<long double>(deg * agl::algorithm::pi_on_180<long double>);
 }
 
 constexpr auto operator "" _rad(unsigned long long rad){
-    return angle_impl<long double>(rad);
+    return agl::angle_impl<long double>(rad);
 }
 
 constexpr auto operator "" _deg(long double deg){
-    return angle_impl<long double>(deg * algorithm::pi_on_180<long double>);
+    return agl::angle_impl<long double>(deg * agl::algorithm::pi_on_180<long double>);
 }
 
 constexpr auto operator "" _rad(long double rad){
-    return angle_impl<long double>(rad);
+    return agl::angle_impl<long double>(rad);
 }
 
-template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi_on_180 = angle_impl<Type>(algorithm::pi_on_180<Type>);
-template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi_on_2 = angle_impl<Type>(algorithm::pi_on_2<Type>);
-template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi_on_4 = angle_impl<Type>(algorithm::pi_on_4<Type>);
-template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi_on_6 = angle_impl<Type>(algorithm::pi_on_6<Type>);
-template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi = angle_impl<Type>(algorithm::pi<Type>);
-template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi_in_3_on_2 = angle_impl<Type>(algorithm::pi_in_3_on_2<Type>);
-template<std::floating_point Type> constexpr static angle_impl<Type> ang_pi_in_2 = angle_impl<Type>(algorithm::pi_in_2<Type>);
+template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi_on_180 = angle_impl<Type>(agl::algorithm::pi_on_180<Type>);
+template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi_on_2 = angle_impl<Type>(agl::algorithm::pi_on_2<Type>);
+template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi_on_4 = angle_impl<Type>(agl::algorithm::pi_on_4<Type>);
+template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi_on_6 = angle_impl<Type>(agl::algorithm::pi_on_6<Type>);
+template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi = angle_impl<Type>(agl::algorithm::pi<Type>);
+template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi_in_3_on_2 = angle_impl<Type>(agl::algorithm::pi_in_3_on_2<Type>);
+template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi_in_2 = angle_impl<Type>(agl::algorithm::pi_in_2<Type>);
 
-}
 
 #endif // ANGLE_H

@@ -129,7 +129,7 @@ constexpr auto scaling_tangent_out(const Circle &circle1, const Circle &circle2,
     if(algorithm::compare(_len, 0.) || (fabs(circle1.radius() - circle2.radius()) > _len)){
         return std::nullopt;
     }
-    auto d = (dir == algorithm::direct::RIGHT) ? -1 : 1;
+    auto d = (dir == algorithm::direct::RIGHT) ? 1 : -1;
     const auto _dradius = circle1.radius() - circle2.radius();
     const auto _angle = (_dradius < 0) ? point_algo::angle(circle1.center(), circle2.center())
                                        : point_algo::angle(circle2.center(), circle1.center());
@@ -145,19 +145,73 @@ constexpr auto scaling_tangent_inboard(const Circle &circle1, const Circle &circ
     -> std::optional<line_view<typename Circle::type_point>>{
     using Type = Circle::type_coefficients;
     using Point = Circle::type_point;
-    const auto _len = point_algo::distance(circle1.center(), circle2.center());
-    if(algorithm::compare(_len, 0.) || (circle1.radius() + circle2.radius()) > _len){
+    const auto lenght = point_algo::distance(circle1.center(), circle2.center());
+    if(algorithm::compare(lenght, 0.) || (circle1.radius() + circle2.radius()) > lenght){
         return {};
     }
-    const auto d = (dir == algorithm::direct::RIGHT) ? -1 : 1;
+    const auto d = (dir == algorithm::direct::RIGHT) ? 1 : -1;
     const bool flag = circle1.radius() > circle2.radius();
-    const  auto _course = flag ? point_algo::angle(circle1.center(), circle2.center())
-                               : point_algo::angle(circle2.center(), circle1.center());
-    const auto _angle = _course + d * (algorithm::pi<Type> - ClassFunc::acos((circle1.radius() + circle2.radius()) / _len));
+    const  auto _course = flag ? point_algo::angle(circle2.center(), circle1.center())
+                               : point_algo::angle(circle1.center(), circle2.center());
+    const auto _angle = _course + d * (algorithm::pi<Type> - ClassFunc::acos((circle1.radius() + circle2.radius()) / lenght));
     return line_view{view<Point>{point_algo::new_point(circle1.center(),
                                                        flag ? _angle : _angle + algorithm::pi<Type>, circle1.radius()), true},
                      view<Point>{point_algo::new_point(circle2.center(),
                                                        !flag ? _angle : _angle + algorithm::pi<Type>, circle2.radius()), true}};
+}
+
+
+
+// MpLineSection MpCircle::scalingTangentInboard( const MpCircle &circle1, const MpCircle &circle2, int direct )
+// {
+//     if( direct != -1 )
+//     {
+//         direct = 1;
+//     }
+//     MpLineSection _lineSection( MpPoint( 0, 0 ), MpPoint( MpBase::mpSundry, MpBase::mpSundry ) );
+//     double _course;
+//     double _len = circle1.center_.distance( circle2.center_ );
+//     if( ( circle1.radius_ + circle2.radius_ ) > _len )
+//     {
+//         return _lineSection;
+//     }
+//     if( circle1.radius_ > circle2.radius_ )
+//     {
+//         _course = MpPoint::angle( circle2.center_, circle1.center_ );
+//         double _angle = _course + direct * ( M_PI - acos( ( circle1.radius_ + circle2.radius_ ) / _len ) );
+//         _lineSection.setStart( MpPoint::getCoordinate( _angle, circle1.radius_, circle1.center_ ) );
+//         _lineSection.setEnd( MpPoint::getCoordinate( _angle + M_PI, circle2.radius_, circle2.center_ ) );
+//     }
+//     else
+//     {
+//         _course = MpPoint::angle( circle1.center_, circle2.center_ );
+//         double _angle = _course + direct * ( M_PI - acos( ( circle1.radius_ + circle2.radius_ ) / _len ) );
+
+//         _lineSection.setStart( MpPoint::getCoordinate( _angle + M_PI, circle1.radius_, circle1.center_ ) );
+//         _lineSection.setEnd( MpPoint::getCoordinate( _angle, circle2.radius_, circle2.center_ ) );
+//     }
+//     return _lineSection;
+// }
+
+
+//Функция возвращает касательные(ограниченая 2-мя точками) окружности и точки
+template<c_circle Circle, c_point2d_decard Point,
+         c_function_angle<typename Circle::type_coefficients> ClassFunc = algorithm::function_angle<typename Circle::type_coefficients>>
+constexpr auto tangent(const Circle &circle, const Point &point)
+    -> std::optional<std::pair<line_view<typename Circle::type_point>,line_view<typename Circle::type_point>>>{
+    using Type = Circle::type_point;
+    if(point_appertain_circle(circle, point)){
+        return std::nullopt;
+    }
+    auto angle = point_algo::angle(circle.center(), point);
+    auto lenght = point_algo::distance(circle.center(), point);
+    auto dangle = ClassFunc::acos(circle.radius() / lenght);
+    auto view1 = line_view<Type>{view<Point>{point_algo::new_point(circle.center(), angle + dangle, circle.radius())},
+                                 view<Point>{point}};
+    auto view2 = line_view<Type>{view<Point>{point_algo::new_point(circle.center(), angle - dangle, circle.radius())},
+                                 view<Point>{point}};
+        // return std::optional<line_view<Type>>(view1);
+    return std::pair<line_view<Type>,line_view<Type>>{view1, view2};
 }
 
 //Функция возвращает центры окружностей, точки которых образуют

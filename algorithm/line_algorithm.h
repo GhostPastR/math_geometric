@@ -39,6 +39,11 @@ namespace line_algo{
 
 namespace {
 
+template<c_line_view View>
+constexpr auto distance(const View &line) -> View::type_point{
+    return point_algo::distance(line.view_begin.value, line.view_end.value);
+}
+
 template<c_line_view View, c_point2d_decard Point>
 constexpr bool belongs_to_area_of_line(const View &line, const Point &point){
     if(!line.view_begin.is_view && !line.view_end.is_view){
@@ -164,10 +169,10 @@ constexpr auto distance_to_line(const View &line, const Point &point) -> View::t
     }
     const auto dist_start = point_algo::distance(line.view_begin.value, point);
     if(!line.view_end.is_view){
-        return std::min(std::abs(distance), dist_start);
+        return std::min(distance, dist_start);
     }
     const auto dist_stop = point_algo::distance(line.view_end.value, point);
-    return std::min({std::abs(distance), dist_start, dist_stop});
+    return std::min({distance, dist_start, dist_stop});
 }
 
 //Функция возвращает значение функции f(x,y) = Ax + By + C

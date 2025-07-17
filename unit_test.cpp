@@ -21,9 +21,7 @@
 
 using namespace agl;
 
-Unit_Test::Unit_Test(QObject *parent)
-    : QObject{parent}
-{}
+Unit_Test::Unit_Test(QObject *parent) : QObject{parent}{}
 
 void Unit_Test::test_angle()
 {
@@ -918,11 +916,11 @@ void Unit_Test::test_circle_algorithm()
             auto circle2 = Circle({5.,5.}, 5.);
             {
                 auto line = circle_algo::scaling_tangent_out(circle1, circle2, algorithm::direct::RIGHT);
-                QVERIFY(line.has_value() && (line->view_begin.value == Point(0, 0)) && (line->view_end.value == Point(5, 0)));
+                QVERIFY(line.has_value() && (line->view_begin.value == Point(0, 10)) && (line->view_end.value == Point(5, 10)));
             }
             {
                 auto line = circle_algo::scaling_tangent_out(circle1, circle2, algorithm::direct::LEFT);
-                QVERIFY(line.has_value() && (line->view_begin.value == Point(0, 10)) && (line->view_end.value == Point(5, 10)));
+                QVERIFY(line.has_value() && (line->view_begin.value == Point(0, 0)) && (line->view_end.value == Point(5, 0)));
             }
         }
 
@@ -957,11 +955,11 @@ void Unit_Test::test_circle_algorithm()
             auto circle2 = Circle({10.,5.}, 8.);
             {
                 auto line = circle_algo::scaling_tangent_out(circle1, circle2, algorithm::direct::RIGHT);
-                QVERIFY(line.has_value() && (line->view_begin.value == Point(-1.5, 9.769696)) && (line->view_end.value == Point(7.6, 12.631514)));
+                QVERIFY(line.has_value() && (line->view_begin.value == Point(-1.5, 0.230304)) && (line->view_end.value == Point(7.6, -2.631514)));
             }
             {
                 auto line = circle_algo::scaling_tangent_out(circle1, circle2, algorithm::direct::LEFT);
-                QVERIFY(line.has_value() && (line->view_begin.value == Point(-1.5, 0.230304)) && (line->view_end.value == Point(7.6, -2.631514)));
+                QVERIFY(line.has_value() && (line->view_begin.value == Point(-1.5, 9.769696)) && (line->view_end.value == Point(7.6, 12.631514)));
             }
         }
     }
@@ -1020,11 +1018,12 @@ void Unit_Test::test_circle_algorithm()
             auto circle2 = Circle({20.,5.}, 5.);
             {
                 auto line = circle_algo::scaling_tangent_inboard(circle1, circle2, algorithm::direct::RIGHT);
-                QVERIFY(line.has_value() && (line->view_begin.value == Point(-2.5, 9.330127)) && (line->view_end.value == Point(22.5, 0.669873)));
+                QVERIFY(line.has_value() && (line->view_begin.value == Point(2.5, 9.330127)) && (line->view_end.value == Point(17.5, 0.669873)));
+
             }
             {
                 auto line = circle_algo::scaling_tangent_inboard(circle1, circle2, algorithm::direct::LEFT);
-                QVERIFY(line.has_value() && (line->view_begin.value == Point(-2.5, 0.669873)) && (line->view_end.value == Point(22.5, 9.330127)));
+                QVERIFY(line.has_value() && (line->view_begin.value == Point(2.5,  0.669873)) && (line->view_end.value == Point(17.5,  9.330127)));
             }
         }
 
@@ -1033,12 +1032,44 @@ void Unit_Test::test_circle_algorithm()
             auto circle2 = Circle({100.,5.}, 50.);
             {
                 auto line = circle_algo::scaling_tangent_inboard(circle1, circle2, algorithm::direct::RIGHT);
-                QVERIFY(line.has_value() && (line->view_begin.value == Point(-2.75, 9.175823)) && (line->view_end.value == Point(127.5, -36.758233)));
+                QVERIFY(line.has_value() && (line->view_begin.value == Point(2.75, 9.175823)) && (line->view_end.value == Point(72.5, -36.758233)));
             }
             {
                 auto line = circle_algo::scaling_tangent_inboard(circle1, circle2, algorithm::direct::LEFT);
-                QVERIFY(line.has_value() && (line->view_begin.value == Point(-2.75, 0.824177)) && (line->view_end.value == Point(127.5, 46.758233)));
+                QVERIFY(line.has_value() && (line->view_begin.value == Point(2.75, 0.824177)) && (line->view_end.value == Point(72.5,  46.758233)));
             }
+        }
+    }
+
+    {
+        {
+            auto circle = Circle({0.,0.}, 5.);
+            auto point = Point(10., 0.);
+            auto line = circle_algo::tangent(circle, point);
+            QVERIFY(line.has_value());
+            auto line1 = line.value().first;
+            QVERIFY((line1.view_begin.value == Point(2.5, -4.330127)) && (line1.view_end.value == Point(10, 0)));
+            auto line2 = line.value().second;
+            QVERIFY((line2.view_begin.value == Point(2.5, 4.330127)) && (line2.view_end.value == Point(10, 0)));
+        }
+
+        {
+            auto circle = Circle({0.,0.}, 5.);
+            auto point = Point(1., 0.);
+            auto line = circle_algo::tangent(circle, point);
+            QVERIFY(!line.has_value());
+        }
+
+        {
+            auto circle = Circle({5.,5.}, 5.);
+            auto point = Point(30., 45.);
+            auto line = circle_algo::tangent(circle, point);
+
+            QVERIFY(line.has_value());
+            auto line1 = line.value().first;
+            QVERIFY((line1.view_begin.value == Point(9.497003, 2.814373)) && (line1.view_end.value == Point(30, 45)));
+            auto line2 = line.value().second;
+            QVERIFY((line2.view_begin.value == Point(1.064795, 8.084503)) && (line2.view_end.value == Point(30, 45)));
         }
     }
 
@@ -2146,5 +2177,28 @@ void Unit_Test::test_vector()
                 return algorithm::compare(i, j);
             }));
         }
+    }
+
+    {//is_co_directional
+        // {
+        //     vector<double, 3> v1{1,2,3};
+        //     vector<double, 3> v2{3,7,5};
+        //     QVERIFY(!matrix_algo::is_co_directional(v1, v2));
+        // }
+        // {
+        //     vector<double, 3> v1{0,0,0};
+        //     vector<double, 3> v2{3,7,5};
+        //     QVERIFY(!matrix_algo::is_co_directional(v1, v2));
+        // }
+        // {
+        //     vector<double, 3> v1{0,1,1};
+        //     vector<double, 3> v2{0,2,2};
+        //     QVERIFY(matrix_algo::is_co_directional(v1, v2));
+        // }
+        // {
+        //     vector<double, 3> v1{1,2,3};
+        //     vector<double, 3> v2{-1,-2,-3};
+        //     QVERIFY(!matrix_algo::is_co_directional(v1, v2));
+        // }
     }
 }

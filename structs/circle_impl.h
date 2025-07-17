@@ -2,6 +2,8 @@
 #define CIRCLE_IMPL_H
 
 #include "../system/system_concept.h"
+#include "../algorithm/math_algorithm.h"
+#include <format>
 
 namespace agl {
 
@@ -37,23 +39,28 @@ struct arc_impl final {
     constexpr arc_impl(const Point &center, Type radius, const Angle &start, const Angle &stop)
         : center_(center), radius_(radius), start_(start.radian()), stop_(stop.radian()){}
 
-    Point center() const{
+    constexpr Point center() const{
         return center_;
     }
-    Type radius() const{
+    constexpr Type radius() const{
         return radius_;
     }
-    Type start() const{
+    constexpr Type start() const{
         return start_;
     }
-    Angle start_angle() const{
+    constexpr Angle start_angle() const{
         return Angle(start_);
     }
-    Type stop() const{
+    constexpr Type stop() const{
         return stop_;
     }
-    Angle stop_angle() const{
+    constexpr Angle stop_angle() const{
         return Angle(stop_);
+    }
+
+    friend constexpr bool operator==(const arc_impl &arc1, const arc_impl &arc2){
+        return (arc1.center_ == arc2.center_) && algorithm::compare(arc1.radius_, arc2.radius_)
+             && algorithm::compare(arc1.start_, arc2.start_) && algorithm::compare(arc1.stop_, arc2.stop_);
     }
 
 private:
@@ -64,6 +71,12 @@ private:
     Type stop_{};
 };
 
+}
+
+template<std::floating_point Type, agl::c_point2d_decard Point, agl::c_angle Angle>
+constexpr std::ostream& operator<<(std::ostream& os, const agl::arc_impl<Type, Point, Angle> &arc){
+    os << std::format("{} {} {} {} {}", arc.center().x(), arc.center().y(), arc.start(), arc.stop(), arc.radius());
+    return os;
 }
 
 #endif // CIRCLE_IMPL_H

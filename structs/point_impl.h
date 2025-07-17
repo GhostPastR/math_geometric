@@ -4,6 +4,7 @@
 #include "../system/system_concept.h"
 #include "../system/system_function.h"
 #include "../algorithm/math_algorithm.h"
+#include <format>
 
 namespace agl {
 
@@ -186,6 +187,12 @@ struct polar2d_impl final : polar2d_abstract<Type, Type>{
     }
 };
 
+}
+
+template<std::floating_point Type>
+constexpr std::ostream& operator<<(std::ostream& os, const agl::point2d_impl<Type> &point){
+    os << std::format("{} {}", point.x(), point.y());
+    return os;
 }
 
 #endif // POINT_IMPL_H

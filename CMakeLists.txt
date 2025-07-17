@@ -36,7 +36,9 @@ qt_add_executable(math_geometric
     unit/weight.h
     unit/temperature.h
     iterator/matrix_iterator.h
-
+    special_algorithms/navigation_route/figure_route.h
+    unit_test_sa.h unit_test_sa.cpp
+    special_algorithms/navigation_route/algorithm_route.h
 )
 
 target_link_libraries(math_geometric PRIVATE Qt::Core Qt6::Test)
@@ -55,3 +57,4 @@ qt_generate_deploy_app_script(
     NO_UNSUPPORTED_PLATFORM_ERROR
 )
 install(SCRIPT ${deploy_script})
+add_subdirectory(TestGraphics)

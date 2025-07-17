@@ -59,6 +59,13 @@ constexpr Point convert_decart(const Polar &point, const Point &start){
     return new_point(start, point.fi(), point.psi());
 }
 
+template<c_point2d_decard Point>
+constexpr bool is_co_directional(const Point &start, const Point &stop1, const Point &stop2){
+    using Type = Point::type_coordinate;
+    return matrix_algo::is_co_directional(std::array<Type, 2>{stop1.x() - start.x(), stop1.y() - start.y()},
+                                          std::array<Type, 2>{stop2.x() - start.x(), stop2.y() - start.y()});
+}
+
 }
 
 #endif // POINT_ALGORITHM_H

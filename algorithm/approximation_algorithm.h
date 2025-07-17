@@ -32,19 +32,21 @@ constexpr auto splitting_evenly(const Line &line, size_t count_point) -> std::ve
 }
 
 template<c_arc Arc>
-constexpr auto splitting_evenly(const Arc &arc, size_t count_point) -> std::vector<typename Arc::type_point>{
+constexpr auto splitting_evenly(const Arc &arc, size_t count_point, algorithm::direct direct = algorithm::direct::RIGHT) -> std::vector<typename Arc::type_point>{
     using Type = Arc::type_coefficients;
+    auto mod_arc = (direct == algorithm::direct::RIGHT) ? arc :
+                       Arc(arc.center(), arc.radius(), arc.stop(), arc.start());
     if(count_point < 2){
-        return {point_algo::new_point(arc.center(), arc.start(), arc.radius()),
-                point_algo::new_point(arc.center(), arc.stop(), arc.radius())};
+        return {point_algo::new_point(mod_arc.center(), mod_arc.start(), mod_arc.radius()),
+                point_algo::new_point(mod_arc.center(), mod_arc.stop(), mod_arc.radius())};
     }
-    const auto stop = (arc.start() > arc.stop()) ? (arc.stop() + algorithm::pi_in_2<Type>) : arc.stop();
-    const auto da = (stop - arc.start()) / count_point;
+    const auto stop = (mod_arc.start() > mod_arc.stop()) ? (mod_arc.stop() + algorithm::pi_in_2<Type>) : mod_arc.stop();
+    const auto da = (stop - mod_arc.start()) / count_point;
     std::vector<typename Arc::type_point> list;
 
     const auto numbers = std::ranges::iota_view{size_t(), count_point + 1};
-    std::ranges::transform(numbers, std::back_inserter(list), [arc, da](const auto &i){
-        return point_algo::new_point(arc.center(), arc.start() + i * da, arc.radius());
+    std::ranges::transform(numbers, std::back_inserter(list), [mod_arc, da](const auto &i){
+        return point_algo::new_point(mod_arc.center(), mod_arc.start() + i * da, mod_arc.radius());
     });
     return list;
 }
@@ -103,27 +105,32 @@ constexpr auto splitting_evenly(const Line &line, Type interval, Type &prior_rem
 }
 
 template<c_arc Arc, std::floating_point Type>
-constexpr auto splitting_evenly(const Arc &arc, Type interval, Type &prior_remains) -> std::vector<typename Arc::type_point>{
+constexpr auto splitting_evenly(const Arc &arc, Type interval, Type &prior_remains, algorithm::direct direct = algorithm::direct::RIGHT) -> std::vector<typename Arc::type_point>{
     using Point = Arc::type_point;
-    if(!(interval > 0) || (prior_remains < 0)){
+    auto mod_arc = (direct == algorithm::direct::RIGHT) ? arc :
+                       Arc(arc.center(), arc.radius(), arc.stop(), arc.start());
+
+    // double d = (direct == algorithm::direct::RIGHT) ? 1. : -1.;
+    if(!(interval > 0) || (prior_remains < 0) || (prior_remains >= interval)){
         return {};
     }
-    const auto stop = (arc.start() > arc.stop()) ? (arc.stop() + algorithm::pi_in_2<Type>) : arc.stop();
+    const auto stop = (mod_arc.start() > mod_arc.stop()) ? (mod_arc.stop() + algorithm::pi_in_2<Type>) : mod_arc.stop();
     Type count_point;
-    Point point;
+    auto angle_start = mod_arc.start();
     if(!algorithm::compare(prior_remains, 0.)){
-        std::modf(circle_algo::length_arc(arc) / (interval - prior_remains), &count_point);
-        const  auto da = (stop - arc.start()) / count_point;
-        point = point_algo::new_point(arc.center(), arc.start() + da, arc.radius());
+        std::modf(circle_algo::length_arc(mod_arc) / (interval - prior_remains), &count_point);
+        const  auto da = (stop - mod_arc.start()) / count_point;
+        auto point = point_algo::new_point(mod_arc.center(), mod_arc.start() + da, mod_arc.radius());
+        angle_start = point_algo::angle(mod_arc.center(), point);
     }
 
-    const auto new_arc = Arc(arc.center(), arc.radius(), point_algo::angle(arc.center(), point), arc.stop());
-    std::modf(circle_algo::length_arc(new_arc) / (interval - prior_remains), &count_point);
+    const auto new_arc = Arc(mod_arc.center(), mod_arc.radius(), angle_start, stop);
+    std::modf((circle_algo::length_arc(new_arc) - prior_remains) / interval, &count_point);
     const auto da = (new_arc.stop() - new_arc.start()) / count_point;
     std::vector<Point> list;
     const auto numbers = std::ranges::iota_view{size_t(), count_point + 1};
-    std::ranges::transform(numbers, std::back_inserter(list), [arc, da](const auto &i){
-        return point_algo::new_point(arc.center(), arc.start() + i * da, arc.radius());
+    std::ranges::transform(numbers, std::back_inserter(list), [mod_arc, da](const auto &i){
+        return point_algo::new_point(mod_arc.center(), mod_arc.start() + i * da, mod_arc.radius());
     });
     prior_remains = circle_algo::length_arc(Arc(new_arc.center(), new_arc.radius(), point_algo::angle(new_arc.center(), list.back()), new_arc.stop()));
     return list;
