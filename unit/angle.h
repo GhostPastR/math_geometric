@@ -2,11 +2,10 @@
 #define ANGLE_H
 
 #include "../algorithm/math_algorithm.h"
-#include "../system/system_concept.h"
 
 namespace agl {
 
-template<std::floating_point Type, c_function_angle<Type> ClassFunc = algorithm::function_angle<Type>>
+template<std::floating_point Type>
 class angle_impl{
 public:
     using type_angle = Type;
@@ -35,7 +34,7 @@ public:
 
     constexpr angle_impl &asin(const Type &value){
         if (algorithm::interval_strict(value, -1.0, 1.0)){
-            radian_ = algorithm::function_angle<Type>::asin(value);
+            radian_ = function_angle<Type>::asin(value);
             return *this;
         }
         else{
@@ -44,7 +43,7 @@ public:
     }
     constexpr angle_impl &acos(const Type &value){
         if(algorithm::interval_strict(value, -1.0, 1.0)){
-            radian_ = algorithm::function_angle<Type>::acos(value);
+            radian_ = function_angle<Type>::acos(value);
             return *this;
         }
         else{
@@ -53,35 +52,35 @@ public:
 
     }
     constexpr angle_impl &atan(const Type &value){
-        radian_ = algorithm::function_angle<Type>::atan(value);
+        radian_ = function_angle<Type>::atan(value);
         return *this;
     }
     constexpr angle_impl &actan(const Type &value){
-        radian_ = algorithm::pi_on_2<Type> + algorithm::function_angle<Type>::atan(-value);
+        radian_ = algorithm::pi_on_2<Type> + function_angle<Type>::atan(-value);
         return *this;
     }
 
     constexpr Type sin() const{
-        return algorithm::function_angle<Type>::sin(radian_);
+        return function_angle<Type>::sin(radian_);
     }
     constexpr Type cos() const{
-        return algorithm::function_angle<Type>::cos(radian_);
+        return function_angle<Type>::cos(radian_);
     }
     constexpr Type tan() const{
-        return algorithm::function_angle<Type>::tan(radian_);
+        return function_angle<Type>::tan(radian_);
     }
     constexpr Type ctan() const{
-        return 1.0 / algorithm::function_angle<Type>::tan(radian_);
+        return 1.0 / function_angle<Type>::tan(radian_);
     }
 
-    template<std::floating_point Type_Value, c_function_angle<Type_Value> Algo_Value = algorithm::function_angle<Type_Value>>
-    constexpr angle_impl &operator+=(const angle_impl<Type_Value, Algo_Value> &angle){
+    template<std::floating_point Type_Value>
+    constexpr angle_impl &operator+=(const angle_impl<Type_Value> &angle){
         radian_ += angle.radian();
         return *this;
     }
 
-    template<std::floating_point Type_Value, c_function_angle<Type_Value> Algo_Value = algorithm::function_angle<Type_Value>>
-    constexpr angle_impl &operator-=(const angle_impl<Type_Value, Algo_Value> &angle){
+    template<std::floating_point Type_Value>
+    constexpr angle_impl &operator-=(const angle_impl<Type_Value> &angle){
         radian_ -= angle.radian();
         return *this;
     }
@@ -100,63 +99,51 @@ private:
     Type radian_{};
 };
 
-template<std::floating_point Type1, std::floating_point Type2,
-         c_function_angle<Type1> Algo1 = algorithm::function_angle<Type1>,
-         c_function_angle<Type2> Algo2 = algorithm::function_angle<Type2>>
-inline constexpr bool compare(const angle_impl<Type1, Algo1> &value1, const angle_impl<Type2, Algo2> &value2) {
+template<std::floating_point Type1, std::floating_point Type2>
+inline constexpr bool compare(const angle_impl<Type1> &value1, const angle_impl<Type2> &value2) {
     return algorithm::compare_common(value1.radian(), value2.radian(), algorithm::epsilon<decltype(value1.radian())>);
 }
 
-template<std::floating_point Type, c_function_angle<Type> Algo = algorithm::function_angle<Type>>
-constexpr auto operator-(const angle_impl<Type, Algo> &value){
-    return angle_impl<Type, Algo>(-value.radian());
+template<std::floating_point Type>
+constexpr auto operator-(const angle_impl<Type> &value){
+    return angle_impl<Type>(-value.radian());
 }
 
-template<std::floating_point Type1, std::floating_point Type2,
-         c_function_angle<Type1> Algo1 = algorithm::function_angle<Type1>,
-         c_function_angle<Type2> Algo2 = algorithm::function_angle<Type2>>
-constexpr auto operator+(const angle_impl<Type1, Algo1> &value1, const angle_impl<Type2, Algo2> &value2){
-    return angle_impl<Type1, Algo1>(value1.radian() + value2.radian());
+template<std::floating_point Type1, std::floating_point Type2>
+constexpr auto operator+(const angle_impl<Type1> &value1, const angle_impl<Type2> &value2){
+    return angle_impl<Type1>(value1.radian() + value2.radian());
 }
 
-template<std::floating_point Type1, std::floating_point Type2,
-         c_function_angle<Type1> Algo1 = algorithm::function_angle<Type1>,
-         c_function_angle<Type2> Algo2 = algorithm::function_angle<Type2>>
-constexpr auto operator-(const angle_impl<Type1, Algo1> &value1, const angle_impl<Type2, Algo2> &value2){
-    return angle_impl<Type1, Algo1>(value1.radian() - value2.radian());
+template<std::floating_point Type1, std::floating_point Type2>
+constexpr auto operator-(const angle_impl<Type1> &value1, const angle_impl<Type2> &value2){
+    return angle_impl<Type1>(value1.radian() - value2.radian());
 }
 
 template<typename T>
 concept c_multiplier = std::floating_point<T> || std::integral<T>;
 
-template<std::floating_point Type1, c_multiplier Type2, c_function_angle<Type1> Algo = algorithm::function_angle<Type1>>
-constexpr auto operator*(const angle_impl<Type1, Algo> &value1, const Type2 &value2){
-    return angle_impl<Type1, Algo>(value1.radian() * value2);
+template<std::floating_point Type1, c_multiplier Type2>
+constexpr auto operator*(const angle_impl<Type1> &value1, const Type2 &value2){
+    return angle_impl<Type1>(value1.radian() * value2);
 }
 
-template<std::floating_point Type1, c_multiplier Type2, c_function_angle<Type1> Algo = algorithm::function_angle<Type1>>
-constexpr auto operator/(const angle_impl<Type1, Algo> &value1, const Type2 &value2){
-    return angle_impl<Type1, Algo>(value1.radian() / value2);
+template<std::floating_point Type1, c_multiplier Type2>
+constexpr auto operator/(const angle_impl<Type1> &value1, const Type2 &value2){
+    return angle_impl<Type1>(value1.radian() / value2);
 }
 
-template<std::floating_point Type1, std::floating_point Type2,
-         c_function_angle<Type1> Algo1 = algorithm::function_angle<Type1>,
-         c_function_angle<Type2> Algo2 = algorithm::function_angle<Type2>>
-constexpr auto operator/(const angle_impl<Type1, Algo1> &value1, const angle_impl<Type2, Algo2> &value2){
+template<std::floating_point Type1, std::floating_point Type2>
+constexpr auto operator/(const angle_impl<Type1> &value1, const angle_impl<Type2> &value2){
     return value1.radian() / value2.radian();
 }
 
-template<std::floating_point Type1, std::floating_point Type2,
-         c_function_angle<Type1> Algo1 = algorithm::function_angle<Type1>,
-         c_function_angle<Type2> Algo2 = algorithm::function_angle<Type2>>
-constexpr auto operator<=>(const angle_impl<Type1, Algo1> &value1, const angle_impl<Type2, Algo2> &value2){
+template<std::floating_point Type1, std::floating_point Type2>
+constexpr auto operator<=>(const angle_impl<Type1> &value1, const angle_impl<Type2> &value2){
     return value1.radian() <=> value2.radian();
 }
 
-template<std::floating_point Type1, std::floating_point Type2,
-         c_function_angle<Type1> Algo1 = algorithm::function_angle<Type1>,
-         c_function_angle<Type2> Algo2 = algorithm::function_angle<Type2>>
-constexpr bool operator==(const angle_impl<Type1, Algo1> &value1, const angle_impl<Type2, Algo2> &value2){
+template<std::floating_point Type1, std::floating_point Type2>
+constexpr bool operator==(const angle_impl<Type1> &value1, const angle_impl<Type2> &value2){
     if constexpr(sizeof(Type1) < sizeof(Type2)){
         return algorithm::compare(static_cast<Type2>(value1.radian()), value2.radian());
     }
@@ -166,6 +153,11 @@ constexpr bool operator==(const angle_impl<Type1, Algo1> &value1, const angle_im
     else{
         return algorithm::compare(value1.radian(), value2.radian());
     }
+}
+
+template<std::floating_point Type1>
+constexpr bool operator==(const angle_impl<Type1> &value1, const Type1 &value2){
+    return algorithm::compare(value1.radian(), value2);
 }
 
 }
@@ -194,5 +186,37 @@ template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi
 template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi_in_3_on_2 = angle_impl<Type>(agl::algorithm::pi_in_3_on_2<Type>);
 template<std::floating_point Type> constexpr static agl::angle_impl<Type> ang_pi_in_2 = angle_impl<Type>(agl::algorithm::pi_in_2<Type>);
 
+
+template<typename Type> requires requires(Type angle){angle.radian();}
+struct function_angle<agl::angle_impl<Type>>{
+    inline constexpr static Type sin(agl::angle_impl<Type> value) {
+        return std::sin(value.radian());
+    }
+    inline constexpr static Type cos(agl::angle_impl<Type> value) {
+        return std::cos(value.radian());
+    }
+    inline constexpr static Type tan(agl::angle_impl<Type> value){
+        return std::tan(value.radian());
+    }
+    inline constexpr static Type ctan(agl::angle_impl<Type> value){
+        return 1.0 / std::tan(value.radian());
+    }
+    inline constexpr static Type atan2(agl::angle_impl<Type> value1, agl::angle_impl<Type> value2){
+        return std::atan2(value1.radian(), value2.radian());
+    }
+
+    inline constexpr static Type asin(agl::angle_impl<Type> value){
+        return std::asin(value.radian());
+    }
+    inline constexpr static Type acos(agl::angle_impl<Type> value){
+        return std::acos(value.radian());
+    }
+    inline constexpr static Type atan(agl::angle_impl<Type> value){
+        return std::atan(value.radian());
+    }
+    inline constexpr static Type actan(agl::angle_impl<Type> value){
+        return agl::algorithm::pi_on_2<Type> - std::atan(value.radian());
+    }
+};
 
 #endif // ANGLE_H

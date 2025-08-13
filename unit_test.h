@@ -19,15 +19,15 @@ private slots:
     void test_line();
     void test_line_algorithm();
 
-    void test_circle();
-    void test_circle_algorithm();
+    // void test_circle();
+    // void test_circle_algorithm();
 
-    void test_polygon();
-    void test_polygon_algorithm();
+    // void test_polygon();
+    // void test_polygon_algorithm();
 
-    void test_geo_algorithm();
+    // void test_geo_algorithm();
 
-    void test_approximation();
+    // void test_approximation();
 
     void test_matrix();
     void test_vector();

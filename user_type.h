@@ -12,36 +12,33 @@ namespace agl{
 
 using Lenght = double;
 using Angle = angle_impl<double>;
-using Point = point2d_impl<double>;
-using Point3d = point3d_impl<double>;
-using Point4d = point4d_abstract<double, double, double, double>;
+using point2d = point2<double>;
+using point3d = point3<double>;
 
-using Polar2d = polar2d_impl<double, Angle>;
-using Polar3d = Polar3d_Impl<double, Angle, double>;
+using polar2d = polar2<double>;
 
-using Line = straight_line_impl<double, Point>;
-using HalfLine = half_line_impl<double, Point, Angle>;
-using LineSection = line_section_impl<Point>;
+using line2d = straight_line_impl<double>;
+using half_Line2d = half_line_impl<double>;
+using line_section2d = line_section_impl<double>;
 
-using Circle = circle_impl<double, Point>;
-using Arc = arc_impl<double, Point, Angle>;
+// using Circle = circle_impl<double, point2d>;
+// using Arc = arc_impl<double, point2d, Angle>;
 
 
-using ConvexPolygon = convex_polygone_impl<Point>;
-using Rectangle = rectangle_impl<double, Point>;
-using Square = square_impl<double, Point>;
-using Triangle = triangle_impl<double, Point>;
-using RegularPolygon = regular_polygon_impl<double, Point>;
+// using ConvexPolygon = convex_polygone_impl<point2d>;
+// using Rectangle = rectangle_impl<double, point2d>;
+// using Square = square_impl<double, point2d>;
+// using Triangle = triangle_impl<double, point2d>;
+// using RegularPolygon = regular_polygon_impl<double, point2d>;
 
-using PointGeo = point_geo2d_impl<double, Angle>;
-using PointGeo3d = point_geo3d_abstract<Angle, Angle, double>;
-using PointGeo4d = PointGeo4d_Impl<Angle, Angle, double, double>;
+// using PointGeo = point_geo2<double>;
+// using PointGeo3d = point_geo3<double>;
 
-using HalfLineGeo = half_line_geo_impl<double, PointGeo, Angle>;
-using LineSectionGeo = line_section_geo_impl<PointGeo>;
+// using HalfLineGeo = half_line_geo_impl<double, PointGeo, Angle>;
+// using LineSectionGeo = line_section_geo_impl<PointGeo>;
 
-using CircleGeo = circle_geo_impl<double, PointGeo>;
-using ArcGeo  = arc_geo_impl<double, PointGeo, Angle>;
+// using CircleGeo = circle_geo_impl<double, PointGeo>;
+// using ArcGeo  = arc_geo_impl<double, PointGeo, Angle>;
 
 }
 

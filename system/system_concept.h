@@ -13,13 +13,11 @@ struct view{
 
 template<typename Type>
 concept c_point2d_decard = requires(Type temp){
-    typename Type::type_coordinate;
     temp.x(); temp.y();
 };
 
 template<typename Type>
 concept c_point2d_polar = requires(Type temp){
-    typename Type::type_coordinate;
     temp.psi(); temp.fi();
 };
 
@@ -63,20 +61,6 @@ concept c_angle = requires(Type type){
     type.operator+=(Type());
     type.operator-=(Type());
     operator*(typename Type::type_angle(), Type());
-};
-
-template<typename ClassFunctions, typename Type>
-concept c_function_angle = requires(){
-    ClassFunctions::sin(Type());
-    ClassFunctions::cos(Type());
-    ClassFunctions::tan(Type());
-    ClassFunctions::ctan(Type());
-
-    ClassFunctions::asin(Type());
-    ClassFunctions::acos(Type());
-    ClassFunctions::atan(Type());
-    ClassFunctions::actan(Type());
-    ClassFunctions::atan2(Type(), Type());
 };
 
 template<typename Type>

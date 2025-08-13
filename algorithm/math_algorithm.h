@@ -154,6 +154,7 @@ constexpr roots_equation<Type> get_roots_equation(const quadratic<Type> &equatio
             (equations.b + std::sqrt(d)) / (2. * equations.a)};
 }
 
+}
 
 template<std::floating_point Type>
 struct function_angle{
@@ -183,11 +184,8 @@ struct function_angle{
         return std::atan(value);
     }
     inline constexpr static Type actan(Type value){
-        algorithm::pi_on_2<Type> - std::atan(value);
+        return agl::algorithm::pi_on_2<Type> - std::atan(value);
     }
 };
-
-
-}
 
 #endif // MATH_ALGORITHM_H

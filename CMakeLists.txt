@@ -39,9 +39,18 @@ qt_add_executable(math_geometric
     special_algorithms/navigation_route/figure_route.h
     unit_test_sa.h unit_test_sa.cpp
     special_algorithms/navigation_route/algorithm_route.h
+    structs/point/decart_point2d.h structs/point/decart_point3d.h structs/point/geo_point2d.h structs/point/geo_point3d.h structs/point/polar_point2d.h structs/point/polar_point3d.h
+    algorithm/distance/distance.h algorithm/distance/interface.h
+    algorithm/distance/test_distance.h
+    system/traits.h
+    algorithm/distance/tag_algoritm.h
+    algorithm/direction/direction.h algorithm/direction/interface.h
+
 )
 
 target_link_libraries(math_geometric PRIVATE Qt::Core Qt6::Test)
+include_directories(${PROJECT_SOURCE_DIR})
+
 
 include(GNUInstallDirs)
 
@@ -58,3 +67,4 @@ qt_generate_deploy_app_script(
 )
 install(SCRIPT ${deploy_script})
 add_subdirectory(TestGraphics)
+

@@ -5,91 +5,62 @@
 
 namespace agl{
 
-template<c_point2d_decard Point>
-struct line_view{
-    using type_point = Point::type_coordinate;
-    using point = Point;
-
-    view<Point> view_begin;
-    view<Point> view_end;
+template<std::floating_point Type>
+struct parameter_line{
+    Type a;
+    Type b;
+    Type c;
 };
 
-template<typename Type>
-concept c_line_temp = requires(Type temp){
-    typename Type::type_point;
-    temp.view_confines();
+template<std::floating_point Type>
+struct parameter_half_line{
+    Type x;
+    Type y;
+    Type angle;
+};
+
+template<std::floating_point Type>
+struct parameter_line_section{
+    Type x1;
+    Type y1;
+    Type x2;
+    Type y2;
 };
 
 
-template<c_line_temp Line>
-auto view_line(const Line &temp) -> line_view<typename Line::type_point>{
-    return temp.view_confines();
-}
-
-template<typename Type>
-concept c_line_view = requires(Type temp){
-    typename Type::type_point;
-    typename Type::point;
-
-    temp.view_begin;
-    temp.view_end;
-};
 
 namespace line_algo{
 
 namespace {
 
-template<c_line_view View>
-constexpr auto distance(const View &line) -> View::type_point{
-    return point_algo::distance(line.view_begin.value, line.view_end.value);
+template<std::floating_point Type>
+constexpr bool belongs_to_area_of_line(const parameter_half_line<Type> &line, const Type &x, const Type &y){
+    Type angle{};
+    Type d = algorithm::pi_on_2<Type>;
+    if(algorithm::interval_left_strict(line.angle, std::exchange(angle, angle + d), angle)){
+        return algorithm::less_than_equal(line.x, x) && algorithm::less_than_equal(line.y, y);
+    }
+    if(algorithm::interval_left_strict(line.angle, std::exchange(angle, angle + d), angle)){
+        return algorithm::less_than_equal(line.x, x) && algorithm::greater_than_equal(line.y, y);
+    }
+    if(algorithm::interval_left_strict(line.angle, std::exchange(angle, angle + d), angle)){
+        return algorithm::greater_than_equal(line.x, x) && algorithm::greater_than_equal(line.y, y);
+    }
+    if(algorithm::interval_left_strict(line.angle, std::exchange(angle, angle + d), angle)){
+        return algorithm::greater_than_equal(line.x, x) && algorithm::less_than_equal(line.y, y);
+    }
+    return false;
 }
 
-template<c_line_view View, c_point2d_decard Point>
-constexpr bool belongs_to_area_of_line(const View &line, const Point &point){
-    if(!line.view_begin.is_view && !line.view_end.is_view){
-        return true;
-    }
-    if(!line.view_end.is_view){
-        using Type = Point::type_coordinate;
-        const auto direction = point_algo::angle(line.view_begin.value, line.view_end.value);
-        Type angle{};
-        Type d = algorithm::pi_on_2<Type>;
-        if(algorithm::interval_left_strict(direction, std::exchange(angle, angle + d), angle)){
-            return algorithm::less_than_equal(line.view_begin.value.x(), point.x())
-            && algorithm::less_than_equal(line.view_begin.value.y(), point.y());
-        }
-        if(algorithm::interval_left_strict(direction, std::exchange(angle, angle + d), angle)){
-            return algorithm::less_than_equal(line.view_begin.value.x(), point.x())
-            && algorithm::greater_than_equal(line.view_begin.value.y(), point.y());
-        }
-        if(algorithm::interval_left_strict(direction, std::exchange(angle, angle + d), angle)){
-            return algorithm::greater_than_equal(line.view_begin.value.x(), point.x())
-            && algorithm::greater_than_equal(line.view_begin.value.y(), point.y());
-        }
-        if(algorithm::interval_left_strict(direction, std::exchange(angle, angle + d), angle)){
-            return algorithm::greater_than_equal(line.view_begin.value.x(), point.x())
-            && algorithm::less_than_equal(line.view_begin.value.y(), point.y());
-        }
-        return false;
-    }
-    bool _flagX;
-    bool _flagY;
-    if(line.view_begin.value.x() < line.view_end.value.x() ){
-        _flagX = algorithm::interval_strict(point.x(), line.view_begin.value.x(), line.view_end.value.x());
-    }
-    else{
-        _flagX = algorithm::interval_strict(point.x(), line.view_end.value.x(), line.view_begin.value.x());
-    }
-
-    if(line.view_begin.value.y() < line.view_end.value.y() ){
-        _flagY = algorithm::interval_strict(point.y(), line.view_begin.value.y(), line.view_end.value.y());
-    }
-    else{
-        _flagY = algorithm::interval_strict(point.y(), line.view_end.value.y(), line.view_begin.value.y());
-    }
-    return _flagX && _flagY;
-
+template<std::floating_point Type>
+constexpr bool belongs_to_area_of_line(const parameter_line_section<Type> &line, const Type &x, const Type &y){
+    bool flag_x = (line.x1 < line.x2) ? algorithm::interval_strict(x, line.x1, line.x2)
+                                      : algorithm::interval_strict(x, line.x2, line.x1);
+    bool flag_y = (line.y1 < line.y2) ? algorithm::interval_strict(y, line.y1, line.y2)
+                                      : algorithm::interval_strict(y, line.y2, line.y1);
+    return flag_x && flag_y;
 }
+
 
 }
 
@@ -121,125 +92,160 @@ constexpr bool compare(Type a1, Type b1, Type c1, Type a2, Type b2, Type c2){
     }
 }
 
-template<c_point2d_decard Point, std::floating_point Type>
-constexpr std::pair<Point,Point> point_line(Type a, Type b, Type c){
-    const bool is_zero_a = algorithm::compare(a, 0.);
-    const bool is_zero_b = algorithm::compare(b, 0.);
-    if(is_zero_a && is_zero_b){
-        return {Point(0,0), Point(0,0)};
-    }
-    if(is_zero_a){
-        return {Point(0., -c / b), Point(1., -c / b)};
-    }
-    if(is_zero_b){
-        return {Point(-c / a, 0.), Point(-c / a, 1.)};
-    }
-    return {Point(0, -c / b), Point(1, -(a + c) / b)};
+//Уравнение прямой по 2-м точкам
+template<std::floating_point Type>
+constexpr auto equation_line_quick(const Type &x1, const Type &y1, const Type &x2, const Type &y2) -> std::tuple<Type, Type, Type>{
+    const auto a = y1 - y2;
+    const auto b = x2 - x1;
+    return {a, b, algorithm::determine(-b, a, x1, y1)};
 }
 
-template<c_point2d_decard Point, std::floating_point Angle>
-constexpr std::pair<Point,Point> point_line(const Point &point, Angle angle){
-    return {point, point_algo::new_point(point, angle, 1.)};
+template<std::floating_point Type, std::floating_point TypeAngle>
+constexpr auto equation_line_quick(const Type &x, const Type &y, TypeAngle direction) -> std::tuple<Type, Type, Type>{
+    const auto a = -function_angle<Type>::cos(direction);
+    const auto b = function_angle<Type>::sin(direction);
+    return {a, b, algorithm::determine(-b, a, x, y)};
 }
 
-template<c_point2d_decard Point>
-constexpr auto equation_line_quick(const Point &point1, const Point &point2)
-    -> std::tuple<typename Point::type_coordinate, typename Point::type_coordinate, typename Point::type_coordinate>{
-    const auto a = point1.y() - point2.y();
-    const auto b = point2.x() - point1.x();
-    return {a, b, algorithm::determine(-b, a, point1.x(), point1.y())};
-}
-
-template<c_point2d_decard Point, std::floating_point TypeAngle,
-         c_function_angle<typename Point::type_coordinate> ClassFunc = algorithm::function_angle<typename Point::type_coordinate>>
-constexpr auto equation_line_quick(const Point &point, TypeAngle direction)
-    -> std::tuple<typename Point::type_coordinate, typename Point::type_coordinate, typename Point::type_coordinate>{
-    const auto a = -ClassFunc::cos(direction);
-    const auto b = ClassFunc::sin(direction);
-    return {a, b, algorithm::determine(-b, a, point.x(), point.y())};
-}
-
-//Функция возвращает кратчайшие расстояние от точки до прямой, если значение меньше 0 то точка находится слева, если больше то справа
-template<c_line_view View, c_point2d_decard Point>
-constexpr auto distance_to_line(const View &line, const Point &point) -> View::type_point{
-    const auto [a,b,c] = equation_line_quick(line.view_begin.value, line.view_end.value);
-    const auto distance = (algorithm::determine(a, -b, point.y(), point.x()) + c) / sqrt(algorithm::determine(a, -b, b, a));
-    if(!line.view_begin.is_view && !line.view_end.is_view){
-        return distance;
+template<std::floating_point Type, template<class> class Line>
+constexpr parameter_line<Type> convert_line(const Line<Type> &line){
+    if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_line<Type>>){
+        return line;
     }
-    const auto dist_start = point_algo::distance(line.view_begin.value, point);
-    if(!line.view_end.is_view){
-        return std::min(distance, dist_start);
+    else if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_half_line<Type>>){
+        auto a = -function_angle<Type>::cos(line.angle);
+        auto b = function_angle<Type>::sin(line.angle);
+        return {a, b, algorithm::determine(-b, a, line.x, line.y)};
+
     }
-    const auto dist_stop = point_algo::distance(line.view_end.value, point);
-    return std::min({distance, dist_start, dist_stop});
+    else if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_line_section<Type>>){
+        auto a = line.y1 - line.y2;
+        auto b = line.x2 - line.x1;
+        return {a, b, algorithm::determine(-b, a, line.x1, line.y1)};
+    }
+    else{
+        static_assert(false, "The line has no borders!");
+    }
 }
 
-//Функция возвращает значение функции f(x,y) = Ax + By + C
-template<c_line_view View, c_point2d_decard Point>
-constexpr auto value_function(const View &line, const Point &point){
-    const auto [a,b,c] = equation_line_quick(line.view_begin.value, line.view_end.value);
-    return algorithm::determine(a, -b, point.y(), point.x()) + c;
+//Уравнение прямой по 2-м точкам
+template<std::floating_point Type, template<class> class Line>
+constexpr Type value_function(const Line<Type> &line, const Type &x, const Type &y){
+    if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_line<Type>>){
+        return algorithm::determine(line.a, -line.b, y, x) + line.c;
+    }
+    else if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_half_line<Type>>
+                         || std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_line_section<Type>>){
+        const auto &temp = convert_line(line);
+        return algorithm::determine(temp.a, -temp.b, y, x) + temp.c;
+    }
+    else{
+        static_assert(false, "No Line");
+    }
 }
 
 //Функция возвращает точку пересечения 2-х линий
-template<c_line_view View>
-constexpr auto intersection_line(const View &line1, const View &line2) ->  std::optional<typename View::point>{
-    using Point = View::point;
-    const auto [a1,b1,c1] = equation_line_quick(line1.view_begin.value, line1.view_end.value);
-    const auto [a2,b2,c2] = equation_line_quick(line2.view_begin.value, line2.view_end.value);
-
-    std::optional<Point> point;
-    const auto c = algorithm::determine(a1, a2, b1, b2);
-    if(!algorithm::compare(c, 0.)){
-        point = {algorithm::determine(b1, b2, c1, c2) / c, algorithm::determine(c1, c2, a1, a2) / c};
+template<std::floating_point Type, template<class> class Line1, template<class> class Line2>
+constexpr auto intersection_line(const Line1<Type> &line1, const Line2<Type> &line2) -> std::optional<std::pair<Type,Type>>{
+    const auto l1 = convert_line(line1);
+    const auto l2 = convert_line(line2);
+    constexpr bool is_line1 = std::is_same_v<std::remove_cvref_t<decltype(line1)>, parameter_line<Type>>;
+    constexpr bool is_line2 = std::is_same_v<std::remove_cvref_t<decltype(line2)>, parameter_line<Type>>;
+    if(const auto c = algorithm::determine(l1.a, l2.a, l1.b, l2.b); !algorithm::compare(c, Type{})){
+        std::pair<Type,Type> point = {algorithm::determine(l1.b, l2.b, l1.c, l2.c) / c,
+                                       algorithm::determine(l1.c, l2.c, l1.a, l2.a) / c};
+        if constexpr(is_line1 && is_line2){
+            return point;
+        }
+        else{
+            bool is_point_line1 = true;
+            if constexpr(!is_line1){
+                is_point_line1 = belongs_to_area_of_line(line1, point.first, point.second);
+            }
+            bool is_point_line2 = true;
+            if constexpr(!is_line2){
+                is_point_line2 = belongs_to_area_of_line(line2, point.first, point.second);
+            }
+            if(is_point_line1 && is_point_line2){
+                return point;
+            }
+        }
     }
-
-    if(point.has_value() && belongs_to_area_of_line(line1, point.value()) && belongs_to_area_of_line(line2, point.value())){
-        return point;
-    }
-    return {};
+    return std::nullopt;
 }
 
-// Функция проверяет принадлежит ли точка линии
-template<c_line_view View, c_point2d_decard Point>
-constexpr bool check_point_on_line(const View &line, const Point &point){
-    if(algorithm::compare(value_function(line, point), 0.)){
-        return belongs_to_area_of_line(line, point);
-    }
-    return false;
+//Функция возвращает точку основания перпендикуляра, опущенную из заданной точки на прямую
+template<std::floating_point Type, template<class> class Line>
+constexpr auto point_perpendicular(const Line<Type> &line, const Type &x, const Type &y) -> std::optional<std::pair<Type,Type>>{
+    auto temp = convert_line(line);
+    temp = {-temp.b, temp.a, algorithm::determine(temp.b, temp.a, x, y)};
+    return line_algo::intersection_line(line, temp);
 }
 
 //Функция возвращает параллельную прямую, находящиеся на заданом расстоянии от
 //данной прямой(если distance < 0, то прямая будет расположена с лево, в других случаях с право)
-template<c_line_view View, std::floating_point Type>
-constexpr View parallel_line(const View &line, Type distance){
-    const auto [a,b,c] = equation_line_quick(line.view_begin.value, line.view_end.value);
-    const auto points = point_line<typename View::point>(a, b, c - distance * (-sqrt(algorithm::determine(a, -b, b, a))));
-    return {{points.first, false}, {points.second, false}};
+template<std::floating_point Type, template<class> class Line>
+constexpr parameter_line<Type> parallel_line(const Line<Type> &line, Type distance){
+    auto temp = convert_line(line);
+    return {temp.a, temp.b, temp.c - distance * (-sqrt(algorithm::determine(temp.a, -temp.b, temp.b, temp.a)))};
 }
 
-//Функция возвращает точку основания перпендикуляра, опущенную из заданной точки на прямую
-template<c_line_view View, c_point2d_decard Point>
-constexpr std::optional<Point> point_perpendicular(const View &line, const Point &point){
-    const auto [a,b,_] = equation_line_quick(line.view_begin.value, line.view_end.value);
-    const auto points = point_line<typename View::point>(-b, a, algorithm::determine(b, a, point.y(), point.x()));
-    return intersection_line(line, View({{points.first, false}, {points.second, false}}));
-}
 
 //Функция возвращает координаты точки на отрезки с заданным расстоянием от начало отрезка
-template<c_line_view View, std::floating_point Type>
-constexpr auto point_on_line(const View &line, Type distance) -> std::optional<typename View::point>{
-    if(!line.view_begin.is_view && !line.view_end.is_view){
-        return std::nullopt;
+template<std::floating_point Type, template<class> class Line>
+constexpr auto point_on_line(const Line<Type> &line, const Type &distance) -> std::optional<std::pair<Type,Type>>{
+    if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_half_line<Type>>){
+        return point_algo::new_point(line.x, line.y, line.angle, distance);
+
     }
-    if(!line.view_end.is_view){
-        return point_algo::new_point(line.view_begin.value, point_algo::angle(line.view_begin.value, line.view_end.value), distance);
+    else if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_line_section<Type>>){
+        if(distance > point_algo::distance<Type, 2>({line.x1, line.y1}, {line.x2, line.y2})){
+            return std::nullopt;
+        }
+        return point_algo::new_point(line.x1, line.y1, point_algo::angle(line.x1, line.y1, line.x2, line.y2), distance);
     }
-    if(distance > point_algo::distance(line.view_begin.value, line.view_end.value)){
-        return std::nullopt;
+    else{
+        static_assert(false, "The line has no borders!");
     }
-    return point_algo::new_point(line.view_begin.value, point_algo::angle(line.view_begin.value, line.view_end.value), distance);
+}
+
+// Функция проверяет принадлежит ли точка линии
+template<std::floating_point Type, template<class> class Line>
+constexpr bool check_point_on_line(const Line<Type> &line, const Type &x, const Type &y){
+    if(algorithm::compare(value_function(line, x, y), 0.)){
+        if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_line<Type>>){
+            return true;
+        }
+        else if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_half_line<Type>>
+                           || std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_line_section<Type>>){
+            return belongs_to_area_of_line(line, x, y);
+        }
+        else{
+            static_assert(false, "No Line");
+        }
+
+    }
+    return false;
+}
+
+//Функция возвращает кратчайшие расстояние от точки до прямой, если значение меньше 0 то точка находится слева, если больше то справа
+template<std::floating_point Type, template<class> class Line>
+constexpr Type distance_to_line(const Line<Type> &line, const Type &x, const Type &y){
+    auto temp = convert_line(line);
+    auto dist = (algorithm::determine(temp.a, -temp.b, y, x) + temp.c) / sqrt(algorithm::determine(temp.a, -temp.b, temp.b, temp.a));
+    if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_line<Type>>){
+        return dist;
+    }
+    else if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_half_line<Type>>){
+        return point_perpendicular(line, x, y).has_value() ? dist : point_algo::distance<Type, 2>({line.x, line.y}, {x, y});
+    }
+    else if constexpr(std::is_same_v<std::remove_cvref_t<decltype(line)>, parameter_line_section<Type>>){
+        return point_perpendicular(line, x, y).has_value() ? dist : std::min(point_algo::distance<Type, 2>({line.x1, line.y1}, {x, y}),
+                                                                             point_algo::distance<Type, 2>({line.x2, line.y2}, {x, y}));
+    }
+    else{
+        static_assert(false, "The line has no borders!");
+    }
 }
 
 }
