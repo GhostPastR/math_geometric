@@ -40,11 +40,12 @@ qt_add_executable(math_geometric
     unit_test_sa.h unit_test_sa.cpp
     special_algorithms/navigation_route/algorithm_route.h
     structs/point/decart_point2d.h structs/point/decart_point3d.h structs/point/geo_point2d.h structs/point/geo_point3d.h structs/point/polar_point2d.h structs/point/polar_point3d.h
-    algorithm/distance/distance.h algorithm/distance/interface.h
+    algorithm/distance/implementation.h algorithm/distance/interface.h
     algorithm/distance/test_distance.h
-    system/traits.h
-    algorithm/distance/tag_algoritm.h
-    algorithm/direction/direction.h algorithm/direction/interface.h
+    algorithm/direction/implementation.h algorithm/direction/interface.h
+    algorithm/convert/implementation.h algorithm/convert/interface.h algorithm/create_point/implementation.h algorithm/create_point/interface.h algorithm/midplane/implementation.h algorithm/midplane/interface.h algorithm/rotate/implementation.h algorithm/rotate/interface.h
+    algorithm/tag_algoritm.h
+    algorithm/traits.h
 
 )
 

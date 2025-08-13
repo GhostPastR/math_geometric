@@ -18,6 +18,11 @@ struct tag_point final{};
 
 namespace traits {
 
+template<typename Object>
+struct type_coordinate{
+    using type = undefined;
+};
+
 template<typename Point, std::size_t Property>
 struct access_point{
     inline constexpr static auto get(const Point &point){
@@ -25,21 +30,15 @@ struct access_point{
     }
 };
 
-
-
 template<typename Object>
 struct tag{
     using type_tag = undefined;
 };
 
-
-
 template<typename Object>
 struct coordinate_system{
-    using type_coordinate = undefined;
+    using system = undefined;
 };
-
-
 
 template<typename Object>
 struct dimension{

@@ -28,7 +28,7 @@ struct tag<int>{
 
 template<>
 struct coordinate_system<int>{
-    using type_coordinate = cartesian;
+    using system = cartesian;
 };
 
 template<>
@@ -48,7 +48,7 @@ namespace agl::algorithm {
 
 struct distance_point_to_line final{};
 
-template<> struct algorithm<object_point, object_line>{
+template<> struct algorithm_distance<object_point, object_line>{
     using type_algorithm = distance_point_to_line;
 };
 

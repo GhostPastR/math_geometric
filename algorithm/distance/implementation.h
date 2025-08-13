@@ -1,8 +1,8 @@
-#ifndef AGL_ALGORITHM_DISTANCE_DISTANCE_H
-#define AGL_ALGORITHM_DISTANCE_DISTANCE_H
+#ifndef AGL_ALGORITHM_DISTANCE_IMPLEMENTATION_H
+#define AGL_ALGORITHM_DISTANCE_IMPLEMENTATION_H
 
 #include <cmath>
-#include "algorithm/distance/tag_algoritm.h"
+#include "algorithm/tag_algoritm.h"
 
 namespace agl::algorithm {
 
@@ -46,7 +46,7 @@ struct distance<Point, polar, 2>{
         const auto r1 = traits::access_point<Point, 0>::get(a);
         const auto q1 = traits::access_point<Point, 1>::get(a);
         const auto r2 = traits::access_point<Point, 0>::get(b);
-        const auto q2 = traits::access_point<Point, 0>::get(b);
+        const auto q2 = traits::access_point<Point, 1>::get(b);
         return std::sqrt(std::pow(r1, 2) + std::pow(r2, 2) - 2 * r1 * r2 * std::cos(q1 - q2));
     }
 };
@@ -87,10 +87,10 @@ namespace geometry {
 
 template<typename Object1, typename Object2>
 inline constexpr auto distance(const Object1 &a, const Object2 &b){
-    using type_algorithm = algorithm<typename traits::tag<Object1>::type_tag,
-                                     typename traits::tag<Object2>::type_tag>::type_algorithm;
-    using type_coordinate_system1 = traits::coordinate_system<Object1>::type_coordinate;
-    using type_coordinate_system2 = traits::coordinate_system<Object2>::type_coordinate;
+    using type_algorithm = algorithm_distance<typename traits::tag<Object1>::type_tag,
+                                              typename traits::tag<Object2>::type_tag>::type_algorithm;
+    using type_coordinate_system1 = traits::coordinate_system<Object1>::system;
+    using type_coordinate_system2 = traits::coordinate_system<Object2>::system;
     constexpr auto dimension1 = traits::dimension<Object1>::value();
     constexpr auto dimension2 = traits::dimension<Object2>::value();
 
@@ -105,4 +105,4 @@ inline constexpr auto distance(const Object1 &a, const Object2 &b){
 
 }
 
-#endif // AGL_ALGORITHM_DISTANCE_DISTANCE_H
+#endif // AGL_ALGORITHM_DISTANCE_IMPLEMENTATION_H

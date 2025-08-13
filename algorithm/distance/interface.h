@@ -1,7 +1,7 @@
 #ifndef AGL_ALGORITHM_DISTANCE_INTERFACE_H
 #define AGL_ALGORITHM_DISTANCE_INTERFACE_H
 
-#include "distance.h"
+#include "implementation.h"
 
 namespace agl::algorithm {
 

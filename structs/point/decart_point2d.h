@@ -5,7 +5,7 @@
 // #include "../algorithm/point_algorithm.h"
 // #include "../unit/angle.h"
 #include <format>
-#include "system/traits.h"
+#include "algorithm/traits.h"
 
 namespace agl::point::decart {
 
@@ -59,6 +59,11 @@ namespace agl {
 namespace traits {
 
 template<typename Type>
+struct type_coordinate<point::decart::point2d<Type>>{
+    using type = Type;
+};
+
+template<typename Type>
 struct access_point<point::decart::point2d<Type>, 0>{
     inline constexpr static auto get(const point::decart::point2d<Type> &point){
         return point.x();
@@ -79,7 +84,7 @@ struct tag<point::decart::point2d<Type>>{
 
 template<typename Type>
 struct coordinate_system<point::decart::point2d<Type>>{
-    using type_coordinate = cartesian;
+    using system = cartesian;
 };
 
 template<typename Type>
