@@ -1,7 +1,8 @@
-#ifndef DISTANCE_H
-#define DISTANCE_H
+#ifndef AGL_UNIT_DISTANCE_H
+#define AGL_UNIT_DISTANCE_H
 
-#include "../system/system_unit.h"
+#include "system/tag.h"
+#include "system/system_unit.h"
 
 namespace agl::unit {
 
@@ -83,6 +84,16 @@ constexpr agl::unit::distance operator *(const agl::unit::distance &value1, cons
     return value2 * value1;
 }
 
+namespace agl::system::tag{
+
+template<> struct value<agl::unit::distance>{
+    inline constexpr static auto get(const agl::unit::distance &temp){
+        return temp.value();
+    }
+};
+
+}
+
 
 /* Для добавления новой единицы измерения:
  * using <name> = measure_unit<_length, <value>>; value - на сколько нужно умножить чтобы получились метры
@@ -91,4 +102,4 @@ constexpr agl::unit::distance operator *(const agl::unit::distance &value1, cons
  * */
 
 
-#endif // DISTANCE_H
+#endif // AGL_UNIT_DISTANCE_H

@@ -1,16 +1,16 @@
-#ifndef AGL_ALGORITHM_<>_INTERFACE_H
-#define AGL_ALGORITHM_<>_INTERFACE_H
+#ifndef AGL_ALGORITHM_ROTATE_INTERFACE_H
+#define AGL_ALGORITHM_ROTATE_INTERFACE_H
 
 #include "implementation.h"
 
 namespace agl::algorithm {
 
 //метод расчитывает координаты новой точки
-template<>
-inline constexpr auto <>(){
-    return geometry::create_point<>();
+template<typename Object, typename ObjectDirection, typename Point>
+inline constexpr auto rotate(const Object &object, const ObjectDirection &direction, const Point &point){
+    return geometry::rotate<Object, ObjectDirection, Point>(object, direction, point);
 }
 
 }
 
-#endif // AGL_ALGORITHM_<>_INTERFACE_H
+#endif // AGL_ALGORITHM_ROTATE_INTERFACE_H

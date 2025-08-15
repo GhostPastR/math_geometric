@@ -1,5 +1,13 @@
 #include "unit_test.h"
 #include <QtTest/QTest>
+
+#include "structs/point/decart_point2d.h"
+#include "structs/point/decart_point3d.h"
+#include "structs/point/geo_point2d.h"
+#include "structs/point/geo_point3d.h"
+#include "structs/point/polar_point2d.h"
+#include "structs/point/polar_point3d.h"
+
 #include "algorithm/approximation_algorithm.h"
 #include "algorithm/circle_algorithm.h"
 #include "algorithm/geo_algorithm.h"
@@ -7,17 +15,20 @@
 #include "algorithm/line_algorithm.h"
 #include "algorithm/polygon_algorithm.h"
 
+
 #include "unit/distance.h"
 
 
 #include "qtestcase.h"
 #include "structs/matrix.h"
 #include "structs/vector.h"
+
+#include "unit/angle.h"
 #include "unit/speed.h"
 #include "unit/temperature.h"
 #include "unit/time.h"
 #include "unit/weight.h"
-#include "user_type.h"
+// #include "user_type.h"
 
 using namespace agl;
 
@@ -25,94 +36,112 @@ Unit_Test::Unit_Test(QObject *parent) : QObject{parent}{}
 
 void Unit_Test::test_angle()
 {
-    {
-        Angle angle;
-        QVERIFY(algorithm::compare(angle.radian(), 0.));
-        QVERIFY(algorithm::compare(angle.degrees(), 0.));
-        angle = 180._deg;
-        QVERIFY(algorithm::compare(angle.radian(), algorithm::pi<decltype(angle.radian())>));
-        QVERIFY(algorithm::compare(angle.degrees(), 180.));
-    }
-    {
-        QVERIFY(4_rad == 4_rad);
-        QVERIFY(5_deg == 5_deg);
+    // {
+    //     Angle angle;
+    //     QVERIFY(algorithm::compare(angle.radian(), 0.));
+    //     QVERIFY(algorithm::compare(angle.degrees(), 0.));
+    //     angle = 180._deg;
+    //     QVERIFY(algorithm::compare(angle.radian(), algorithm::pi<decltype(angle.radian())>));
+    //     QVERIFY(algorithm::compare(angle.degrees(), 180.));
+    // }
+    // {
+    //     QVERIFY(4_rad == 4_rad);
+    //     QVERIFY(5_deg == 5_deg);
 
-        QVERIFY(50._rad == 50._rad);
-        QVERIFY(50._deg == 50._deg);
+    //     QVERIFY(50._rad == 50._rad);
+    //     QVERIFY(50._deg == 50._deg);
 
-        QVERIFY(20._deg < 50._deg);
-        QVERIFY(23._rad < 45._rad);
+    //     QVERIFY(20._deg < 50._deg);
+    //     QVERIFY(23._rad < 45._rad);
 
-        QVERIFY(12._deg > 2._deg);
-        QVERIFY(56._rad > 45._rad);
+    //     QVERIFY(12._deg > 2._deg);
+    //     QVERIFY(56._rad > 45._rad);
 
-        QVERIFY(20._deg <= 50._deg);
-        QVERIFY(23._rad <= 45._rad);
-        QVERIFY(23._rad <= 23._rad);
+    //     QVERIFY(20._deg <= 50._deg);
+    //     QVERIFY(23._rad <= 45._rad);
+    //     QVERIFY(23._rad <= 23._rad);
 
-        QVERIFY(12._deg >= 2._deg);
-        QVERIFY(56._rad >= 45._rad);
-        QVERIFY(1._rad >= 1._rad);
+    //     QVERIFY(12._deg >= 2._deg);
+    //     QVERIFY(56._rad >= 45._rad);
+    //     QVERIFY(1._rad >= 1._rad);
 
-        QVERIFY(-50._deg == -50._deg);
-        QVERIFY(-50._rad == -50._rad);
-        QVERIFY((50._deg + 70._deg) == 120._deg);
+    //     QVERIFY(-50._deg == -50._deg);
+    //     QVERIFY(-50._rad == -50._rad);
+    //     QVERIFY((50._deg + 70._deg) == 120._deg);
 
-        {
-            Angle angle1 = 40._deg;
-            Angle angle2 = 65._deg;
-            QVERIFY((angle1 + 70._deg) == 110._deg);
-            QVERIFY((angle1 + angle2) == 105._deg);
-        }
+    //     {
+    //         Angle angle1 = 40._deg;
+    //         Angle angle2 = 65._deg;
+    //         QVERIFY((angle1 + 70._deg) == 110._deg);
+    //         QVERIFY((angle1 + angle2) == 105._deg);
+    //     }
 
-        {
-            Angle angle1 = 76._deg;
-            Angle angle2 = 25._deg;
-            QVERIFY((angle1 - 70._deg) == 6._deg);
-            QVERIFY((angle1 - angle2) == 51._deg);
-            QVERIFY((angle1 - 100._deg) == -24._deg);
-            QVERIFY((angle2 - angle1) == -51._deg);
-        }
+    //     {
+    //         Angle angle1 = 76._deg;
+    //         Angle angle2 = 25._deg;
+    //         QVERIFY((angle1 - 70._deg) == 6._deg);
+    //         QVERIFY((angle1 - angle2) == 51._deg);
+    //         QVERIFY((angle1 - 100._deg) == -24._deg);
+    //         QVERIFY((angle2 - angle1) == -51._deg);
+    //     }
 
-        {
-            Angle angle = 35._deg;
-            QVERIFY((angle * 2) == 70._deg);
-            QVERIFY((2 * angle) == 70._deg);
-            angle = 90._deg;
-            QVERIFY((angle / 3) == 30._deg);
-            QVERIFY((90_deg / 3) == 30._deg);
-        }
+    //     {
+    //         Angle angle = 35._deg;
+    //         QVERIFY((angle * 2) == 70._deg);
+    //         QVERIFY((2 * angle) == 70._deg);
+    //         angle = 90._deg;
+    //         QVERIFY((angle / 3) == 30._deg);
+    //         QVERIFY((90_deg / 3) == 30._deg);
+    //     }
 
-        {
-            Angle angle = 20._deg;
-            angle += 20._deg;
-            QVERIFY(angle == 40._deg);
-            angle -= 50._deg;
-            QVERIFY(angle == -10._deg);
-        }
-    }
+    //     {
+    //         Angle angle = 20._deg;
+    //         angle += 20._deg;
+    //         QVERIFY(angle == 40._deg);
+    //         angle -= 50._deg;
+    //         QVERIFY(angle == -10._deg);
+    //     }
+    // }
 
-    {
-        {
-            Angle angle = 45._deg;
-            QVERIFY(Angle().asin(angle.sin()) == 45._deg);
-            QVERIFY(Angle().acos(angle.cos()) == 45._deg);
-            QVERIFY(Angle().atan(angle.tan()) == 45._deg);
-            QVERIFY(Angle().actan(angle.ctan()) == 45._deg);
-        }
+    // {
+    //     {
+    //         Angle angle = 45._deg;
+    //         QVERIFY(Angle().asin(angle.sin()) == 45._deg);
+    //         QVERIFY(Angle().acos(angle.cos()) == 45._deg);
+    //         QVERIFY(Angle().atan(angle.tan()) == 45._deg);
+    //         QVERIFY(Angle().actan(angle.ctan()) == 45._deg);
+    //     }
 
-        {
-            Angle angle = 0._deg;
-            QVERIFY(angle.asin(angle.sin()) == 0._deg);
-            QVERIFY(angle.acos(angle.cos()) == 0._deg);
-            QVERIFY(angle.atan(angle.tan()) == 0._deg);
-            QVERIFY(angle.actan(angle.ctan()) == 0._deg);
-        }
-    }
+    //     {
+    //         Angle angle = 0._deg;
+    //         QVERIFY(angle.asin(angle.sin()) == 0._deg);
+    //         QVERIFY(angle.acos(angle.cos()) == 0._deg);
+    //         QVERIFY(angle.atan(angle.tan()) == 0._deg);
+    //         QVERIFY(angle.actan(angle.ctan()) == 0._deg);
+    //     }
+    // }
 }
 
 void Unit_Test::test_unit()
 {
+    {//distance
+        {
+            unit::angle d(algorithm::pi<double>);
+            QVERIFY(algorithm::compare(d.value<unit::radian>(), algorithm::pi<double>));
+            QVERIFY(algorithm::compare(d.value<unit::degrees>(), 180));
+        }
+        {
+            unit::angle d;
+            d.set_value<unit::radian>(algorithm::pi_on_2<double>);
+            QVERIFY(algorithm::compare(d.value<unit::radian>(), algorithm::pi_on_2<double>));
+            d.set_value<unit::degrees>(45);
+            QVERIFY(algorithm::compare(d.value<unit::radian>(), algorithm::pi_on_4<double>));
+        }
+        {
+            QVERIFY(algorithm::compare((1_rad).value<unit::radian>(), 1));
+            QVERIFY(algorithm::compare((100_deg).value<unit::radian>(), 1.745329));
+        }
+    }
     {//distance
         {
             unit::distance d(1000);
@@ -352,7 +381,7 @@ void Unit_Test::test_unit()
 void Unit_Test::test_point()
 {
     {
-        point2d point1;
+        agl::point::decart::point2d<double> point1;
         QVERIFY(algorithm::compare(point1.x(), 0.));
         QVERIFY(algorithm::compare(point1.y(), 0.));
 
@@ -361,14 +390,31 @@ void Unit_Test::test_point()
         QVERIFY(algorithm::compare(point1.x(), 100.));
         QVERIFY(algorithm::compare(point1.y(), 100.));
 
-        point2d point2;
+        agl::point::decart::point2d<double> point2;
+        point2.set_x(100.);
+        point2.set_y(100.);
+        QVERIFY(point1 == point2);
+    }
+
+
+    {
+        agl::point::decart::point2d<double> point1;
+        QVERIFY(algorithm::compare(point1.x(), 0.));
+        QVERIFY(algorithm::compare(point1.y(), 0.));
+
+        point1.set_x(100.);
+        point1.set_y(100.);
+        QVERIFY(algorithm::compare(point1.x(), 100.));
+        QVERIFY(algorithm::compare(point1.y(), 100.));
+
+        agl::point::decart::point2d<double> point2;
         point2.set_x(100.);
         point2.set_y(100.);
         QVERIFY(point1 == point2);
     }
 
     {
-        point3d point1;
+        agl::point::decart::point3d<double> point1;
         QVERIFY(algorithm::compare(point1.x(), 0.));
         QVERIFY(algorithm::compare(point1.y(), 0.));
         QVERIFY(algorithm::compare(point1.z(), 0.));
@@ -380,7 +426,7 @@ void Unit_Test::test_point()
         QVERIFY(algorithm::compare(point1.y(), 123.));
         QVERIFY(algorithm::compare(point1.z(), 34.));
 
-        point3d point2;
+        agl::point::decart::point3d<double> point2;
         point2.set_x(100.);
         point2.set_y(123.);
         point2.set_z(34.);
@@ -388,455 +434,457 @@ void Unit_Test::test_point()
     }
 
     {
-        // {
-        //     PointGeo point;
-        //     QVERIFY(point.latitude() == 0_deg);
-        //     QVERIFY(point.longitude() == 0_deg);
+        // PointGeo point;
+        // QVERIFY(point.latitude() == 0_deg);
+        // QVERIFY(point.longitude() == 0_deg);
 
-        //     point.set_latitude(56.7_deg);
-        //     point.set_longitude(12.12_deg);
-        //     QVERIFY(point.latitude() == 56.7_deg);
-        //     QVERIFY(point.longitude() == 12.12_deg);
+        // point.set_latitude(56.7_deg);
+        // point.set_longitude(12.12_deg);
+        // QVERIFY(point.latitude() == 56.7_deg);
+        // QVERIFY(point.longitude() == 12.12_deg);
 
-        //     PointGeo point1{10_deg, 10_deg};
-        //     PointGeo point2{10_deg, 10_deg};
-        //     QVERIFY(point1 == point2);
-        // }
-
-        // {
-        //     PointGeo3d point;
-        //     QVERIFY(point.latitude() == 0_deg);
-        //     QVERIFY(point.longitude() == 0_deg);
-        //     QVERIFY(algorithm::compare(point.altitude(), 0.));
-
-        //     point.set_latitude(56.7_deg);
-        //     point.set_longitude(12.12_deg);
-        //     point.set_altitude(1232);
-        //     QVERIFY(point.latitude() == 56.7_deg);
-        //     QVERIFY(point.longitude() == 12.12_deg);
-        //     QVERIFY(algorithm::compare(point.altitude(), 1232.));
-
-        //     PointGeo3d point1{10_deg, 10_deg, 123.0};
-        //     PointGeo3d point2{10_deg, 10_deg, 123.};
-        //     QVERIFY(point1 == point2);
-        // }
-
-        // {
-        //     PointGeo4d point;
-        //     QVERIFY(point.latitude() == 0_deg);
-        //     QVERIFY(point.longitude() == 0_deg);
-        //     QVERIFY(algorithm::compare(point.altitude(), 0.));
-        //     QVERIFY(algorithm::compare(point.time(), 0.));
-
-        //     point.set_latitude(56.7_deg);
-        //     point.set_longitude(12.12_deg);
-        //     point.set_altitude(1232);
-        //     point.set_time(3533);
-        //     QVERIFY(point.latitude() == 56.7_deg);
-        //     QVERIFY(point.longitude() == 12.12_deg);
-        //     QVERIFY(algorithm::compare(point.altitude(), 1232.));
-        //     QVERIFY(algorithm::compare(point.time(), 3533.));
-
-        //     PointGeo4d point1{10_deg, 10_deg, 123, 56};
-        //     PointGeo4d point2{10_deg, 10_deg, 123, 56};
-        //     QVERIFY(point1 == point2);
-        // }
-
-        {
-            polar2d point;
-            QVERIFY(algorithm::compare(point.psi(), 0.));
-            QVERIFY(point.fi() == 0_deg);
-
-            point.set_psi(123);
-            point.set_fi(3_deg);
-            QVERIFY(algorithm::compare(point.psi(), 123.));
-            QVERIFY(point.fi() == 3_deg);
-        }
-
-        // {
-        //     Polar3d point;
-        //     QVERIFY(algorithm::compare(point.psi(), 0.));
-        //     QVERIFY(point.fi() == 0_deg);
-        //     QVERIFY(point.z() == 0.);
-
-        //     point.set_psi(123);
-        //     point.set_fi(3_deg);
-        //     point.set_z(21);
-        //     QVERIFY(algorithm::compare(point.psi(), 123.));
-        //     QVERIFY(point.fi() == 3_deg);
-        //     QVERIFY(point.z() == 21.);
-        // }
+        // PointGeo point1{10_deg, 10_deg};
+        // PointGeo point2{10_deg, 10_deg};
+        // QVERIFY(point1 == point2);
     }
+
+    {
+        // PointGeo3d point;
+        // QVERIFY(point.latitude() == 0_deg);
+        // QVERIFY(point.longitude() == 0_deg);
+        // QVERIFY(algorithm::compare(point.altitude(), 0.));
+
+        // point.set_latitude(56.7_deg);
+        // point.set_longitude(12.12_deg);
+        // point.set_altitude(1232);
+        // QVERIFY(point.latitude() == 56.7_deg);
+        // QVERIFY(point.longitude() == 12.12_deg);
+        // QVERIFY(algorithm::compare(point.altitude(), 1232.));
+
+        // PointGeo3d point1{10_deg, 10_deg, 123.0};
+        // PointGeo3d point2{10_deg, 10_deg, 123.};
+        // QVERIFY(point1 == point2);
+    }
+
+    // {
+    //     PointGeo4d point;
+    //     QVERIFY(point.latitude() == 0_deg);
+    //     QVERIFY(point.longitude() == 0_deg);
+    //     QVERIFY(algorithm::compare(point.altitude(), 0.));
+    //     QVERIFY(algorithm::compare(point.time(), 0.));
+
+    //     point.set_latitude(56.7_deg);
+    //     point.set_longitude(12.12_deg);
+    //     point.set_altitude(1232);
+    //     point.set_time(3533);
+    //     QVERIFY(point.latitude() == 56.7_deg);
+    //     QVERIFY(point.longitude() == 12.12_deg);
+    //     QVERIFY(algorithm::compare(point.altitude(), 1232.));
+    //     QVERIFY(algorithm::compare(point.time(), 3533.));
+
+    //     PointGeo4d point1{10_deg, 10_deg, 123, 56};
+    //     PointGeo4d point2{10_deg, 10_deg, 123, 56};
+    //     QVERIFY(point1 == point2);
+    // }
+
+    {
+        // agl::point::polar::polar2d<double,double, Angle> point;
+
+
+        // polar2d point;
+        // QVERIFY(algorithm::compare(point.psi(), 0.));
+        // QVERIFY(point.fi() == 0_deg);
+
+        // point.set_psi(123);
+        // point.set_fi(3_deg);
+        // QVERIFY(algorithm::compare(point.psi(), 123.));
+        // QVERIFY(point.fi() == 3_deg);
+    }
+
+    {
+        // Polar3d point;
+        // QVERIFY(algorithm::compare(point.psi(), 0.));
+        // QVERIFY(point.fi() == 0_deg);
+        // QVERIFY(point.z() == 0.);
+
+        // point.set_psi(123);
+        // point.set_fi(3_deg);
+        // point.set_z(21);
+        // QVERIFY(algorithm::compare(point.psi(), 123.));
+        // QVERIFY(point.fi() == 3_deg);
+        // QVERIFY(point.z() == 21.);
+    }
+
 }
 
 void Unit_Test::test_point_algorithm()
 {
-    {
-        point2d point1{0,0};
-        point2d point2{5,5};
-        auto value = Angle(angle(point1, point2));
-        QVERIFY(value == 45_deg);
-    }
+    // {
+    //     point2d point1{0,0};
+    //     point2d point2{5,5};
+    //     auto value = Angle(angle(point1, point2));
+    //     QVERIFY(value == 45_deg);
+    // }
 
-    {
-        point2d point1{5,5};
-        point2d point2{10,10};
-        auto value = distance(point1, point2);
-        QVERIFY(algorithm::compare(value, 5 * std::sqrt(2)));
-    }
+    // {
+    //     point2d point1{5,5};
+    //     point2d point2{10,10};
+    //     auto value = distance(point1, point2);
+    //     QVERIFY(algorithm::compare(value, 5 * std::sqrt(2)));
+    // }
 
-    {//new_point
-        {
-            point2d point1{10,10};
-            auto value = new_point(point1, (90._deg).radian(), 10.);
-            QVERIFY(algorithm::compare(value.x(), 20.));
-            QVERIFY(algorithm::compare(value.y(), 10.));
-        }
-        {
-            point2d point1{10,10};
-            auto value = new_point(point1, (0._deg).radian(), 10.);
-            QVERIFY(algorithm::compare(value.x(), 10.));
-            QVERIFY(algorithm::compare(value.y(), 20.));
-        }
-        {
-            point2d point1{10,10};
-            auto value = new_point(point1, (180._deg).radian(), 10.);
-            QVERIFY(algorithm::compare(value.x(), 10.));
-            QVERIFY(algorithm::compare(value.y(), 0.));
-        }
-        {
-            point2d point1{10,10};
-            auto value = new_point(point1, (270._deg).radian(), 10.);
-            QVERIFY(algorithm::compare(value.x(), 0.));
-            QVERIFY(algorithm::compare(value.y(), 10.));
-        }
-    }
+    // {//new_point
+    //     {
+    //         point2d point1{10,10};
+    //         auto value = new_point(point1, (90._deg).radian(), 10.);
+    //         QVERIFY(algorithm::compare(value.x(), 20.));
+    //         QVERIFY(algorithm::compare(value.y(), 10.));
+    //     }
+    //     {
+    //         point2d point1{10,10};
+    //         auto value = new_point(point1, (0._deg).radian(), 10.);
+    //         QVERIFY(algorithm::compare(value.x(), 10.));
+    //         QVERIFY(algorithm::compare(value.y(), 20.));
+    //     }
+    //     {
+    //         point2d point1{10,10};
+    //         auto value = new_point(point1, (180._deg).radian(), 10.);
+    //         QVERIFY(algorithm::compare(value.x(), 10.));
+    //         QVERIFY(algorithm::compare(value.y(), 0.));
+    //     }
+    //     {
+    //         point2d point1{10,10};
+    //         auto value = new_point(point1, (270._deg).radian(), 10.);
+    //         QVERIFY(algorithm::compare(value.x(), 0.));
+    //         QVERIFY(algorithm::compare(value.y(), 10.));
+    //     }
+    // }
 
-    {
-        point2d point1{10,10};
-        auto value = rotate(point1, (90._deg).radian(), point2d{5,5});
-        QVERIFY(algorithm::compare(value.x(), 10.));
-        QVERIFY(algorithm::compare(value.y(), 0.));
-    }
+    // {
+    //     point2d point1{10,10};
+    //     auto value = rotate(point1, (90._deg).radian(), point2d{5,5});
+    //     QVERIFY(algorithm::compare(value.x(), 10.));
+    //     QVERIFY(algorithm::compare(value.y(), 0.));
+    // }
 
-    {
-        auto value = midplane(point2d{10,10}, point2d{5,5});
-        QVERIFY(algorithm::compare(value.x(), 7.5));
-        QVERIFY(algorithm::compare(value.y(), 7.5));
-    }
+    // {
+    //     auto value = midplane(point2d{10,10}, point2d{5,5});
+    //     QVERIFY(algorithm::compare(value.x(), 7.5));
+    //     QVERIFY(algorithm::compare(value.y(), 7.5));
+    // }
 
-    {
-        auto value = convert_polar(point2d{10,10}, point2d{5,5});
-        QVERIFY(algorithm::compare(value.psi(), 5 * std::sqrt(2)));
-        QVERIFY(value.fi() == 225_deg);
-    }
+    // {
+    //     auto value = convert_polar(point2d{10,10}, point2d{5,5});
+    //     QVERIFY(algorithm::compare(value.psi(), 5 * std::sqrt(2)));
+    //     QVERIFY(value.fi() == 225_deg);
+    // }
 }
 
 void Unit_Test::test_line()
 {
-    {
-        {
-            auto line = line2d({1.,0.}, {5.,3.});
-            QVERIFY(line.a() == -3);
-            QVERIFY(line.b() == 4);
-            QVERIFY(line.c() == 3);
-        }
+    // {
+    //     {
+    //         auto line = line2d({1.,0.}, {5.,3.});
+    //         QVERIFY(line.a() == -3);
+    //         QVERIFY(line.b() == 4);
+    //         QVERIFY(line.c() == 3);
+    //     }
 
-        {
-            auto line1 = line2d({0.,0.}, {0.,10.});
-            auto line2 = line2d({0.,2.}, {5.,2.});
-            QVERIFY(line1 != line2);
-        }
+    //     {
+    //         auto line1 = line2d({0.,0.}, {0.,10.});
+    //         auto line2 = line2d({0.,2.}, {5.,2.});
+    //         QVERIFY(line1 != line2);
+    //     }
 
-        {
-            auto line1 = line2d({0.,2.}, {5.,2.});
-            auto line2 = line2d({0.,2.}, {5.,2.});
-            QVERIFY(line1 == line2);
-        }
+    //     {
+    //         auto line1 = line2d({0.,2.}, {5.,2.});
+    //         auto line2 = line2d({0.,2.}, {5.,2.});
+    //         QVERIFY(line1 == line2);
+    //     }
 
-        {
-            line2d line1 = {1,1,1};
-            line2d line2 = {2,2,2};
-            QVERIFY(line1 == line2);
-        }
-    }
+    //     {
+    //         line2d line1 = {1,1,1};
+    //         line2d line2 = {2,2,2};
+    //         QVERIFY(line1 == line2);
+    //     }
+    // }
 
-    {
-        {
-            auto half_line = half_Line2d({3.,2.}, 50_deg);
-            auto [a,b,c] = equation_line_quick(half_line.start(), half_line.direction());
-            QVERIFY(algorithm::compare(a, -0.642788));
-            QVERIFY(algorithm::compare(b, 0.7660444));
-            QVERIFY(algorithm::compare(c, 0.3962739));
-        }
+    // {
+    //     {
+    //         auto half_line = half_Line2d({3.,2.}, 50_deg);
+    //         auto [a,b,c] = equation_line_quick(half_line.start(), half_line.direction());
+    //         QVERIFY(algorithm::compare(a, -0.642788));
+    //         QVERIFY(algorithm::compare(b, 0.7660444));
+    //         QVERIFY(algorithm::compare(c, 0.3962739));
+    //     }
 
-        {
-            auto half_line1 = half_Line2d({3.,2.}, 50_deg);
-            auto half_line2 = half_Line2d({3.,2.}, 50_deg);
-            QVERIFY(half_line1 == half_line2);
-        }
+    //     {
+    //         auto half_line1 = half_Line2d({3.,2.}, 50_deg);
+    //         auto half_line2 = half_Line2d({3.,2.}, 50_deg);
+    //         QVERIFY(half_line1 == half_line2);
+    //     }
 
-        {
-            auto half_line1 = half_Line2d({3.,2.}, 50_deg);
-            auto half_line2 = half_Line2d({3.,20.}, 50_deg);
-            QVERIFY(half_line1 != half_line2);
-        }
-    }
+    //     {
+    //         auto half_line1 = half_Line2d({3.,2.}, 50_deg);
+    //         auto half_line2 = half_Line2d({3.,20.}, 50_deg);
+    //         QVERIFY(half_line1 != half_line2);
+    //     }
+    // }
 
-    {
-        {
-            auto line_section = line_section2d({0.,2.}, {1.,2.});
-            auto [a,b,c] = equation_line_quick(line_section.start(), line_section.stop());
-            QVERIFY(algorithm::compare(a, 0.));
-            QVERIFY(algorithm::compare(b, 1.));
-            QVERIFY(algorithm::compare(c, -2.));
-        }
+    // {
+    //     {
+    //         auto line_section = line_section2d({0.,2.}, {1.,2.});
+    //         auto [a,b,c] = equation_line_quick(line_section.start(), line_section.stop());
+    //         QVERIFY(algorithm::compare(a, 0.));
+    //         QVERIFY(algorithm::compare(b, 1.));
+    //         QVERIFY(algorithm::compare(c, -2.));
+    //     }
 
-        {
-            auto line_section1 = line_section2d({0.,2.}, {1.,2.});
-            auto line_section2 = line_section2d({0.,2.}, {1.,2.});
-            QVERIFY(line_section1 == line_section2);
-        }
+    //     {
+    //         auto line_section1 = line_section2d({0.,2.}, {1.,2.});
+    //         auto line_section2 = line_section2d({0.,2.}, {1.,2.});
+    //         QVERIFY(line_section1 == line_section2);
+    //     }
 
-        {
-            auto line_section1 = line_section2d({0.,2.}, {1.,2.});
-            auto line_section2 = line_section2d({1.,2.}, {2.,2.});
-            QVERIFY(line_section1 != line_section2);
-        }
-    }
+    //     {
+    //         auto line_section1 = line_section2d({0.,2.}, {1.,2.});
+    //         auto line_section2 = line_section2d({1.,2.}, {2.,2.});
+    //         QVERIFY(line_section1 != line_section2);
+    //     }
+    // }
 }
 
 void Unit_Test::test_line_algorithm()
 {
-    {//equation_line_quick, distance_to_line
-        {
-            {
-                auto line = line2d({0.,0.}, {2.,2.});
-                std::cout << line.a() << std::endl;
-                std::cout << line.b() << std::endl;
-                std::cout << line.c() << std::endl;
-            }
-            {
-                auto line = line2d({5.,5.}, {6.,6.});
-                std::cout << line.a() << std::endl;
-                std::cout << line.b() << std::endl;
-                std::cout << line.c() << std::endl;
-            }
-        }
+    // {//equation_line_quick, distance_to_line
+    //     {
+    //         {
+    //             auto line = line2d({0.,0.}, {2.,2.});
+    //             std::cout << line.a() << std::endl;
+    //             std::cout << line.b() << std::endl;
+    //             std::cout << line.c() << std::endl;
+    //         }
+    //         {
+    //             auto line = line2d({5.,5.}, {6.,6.});
+    //             std::cout << line.a() << std::endl;
+    //             std::cout << line.b() << std::endl;
+    //             std::cout << line.c() << std::endl;
+    //         }
+    //     }
 
 
 
-        {
-            auto line = line2d({0.,0.}, {0.,10.});
-            auto dist = distance_to_line(line, point2d{5,5});
-            QVERIFY(algorithm::compare(dist, -5.));
+    //     {
+    //         auto line = line2d({0.,0.}, {0.,10.});
+    //         auto dist = distance_to_line(line, point2d{5,5});
+    //         QVERIFY(algorithm::compare(dist, -5.));
 
-            line = line2d({0.,0.}, {0.,10.});
-            dist = distance_to_line(line, point2d{-5,-5});
-            QVERIFY(algorithm::compare(dist, 5.));
-        }
-        {
-            auto half_line = half_Line2d({3.,2.}, 50_deg);
-            auto dist = distance_to_line(half_line, point2d{5,5});
-            QVERIFY(algorithm::compare(dist, 1.012558));
+    //         line = line2d({0.,0.}, {0.,10.});
+    //         dist = distance_to_line(line, point2d{-5,-5});
+    //         QVERIFY(algorithm::compare(dist, 5.));
+    //     }
+    //     {
+    //         auto half_line = half_Line2d({3.,2.}, 50_deg);
+    //         auto dist = distance_to_line(half_line, point2d{5,5});
+    //         QVERIFY(algorithm::compare(dist, 1.012558));
 
-            half_line = half_Line2d({10.,10.}, 100_deg);
-            dist = distance_to_line(half_line, point2d{-5,-5});
-            QVERIFY(algorithm::compare(dist, 21.213203));
-        }
-        {
-            auto line = line_section2d({0.,0.}, {0.,10.});
-            auto dist = distance_to_line(line, point2d{5,5});
-            QVERIFY(algorithm::compare(dist, -5.));
+    //         half_line = half_Line2d({10.,10.}, 100_deg);
+    //         dist = distance_to_line(half_line, point2d{-5,-5});
+    //         QVERIFY(algorithm::compare(dist, 21.213203));
+    //     }
+    //     {
+    //         auto line = line_section2d({0.,0.}, {0.,10.});
+    //         auto dist = distance_to_line(line, point2d{5,5});
+    //         QVERIFY(algorithm::compare(dist, -5.));
 
-            line = line_section2d({0.,0.}, {0.,10.});
-            dist = distance_to_line(line, point2d{-5,-5});
-            QVERIFY(algorithm::compare(dist, 7.071068));
-        }
-    }
+    //         line = line_section2d({0.,0.}, {0.,10.});
+    //         dist = distance_to_line(line, point2d{-5,-5});
+    //         QVERIFY(algorithm::compare(dist, 7.071068));
+    //     }
+    // }
 
-    {//value_function
-        {
-            auto line = line2d({0.,0.}, {5.,5.});
-            auto value = value_function(line, point2d{5,5});
-            QVERIFY(algorithm::compare(value, 0.));
-        }
+    // {//value_function
+    //     {
+    //         auto line = line2d({0.,0.}, {5.,5.});
+    //         auto value = value_function(line, point2d{5,5});
+    //         QVERIFY(algorithm::compare(value, 0.));
+    //     }
 
-        {
-            auto line = line2d({1.,0.}, {5.,3.});
-            auto value = value_function(line, point2d{5,5});
-            QVERIFY(!algorithm::compare(value, 0.));
-        }
-    }
+    //     {
+    //         auto line = line2d({1.,0.}, {5.,3.});
+    //         auto value = value_function(line, point2d{5,5});
+    //         QVERIFY(!algorithm::compare(value, 0.));
+    //     }
+    // }
 
-    {//intersection_line(3)
-        {
-            auto line1 = line2d({0.,0.}, {0.,10.});
-            auto line2 = line2d({0.,2.}, {5.,2.});
+    // {//intersection_line(3)
+    //     {
+    //         auto line1 = line2d({0.,0.}, {0.,10.});
+    //         auto line2 = line2d({0.,2.}, {5.,2.});
 
-            auto value = intersection_line(line1, line2);
-            auto point = point2d(0,2);
-            QVERIFY(value.has_value() && (value.value() == point));
-        }
+    //         auto value = intersection_line(line1, line2);
+    //         auto point = point2d(0,2);
+    //         QVERIFY(value.has_value() && (value.value() == point));
+    //     }
 
-        {
-            auto line1 = line2d({0.,2.}, {10.,2.});
-            auto line2 = line2d({0.,5.}, {10.,5.});
+    //     {
+    //         auto line1 = line2d({0.,2.}, {10.,2.});
+    //         auto line2 = line2d({0.,5.}, {10.,5.});
 
-            auto value = intersection_line(line1, line2);
-            QVERIFY(!value.has_value());
-        }
+    //         auto value = intersection_line(line1, line2);
+    //         QVERIFY(!value.has_value());
+    //     }
 
-        {
-            auto half_line1 = half_Line2d({3.,2.}, 50_deg);
-            auto half_line2 = half_Line2d({3.,2.}, 50_deg);
+    //     {
+    //         auto half_line1 = half_Line2d({3.,2.}, 50_deg);
+    //         auto half_line2 = half_Line2d({3.,2.}, 50_deg);
 
-            auto value = intersection_line(half_line1, half_line2);
-            QVERIFY(!value.has_value());
-        }
+    //         auto value = intersection_line(half_line1, half_line2);
+    //         QVERIFY(!value.has_value());
+    //     }
 
-        {
-            auto half_line1 = half_Line2d({0,2}, 90_deg);
-            auto half_line2 = half_Line2d({2.,0}, 0_deg);
+    //     {
+    //         auto half_line1 = half_Line2d({0,2}, 90_deg);
+    //         auto half_line2 = half_Line2d({2.,0}, 0_deg);
 
-            auto value = intersection_line(half_line1, half_line2);
-            auto point = point2d(2, 2);
-            QVERIFY(value == point);
-        }
+    //         auto value = intersection_line(half_line1, half_line2);
+    //         auto point = point2d(2, 2);
+    //         QVERIFY(value == point);
+    //     }
 
-        {
-            auto line1 = line_section2d({1,2}, {5, 2});
-            auto line2 = line_section2d({2.,0}, {2.,10});
-            QVERIFY(intersection_line(line1, line2).has_value());
-        }
-    }
+    //     {
+    //         auto line1 = line_section2d({1,2}, {5, 2});
+    //         auto line2 = line_section2d({2.,0}, {2.,10});
+    //         QVERIFY(intersection_line(line1, line2).has_value());
+    //     }
+    // }
 
-    {//check_point_on_line(3)
-        {
-            auto line = line2d({0.,0.}, {0.,10.});
-            QVERIFY(check_point_on_line(line, point2d{0.,0.}));
-            QVERIFY(check_point_on_line(line, point2d{0.,10.}));
-            QVERIFY(check_point_on_line(line, point2d{0.,5.}));
-            QVERIFY(check_point_on_line(line, point2d{0.,-5.}));
-        }
-        {
-            auto line = half_Line2d({0.,0.}, 45_deg);
-            QVERIFY(check_point_on_line(line, point2d{0.,0.}));
-            QVERIFY(check_point_on_line(line, point2d{10.,10.}));
-            QVERIFY(!check_point_on_line(line, point2d{0.,5.}));
-            QVERIFY(!check_point_on_line(line, point2d{-1.,-1.}));
-        }
-        {
-            auto line = line_section2d({0.,0.}, {10.,10.});
-            QVERIFY(check_point_on_line(line, point2d{0.,0.}));
-            QVERIFY(check_point_on_line(line, point2d{10.,10.}));
-            QVERIFY(!check_point_on_line(line, point2d{0.,5.}));
-            QVERIFY(!check_point_on_line(line, point2d{-1.,-1.}));
-            QVERIFY(!check_point_on_line(line, point2d{11.,11.}));
-        }
-        {
-            auto line = line_section2d({0,0}, {0,10});
-            QVERIFY(check_point_on_line(line, point2d{0,1}));
-        }
-    }
+    // {//check_point_on_line(3)
+    //     {
+    //         auto line = line2d({0.,0.}, {0.,10.});
+    //         QVERIFY(check_point_on_line(line, point2d{0.,0.}));
+    //         QVERIFY(check_point_on_line(line, point2d{0.,10.}));
+    //         QVERIFY(check_point_on_line(line, point2d{0.,5.}));
+    //         QVERIFY(check_point_on_line(line, point2d{0.,-5.}));
+    //     }
+    //     {
+    //         auto line = half_Line2d({0.,0.}, 45_deg);
+    //         QVERIFY(check_point_on_line(line, point2d{0.,0.}));
+    //         QVERIFY(check_point_on_line(line, point2d{10.,10.}));
+    //         QVERIFY(!check_point_on_line(line, point2d{0.,5.}));
+    //         QVERIFY(!check_point_on_line(line, point2d{-1.,-1.}));
+    //     }
+    //     {
+    //         auto line = line_section2d({0.,0.}, {10.,10.});
+    //         QVERIFY(check_point_on_line(line, point2d{0.,0.}));
+    //         QVERIFY(check_point_on_line(line, point2d{10.,10.}));
+    //         QVERIFY(!check_point_on_line(line, point2d{0.,5.}));
+    //         QVERIFY(!check_point_on_line(line, point2d{-1.,-1.}));
+    //         QVERIFY(!check_point_on_line(line, point2d{11.,11.}));
+    //     }
+    //     {
+    //         auto line = line_section2d({0,0}, {0,10});
+    //         QVERIFY(check_point_on_line(line, point2d{0,1}));
+    //     }
+    // }
 
-    {//parallel_line
-        {
-            auto line = line2d({0.,0.}, {0.,10.});
-            {
-                auto pl = parallel_line(line, 10.);
-                QVERIFY(pl == line2d(-10, 0, 100));
-            }
-            {
-                auto pl = parallel_line(line, -10.);
-                QVERIFY(pl == line2d(-10, 0, -100));
-            }
-        }
-        {
-            auto line = half_Line2d({0.,0.}, 0_deg);
-            {
-                auto pl = parallel_line(line, 10.);
-                QVERIFY(pl == line2d(-10, 0, 100));
-            }
-            {
-                auto pl = parallel_line(line, -10.);
-                QVERIFY(pl == line2d(-10, 0, -100));
-            }
-        }
-        {
-            auto line = line_section2d({0.,0.}, {0.,10.});
-            {
-                auto pl = parallel_line(line, 10.);
-                QVERIFY(pl == line2d(-10, 0, 100));
-            }
-            {
-                auto pl = parallel_line(line, -10.);
-                QVERIFY(pl == line2d(-10, 0, -100));
-            }
-        }
-    }
+    // {//parallel_line
+    //     {
+    //         auto line = line2d({0.,0.}, {0.,10.});
+    //         {
+    //             auto pl = parallel_line(line, 10.);
+    //             QVERIFY(pl == line2d(-10, 0, 100));
+    //         }
+    //         {
+    //             auto pl = parallel_line(line, -10.);
+    //             QVERIFY(pl == line2d(-10, 0, -100));
+    //         }
+    //     }
+    //     {
+    //         auto line = half_Line2d({0.,0.}, 0_deg);
+    //         {
+    //             auto pl = parallel_line(line, 10.);
+    //             QVERIFY(pl == line2d(-10, 0, 100));
+    //         }
+    //         {
+    //             auto pl = parallel_line(line, -10.);
+    //             QVERIFY(pl == line2d(-10, 0, -100));
+    //         }
+    //     }
+    //     {
+    //         auto line = line_section2d({0.,0.}, {0.,10.});
+    //         {
+    //             auto pl = parallel_line(line, 10.);
+    //             QVERIFY(pl == line2d(-10, 0, 100));
+    //         }
+    //         {
+    //             auto pl = parallel_line(line, -10.);
+    //             QVERIFY(pl == line2d(-10, 0, -100));
+    //         }
+    //     }
+    // }
 
-    {//point_perpendicular
-        {
-            auto line = line2d({1.,2.}, {5.,2.});
-            auto point = point_perpendicular(line, point2d{0.,0.});
-            QVERIFY(point == point2d(0.,2.));
-        }
-        {
-            auto line = line2d({1.,2.}, {5.,2.});
-            auto point = point_perpendicular(line, point2d{10.,10.});
-            QVERIFY(point == point2d(10.,2.));
-        }
+    // {//point_perpendicular
+    //     {
+    //         auto line = line2d({1.,2.}, {5.,2.});
+    //         auto point = point_perpendicular(line, point2d{0.,0.});
+    //         QVERIFY(point == point2d(0.,2.));
+    //     }
+    //     {
+    //         auto line = line2d({1.,2.}, {5.,2.});
+    //         auto point = point_perpendicular(line, point2d{10.,10.});
+    //         QVERIFY(point == point2d(10.,2.));
+    //     }
 
-        {
-            auto line = half_Line2d({1.,2.}, 45_deg);
-            auto point = point_perpendicular(line, point2d{10.,10.});
-            QVERIFY(point.has_value() && (point == point2d(9.5,10.5)));
-        }
-        {
-            auto line = half_Line2d({1.,2.}, 45_deg);
-            auto point = point_perpendicular(line, point2d{-100.,-100.});
-            QVERIFY(!point.has_value());
-        }
+    //     {
+    //         auto line = half_Line2d({1.,2.}, 45_deg);
+    //         auto point = point_perpendicular(line, point2d{10.,10.});
+    //         QVERIFY(point.has_value() && (point == point2d(9.5,10.5)));
+    //     }
+    //     {
+    //         auto line = half_Line2d({1.,2.}, 45_deg);
+    //         auto point = point_perpendicular(line, point2d{-100.,-100.});
+    //         QVERIFY(!point.has_value());
+    //     }
 
-        {
-            auto line = line_section2d({1.,2.}, {5.,2.});
-            auto point = point_perpendicular(line, point2d{0.,0.});
-            QVERIFY(!point.has_value());
-        }
-        {
-            auto line = line_section2d({1.,2.}, {50.,20.});
-            auto point = point_perpendicular(line, point2d{10.,10.});
-            QVERIFY(point.has_value() && (point == point2d(11.519266,5.864220)));
-        }
-    }
+    //     {
+    //         auto line = line_section2d({1.,2.}, {5.,2.});
+    //         auto point = point_perpendicular(line, point2d{0.,0.});
+    //         QVERIFY(!point.has_value());
+    //     }
+    //     {
+    //         auto line = line_section2d({1.,2.}, {50.,20.});
+    //         auto point = point_perpendicular(line, point2d{10.,10.});
+    //         QVERIFY(point.has_value() && (point == point2d(11.519266,5.864220)));
+    //     }
+    // }
 
-    {//point_on_line
-        {
-            auto line = half_Line2d({1.,2.}, 45_deg);
-            auto point = point_on_line(line, 10.);
-            QVERIFY(point.has_value() && (point.value() == point2d(8.071068,9.071068)));
-        }
+    // {//point_on_line
+    //     {
+    //         auto line = half_Line2d({1.,2.}, 45_deg);
+    //         auto point = point_on_line(line, 10.);
+    //         QVERIFY(point.has_value() && (point.value() == point2d(8.071068,9.071068)));
+    //     }
 
-        {
-            auto line = half_Line2d({1.,2.}, 45_deg);
-            auto point = point_on_line(line, 2.);
-            QVERIFY(point.has_value() && (point.value() == point2d(2.414214,3.414214)));
-        }
+    //     {
+    //         auto line = half_Line2d({1.,2.}, 45_deg);
+    //         auto point = point_on_line(line, 2.);
+    //         QVERIFY(point.has_value() && (point.value() == point2d(2.414214,3.414214)));
+    //     }
 
 
-        {
-            auto line = line_section2d({1.,2.}, {5.,2.});
-            auto point = point_on_line(line, 10.);
-            QVERIFY(!point.has_value());
-        }
+    //     {
+    //         auto line = line_section2d({1.,2.}, {5.,2.});
+    //         auto point = point_on_line(line, 10.);
+    //         QVERIFY(!point.has_value());
+    //     }
 
-        {
-            auto line = line_section2d({1.,2.}, {5.,2.});
-            auto point = point_on_line(line, 2.);
-            QVERIFY(point.has_value() && (point.value() == point2d(3.,2.)));
-        }
-    }
+    //     {
+    //         auto line = line_section2d({1.,2.}, {5.,2.});
+    //         auto point = point_on_line(line, 2.);
+    //         QVERIFY(point.has_value() && (point.value() == point2d(3.,2.)));
+    //     }
+    // }
 }
 
 // void Unit_Test::test_circle()

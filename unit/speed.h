@@ -1,7 +1,7 @@
-#ifndef SPEED_H
-#define SPEED_H
+#ifndef AGL_UNIT_SPEED_H
+#define AGL_UNIT_SPEED_H
 
-#include "../system/system_unit.h"
+#include "system/system_unit.h"
 #include "distance.h"
 #include "time.h"
 
@@ -82,4 +82,4 @@ constexpr agl::unit::speed operator *(const agl::unit::speed &value1, const doub
     return value2 * value1;
 }
 
-#endif // SPEED_H
+#endif // AGL_UNIT_SPEED_H

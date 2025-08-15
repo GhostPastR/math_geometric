@@ -23,6 +23,14 @@ struct create_point<Point, Turning, Range, NewPoint, cartesian, 2, direction_ang
 };
 
 template<typename Point, typename Turning, typename Range, typename NewPoint>
+struct create_point<Point, Turning, Range, NewPoint, geographical, 2, direction_angle>{
+    inline constexpr static auto get(const Point &point, const Turning &turning, const Range &range){
+        // return NewPoint{traits::access_point<Point, 0>::get(point) + range * std::sin(turning),
+        //                 traits::access_point<Point, 1>::get(point) + range * std::cos(turning)};
+    }
+};
+
+template<typename Point, typename Turning, typename Range, typename NewPoint>
 struct create_point<Point, Turning, Range, NewPoint, cartesian, 2, direction_vector>{
     inline constexpr static auto get(const Point &point, const Turning &turning, const Range &range){
         static_assert(false, "Not implemented.");

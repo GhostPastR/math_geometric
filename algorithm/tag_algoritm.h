@@ -1,5 +1,5 @@
-#ifndef TAG_ALGORITM_DISTANCE_H
-#define TAG_ALGORITM_DISTANCE_H
+#ifndef AGL_ALGORITM_TAG_H
+#define AGL_ALGORITM_TAG_H
 
 #include "algorithm/traits.h"
 
@@ -12,7 +12,7 @@ struct algorithm_distance{
     using type_algorithm = undefined;
 };
 
-template<> struct algorithm_distance<object_point, object_point>{
+template<> struct algorithm_distance<tag_point, tag_point>{
     using type_algorithm = distance_point;
 };
 
@@ -42,4 +42,4 @@ template<> struct direction_object<long double>{
 
 }
 
-#endif // TAG_ALGORITM_DISTANCE_H
+#endif // AGL_ALGORITM_TAG_H

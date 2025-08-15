@@ -101,6 +101,24 @@ inline constexpr bool compare(const Value1& value1, const Value2& value2) {
     return algorithm::compare_common(value1, value2, algorithm::epsilon<Value1>);
 }
 
+template<typename Value1, typename Value2>
+inline constexpr bool compare(const Value1& value1, const Value2& value2) {
+    if constexpr(std::is_same_v<Value1, Value2> && std::is_floating_point_v<Value1>){
+        return algorithm::compare_common(value1, value2, algorithm::epsilon<Value1>);
+    }
+    else if constexpr(std::is_floating_point_v<Value1> && std::is_integral_v<Value2>){
+        return algorithm::compare_common(value1, value2, algorithm::epsilon<Value1>);
+    }
+    else if constexpr(std::is_floating_point_v<Value2> && std::is_integral_v<Value1>){
+        return algorithm::compare_common(value2, value1, algorithm::epsilon<Value1>);
+    }
+    else{
+        return value1 == value2;
+    }
+}
+
+
+
 template<compare_intervel Value>
 inline constexpr bool less_than_equal(const Value& value1, const Value& value2) {
     return ((value1 < value2) || compare(value1, value2));

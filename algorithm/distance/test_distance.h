@@ -23,7 +23,7 @@ struct access_point<int, 1>{
 
 template<>
 struct tag<int>{
-    using type_tag = object_line;
+    using type_tag = tag_line;
 };
 
 template<>
@@ -48,7 +48,7 @@ namespace agl::algorithm {
 
 struct distance_point_to_line final{};
 
-template<> struct algorithm_distance<object_point, object_line>{
+template<> struct algorithm_distance<tag_point, tag_line>{
     using type_algorithm = distance_point_to_line;
 };
 

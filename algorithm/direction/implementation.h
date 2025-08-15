@@ -53,7 +53,7 @@ inline constexpr auto direction(const Object1 &a, const Object2 &b){
     constexpr auto dimension2 = traits::dimension<Object2>::value();
 
     static_assert(std::is_same_v<type_coordinate_system1, type_coordinate_system2>, "Error!");
-    static_assert(std::is_same_v<type_coordinate_system1, type_coordinate_system2>, "Error!");
+    static_assert(!std::is_same_v<direction_object, undefined>, "Error!");
     static_assert((dimension1 == dimension2) && (dimension1 > decltype(dimension1){}), "Error!");
 
     return dispatch::direction<Object1, Object2, ObjectDirection, type_coordinate_system1, dimension1, direction_object>::get(a,b);

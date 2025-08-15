@@ -11,15 +11,15 @@
 namespace agl{
 
 using Lenght = double;
-using Angle = angle_impl<double>;
-using point2d = point2<double>;
-using point3d = point3<double>;
+// using Angle = angle_impl<double>;
+// using point2d = point2<double>;
+// using point3d = point3<double>;
 
-using polar2d = polar2<double>;
+// using polar2d = polar2<double>;
 
-using line2d = straight_line_impl<double>;
-using half_Line2d = half_line_impl<double>;
-using line_section2d = line_section_impl<double>;
+// using line2d = straight_line_impl<double>;
+// using half_Line2d = half_line_impl<double>;
+// using line_section2d = line_section_impl<double>;
 
 // using Circle = circle_impl<double, point2d>;
 // using Arc = arc_impl<double, point2d, Angle>;

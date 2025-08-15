@@ -46,6 +46,13 @@ qt_add_executable(math_geometric
     algorithm/convert/implementation.h algorithm/convert/interface.h algorithm/create_point/implementation.h algorithm/create_point/interface.h algorithm/midplane/implementation.h algorithm/midplane/interface.h algorithm/rotate/implementation.h algorithm/rotate/interface.h
     algorithm/tag_algoritm.h
     algorithm/traits.h
+    algorithm/convert/implementation_geo.h
+    algorithm/create_point/implementation_geo.h
+    algorithm/distance/implementation_cartesian.h
+    algorithm/distance/implementation_geo.h
+
+
+    system/tag.h
 
 )
 

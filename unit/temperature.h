@@ -1,7 +1,7 @@
-#ifndef TEMPERATURE_H
-#define TEMPERATURE_H
+#ifndef AGL_UNIT_TEMPERATURE_H
+#define AGL_UNIT_TEMPERATURE_H
 
-#include "../system/system_unit.h"
+#include "system/system_unit.h"
 
 namespace agl::unit {
 
@@ -51,4 +51,4 @@ constexpr agl::unit::temperature operator *(const agl::unit::temperature &value1
 }
 
 
-#endif // TEMPERATURE_H
+#endif // AGL_UNIT_TEMPERATURE_H

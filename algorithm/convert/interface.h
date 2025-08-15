@@ -1,16 +1,16 @@
-#ifndef AGL_ALGORITHM_<>_INTERFACE_H
-#define AGL_ALGORITHM_<>_INTERFACE_H
+#ifndef AGL_ALGORITHM_CONVERT_INTERFACE_H
+#define AGL_ALGORITHM_CONVERT_INTERFACE_H
 
 #include "implementation.h"
 
 namespace agl::algorithm {
 
 //метод расчитывает координаты новой точки
-template<>
-inline constexpr auto <>(){
-    return geometry::create_point<>();
+template<typename Object, typename ObjectOut>
+inline constexpr auto convert(const Object &object){
+    return geometry::convert<Object, ObjectOut>(object);
 }
 
 }
 
-#endif // AGL_ALGORITHM_<>_INTERFACE_H
+#endif // AGL_ALGORITHM_CONVERT_INTERFACE_H

@@ -75,7 +75,7 @@ struct Value final{
         }
     }
 
-    constexpr auto value() const{
+    constexpr auto &value() const{
         return value_;
     }
 
@@ -87,6 +87,10 @@ struct Value final{
         else{
             static_assert(false, "Error UnitPrefix");
         }
+    }
+
+    friend constexpr auto operator<=>(const Value &value1, const Value &value2){
+        return value1.value_ <=> value2.value_;
     }
 
     template<typename D1, typename D2>

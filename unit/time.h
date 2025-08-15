@@ -1,7 +1,7 @@
-#ifndef TIME_H
-#define TIME_H
+#ifndef AGL_UNIT_TIME_H
+#define AGL_UNIT_TIME_H
 
-#include "../system/system_unit.h"
+#include "system/system_unit.h"
 
 namespace agl::unit {
 
@@ -48,4 +48,4 @@ constexpr agl::unit::time operator *(const agl::unit::time &value1, const double
     return value2 * value1;
 }
 
-#endif // TIME_H
+#endif // AGL_UNIT_TIME_H
