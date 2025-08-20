@@ -3,6 +3,7 @@
 
 #include "algorithm/tag_algoritm.h"
 #include "algorithm/traits.h"
+#include "system/tag.h"
 #include <cmath>
 
 namespace agl::algorithm::dispatch {
@@ -17,8 +18,12 @@ struct create_point{
 template<typename Point, typename Turning, typename Range, typename NewPoint>
 struct create_point<Point, Turning, Range, NewPoint, cartesian, 2, direction_angle>{
     inline constexpr static auto get(const Point &point, const Turning &turning, const Range &range){
-        return NewPoint{traits::access_point<Point, 0>::get(point) + range * std::sin(turning),
-                        traits::access_point<Point, 1>::get(point) + range * std::cos(turning)};
+        return NewPoint{traits::traits_point::access_point<Point, 0>::get(point)
+                            + system::tag::value<Range>::get(range)
+                                  * std::sin(system::tag::value<Turning>::get(turning)),
+                        traits::traits_point::access_point<Point, 1>::get(point)
+                            + system::tag::value<Range>::get(range)
+                                  * std::cos(system::tag::value<Turning>::get(turning))};
     }
 };
 
@@ -56,10 +61,10 @@ inline constexpr auto create_point(const Point &point, const Turning &angle, con
     using direction_object = direction_object<Turning>::type_direction_object;
     constexpr auto dimension = traits::dimension<Point>::value();
 
-    static_assert(std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");
+    static_assert(!std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");
     static_assert((dimension > decltype(dimension){}), "Error!");
 
-    return dispatch::create_point<Point, Turning, NewPoint, NewPoint,
+    return dispatch::create_point<Point, Turning, Range, NewPoint,
                                   type_coordinate_system, dimension, direction_object>::get(point, angle, range);
 }
 

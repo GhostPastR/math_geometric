@@ -1,8 +1,8 @@
 #include <QCoreApplication>
-#include <iostream>
 #include "QtTest/qtestcase.h"
 #include "unit_test.h"
 #include "unit_test_sa.h"
+
 
 int main(int argc, char *argv[])
 {

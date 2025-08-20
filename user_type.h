@@ -1,16 +1,16 @@
 #ifndef USER_TYPE_H
 #define USER_TYPE_H
 
-#include "structs/circle_impl.h"
-#include "structs/line_impl.h"
-#include "structs/point_impl.h"
-#include "unit/angle.h"
+#include "structs/point/decart_point2d.h"
 #include "structs/polygon_impl.h"
 #include "structs/struct_geo_imp.h"
 
+#include "unit/distance.h"
+
+
 namespace agl{
 
-using Lenght = double;
+// using Lenght = double;
 // using Angle = angle_impl<double>;
 // using point2d = point2<double>;
 // using point3d = point3<double>;
@@ -39,6 +39,44 @@ using Lenght = double;
 
 // using CircleGeo = circle_geo_impl<double, PointGeo>;
 // using ArcGeo  = arc_geo_impl<double, PointGeo, Angle>;
+
+}
+
+namespace agl::traits {
+
+template<> struct tag<point::decart::point2d<unit::distance>>{
+    using type_tag = tag_point;
+};
+
+template<> struct coordinate_system<point::decart::point2d<unit::distance>>{
+    using system = cartesian;
+};
+
+template<> struct dimension<point::decart::point2d<unit::distance>>{
+    inline static constexpr std::size_t value(){
+        return 2;
+    }
+};
+
+namespace traits_point {
+
+template<> struct type_property<point::decart::point2d<unit::distance>>{
+    using type = unit::distance::type_value;
+};
+
+template<> struct access_point<point::decart::point2d<unit::distance>, 0>{
+    inline constexpr static auto get(const point::decart::point2d<unit::distance> &point){
+        return agl::system::tag::value<unit::distance>::get(point.x());
+    }
+};
+
+template<> struct access_point<point::decart::point2d<unit::distance>, 1>{
+    inline constexpr static auto get(const point::decart::point2d<unit::distance> &point){
+        return agl::system::tag::value<unit::distance>::get(point.y());
+    }
+};
+
+}
 
 }
 

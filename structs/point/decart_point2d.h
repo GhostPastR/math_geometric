@@ -55,7 +55,26 @@ protected:
 namespace agl::traits {
 
 template<typename Type>
-struct type_coordinate<point::decart::point2d<Type>>{
+struct tag<point::decart::point2d<Type>>{
+    using type_tag = tag_point;
+};
+
+template<typename Type>
+struct coordinate_system<point::decart::point2d<Type>>{
+    using system = cartesian;
+};
+
+template<typename Type>
+struct dimension<point::decart::point2d<Type>>{
+    inline static constexpr std::size_t value(){
+        return 2;
+    }
+};
+
+namespace traits_point {
+
+template<typename Type>
+struct type_property<point::decart::point2d<Type>>{
     using type = Type;
 };
 
@@ -73,30 +92,28 @@ struct access_point<point::decart::point2d<Type>, 1>{
     }
 };
 
-template<typename Type>
-struct tag<point::decart::point2d<Type>>{
-    using type_tag = tag_point;
-};
-
-template<typename Type>
-struct coordinate_system<point::decart::point2d<Type>>{
-    using system = cartesian;
-};
-
-template<typename Type>
-struct dimension<point::decart::point2d<Type>>{
-    inline static constexpr std::size_t value(){
-        return 2;
-    }
-};
+}
 
 }
 
+
+
+template<typename Type>
+struct std::formatter<agl::point::decart::point2d<Type>> {
+    std::formatter<std::string> _formatter;
+    constexpr auto parse(std::format_parse_context& parse_context) {
+        return _formatter.parse(parse_context);
+    }
+
+    auto format(const agl::point::decart::point2d<Type>& point, std::format_context& format_context) const {
+        return _formatter.format(std::format("Point(x={} y={})", point.x(), point.y()), format_context);
+    }
+};
+
+
 template<typename Type>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::decart::point2d<Type> &point){
-    os << std::format("x={} y={}",
-                      agl::system::tag::value<Type>::get(point.x()),
-                      agl::system::tag::value<Type>::get(point.y()));
+    os << std::format("{}", point);
     return os;
 }
 

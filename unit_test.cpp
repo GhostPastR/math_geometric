@@ -7,6 +7,16 @@
 #include "structs/point/geo_point3d.h"
 #include "structs/point/polar_point2d.h"
 #include "structs/point/polar_point3d.h"
+#include "structs/circle/arc.h"
+#include "structs/circle/circle.h"
+
+
+
+#include "algorithm/direction/interface.h"
+#include "algorithm/distance/interface.h"
+#include "algorithm/create_point/interface.h"
+#include "algorithm/rotate/interface.h"
+#include "algorithm/midplane/interface.h"
 
 #include "algorithm/approximation_algorithm.h"
 #include "algorithm/circle_algorithm.h"
@@ -16,7 +26,7 @@
 #include "algorithm/polygon_algorithm.h"
 
 
-#include "unit/distance.h"
+
 
 
 #include "qtestcase.h"
@@ -28,103 +38,18 @@
 #include "unit/temperature.h"
 #include "unit/time.h"
 #include "unit/weight.h"
-// #include "user_type.h"
+#include "unit/distance.h"
+
+#include "user_type.h"
 
 using namespace agl;
 
 Unit_Test::Unit_Test(QObject *parent) : QObject{parent}{}
 
-void Unit_Test::test_angle()
-{
-    // {
-    //     Angle angle;
-    //     QVERIFY(algorithm::compare(angle.radian(), 0.));
-    //     QVERIFY(algorithm::compare(angle.degrees(), 0.));
-    //     angle = 180._deg;
-    //     QVERIFY(algorithm::compare(angle.radian(), algorithm::pi<decltype(angle.radian())>));
-    //     QVERIFY(algorithm::compare(angle.degrees(), 180.));
-    // }
-    // {
-    //     QVERIFY(4_rad == 4_rad);
-    //     QVERIFY(5_deg == 5_deg);
-
-    //     QVERIFY(50._rad == 50._rad);
-    //     QVERIFY(50._deg == 50._deg);
-
-    //     QVERIFY(20._deg < 50._deg);
-    //     QVERIFY(23._rad < 45._rad);
-
-    //     QVERIFY(12._deg > 2._deg);
-    //     QVERIFY(56._rad > 45._rad);
-
-    //     QVERIFY(20._deg <= 50._deg);
-    //     QVERIFY(23._rad <= 45._rad);
-    //     QVERIFY(23._rad <= 23._rad);
-
-    //     QVERIFY(12._deg >= 2._deg);
-    //     QVERIFY(56._rad >= 45._rad);
-    //     QVERIFY(1._rad >= 1._rad);
-
-    //     QVERIFY(-50._deg == -50._deg);
-    //     QVERIFY(-50._rad == -50._rad);
-    //     QVERIFY((50._deg + 70._deg) == 120._deg);
-
-    //     {
-    //         Angle angle1 = 40._deg;
-    //         Angle angle2 = 65._deg;
-    //         QVERIFY((angle1 + 70._deg) == 110._deg);
-    //         QVERIFY((angle1 + angle2) == 105._deg);
-    //     }
-
-    //     {
-    //         Angle angle1 = 76._deg;
-    //         Angle angle2 = 25._deg;
-    //         QVERIFY((angle1 - 70._deg) == 6._deg);
-    //         QVERIFY((angle1 - angle2) == 51._deg);
-    //         QVERIFY((angle1 - 100._deg) == -24._deg);
-    //         QVERIFY((angle2 - angle1) == -51._deg);
-    //     }
-
-    //     {
-    //         Angle angle = 35._deg;
-    //         QVERIFY((angle * 2) == 70._deg);
-    //         QVERIFY((2 * angle) == 70._deg);
-    //         angle = 90._deg;
-    //         QVERIFY((angle / 3) == 30._deg);
-    //         QVERIFY((90_deg / 3) == 30._deg);
-    //     }
-
-    //     {
-    //         Angle angle = 20._deg;
-    //         angle += 20._deg;
-    //         QVERIFY(angle == 40._deg);
-    //         angle -= 50._deg;
-    //         QVERIFY(angle == -10._deg);
-    //     }
-    // }
-
-    // {
-    //     {
-    //         Angle angle = 45._deg;
-    //         QVERIFY(Angle().asin(angle.sin()) == 45._deg);
-    //         QVERIFY(Angle().acos(angle.cos()) == 45._deg);
-    //         QVERIFY(Angle().atan(angle.tan()) == 45._deg);
-    //         QVERIFY(Angle().actan(angle.ctan()) == 45._deg);
-    //     }
-
-    //     {
-    //         Angle angle = 0._deg;
-    //         QVERIFY(angle.asin(angle.sin()) == 0._deg);
-    //         QVERIFY(angle.acos(angle.cos()) == 0._deg);
-    //         QVERIFY(angle.atan(angle.tan()) == 0._deg);
-    //         QVERIFY(angle.actan(angle.ctan()) == 0._deg);
-    //     }
-    // }
-}
-
 void Unit_Test::test_unit()
 {
-    {//distance
+    using namespace agl;
+    {//angle
         {
             unit::angle d(algorithm::pi<double>);
             QVERIFY(algorithm::compare(d.value<unit::radian>(), algorithm::pi<double>));
@@ -382,13 +307,13 @@ void Unit_Test::test_point()
 {
     {
         agl::point::decart::point2d<double> point1;
-        QVERIFY(algorithm::compare(point1.x(), 0.));
-        QVERIFY(algorithm::compare(point1.y(), 0.));
+        QVERIFY(agl::algorithm::compare(point1.x(), 0.));
+        QVERIFY(agl::algorithm::compare(point1.y(), 0.));
 
         point1.set_x(100.);
         point1.set_y(100.);
-        QVERIFY(algorithm::compare(point1.x(), 100.));
-        QVERIFY(algorithm::compare(point1.y(), 100.));
+        QVERIFY(agl::algorithm::compare(point1.x(), 100.));
+        QVERIFY(agl::algorithm::compare(point1.y(), 100.));
 
         agl::point::decart::point2d<double> point2;
         point2.set_x(100.);
@@ -399,13 +324,13 @@ void Unit_Test::test_point()
 
     {
         agl::point::decart::point2d<double> point1;
-        QVERIFY(algorithm::compare(point1.x(), 0.));
-        QVERIFY(algorithm::compare(point1.y(), 0.));
+        QVERIFY(agl::algorithm::compare(point1.x(), 0.));
+        QVERIFY(agl::algorithm::compare(point1.y(), 0.));
 
         point1.set_x(100.);
         point1.set_y(100.);
-        QVERIFY(algorithm::compare(point1.x(), 100.));
-        QVERIFY(algorithm::compare(point1.y(), 100.));
+        QVERIFY(agl::algorithm::compare(point1.x(), 100.));
+        QVERIFY(agl::algorithm::compare(point1.y(), 100.));
 
         agl::point::decart::point2d<double> point2;
         point2.set_x(100.);
@@ -415,16 +340,16 @@ void Unit_Test::test_point()
 
     {
         agl::point::decart::point3d<double> point1;
-        QVERIFY(algorithm::compare(point1.x(), 0.));
-        QVERIFY(algorithm::compare(point1.y(), 0.));
-        QVERIFY(algorithm::compare(point1.z(), 0.));
+        QVERIFY(agl::algorithm::compare(point1.x(), 0.));
+        QVERIFY(agl::algorithm::compare(point1.y(), 0.));
+        QVERIFY(agl::algorithm::compare(point1.z(), 0.));
 
         point1.set_x(100.);
         point1.set_y(123.);
         point1.set_z(34.);
-        QVERIFY(algorithm::compare(point1.x(), 100.));
-        QVERIFY(algorithm::compare(point1.y(), 123.));
-        QVERIFY(algorithm::compare(point1.z(), 34.));
+        QVERIFY(agl::algorithm::compare(point1.x(), 100.));
+        QVERIFY(agl::algorithm::compare(point1.y(), 123.));
+        QVERIFY(agl::algorithm::compare(point1.z(), 34.));
 
         agl::point::decart::point3d<double> point2;
         point2.set_x(100.);
@@ -488,90 +413,115 @@ void Unit_Test::test_point()
     // }
 
     {
-        // agl::point::polar::polar2d<double,double, Angle> point;
+        agl::point::polar::polar2d<double, agl::unit::angle> point;
+        QVERIFY(agl::algorithm::compare(point.psi(), 0.));
+        QVERIFY(point.fi() == 0_deg);
 
-
-        // polar2d point;
-        // QVERIFY(algorithm::compare(point.psi(), 0.));
-        // QVERIFY(point.fi() == 0_deg);
-
-        // point.set_psi(123);
-        // point.set_fi(3_deg);
-        // QVERIFY(algorithm::compare(point.psi(), 123.));
-        // QVERIFY(point.fi() == 3_deg);
+        point.set_psi(123);
+        point.set_fi(3_deg);
+        QVERIFY(agl::algorithm::compare(point.psi(), 123.));
+        QVERIFY(point.fi() == 3_deg);
     }
 
     {
-        // Polar3d point;
-        // QVERIFY(algorithm::compare(point.psi(), 0.));
-        // QVERIFY(point.fi() == 0_deg);
-        // QVERIFY(point.z() == 0.);
+        agl::point::polar::polar3d<double, agl::unit::angle, double> point;
+        QVERIFY(agl::algorithm::compare(point.psi(), 0.));
+        QVERIFY(point.fi() == 0_deg);
+        QVERIFY(agl::algorithm::compare(point.z(), 0.));
 
-        // point.set_psi(123);
-        // point.set_fi(3_deg);
-        // point.set_z(21);
-        // QVERIFY(algorithm::compare(point.psi(), 123.));
-        // QVERIFY(point.fi() == 3_deg);
-        // QVERIFY(point.z() == 21.);
+        point.set_psi(123);
+        point.set_fi(3_deg);
+        point.set_z(21);
+        QVERIFY(agl::algorithm::compare(point.psi(), 123.));
+        QVERIFY(point.fi() == 3_deg);
+        QVERIFY(agl::algorithm::compare(point.z(), 21.));
+    }
+
+
+    {
+        agl::point::decart::point2d<unit::distance> point1;
+        QVERIFY(agl::algorithm::compare(point1.x(), 0_m));
+        QVERIFY(agl::algorithm::compare(point1.y(), 0_m));
+
+        point1.set_x(100_m);
+        point1.set_y(100_m);
+        QVERIFY(agl::algorithm::compare(point1.x(), 100_m));
+        QVERIFY(agl::algorithm::compare(point1.y(), 100_m));
+
+        agl::point::decart::point2d<unit::distance> point2;
+        point2.set_x(100_m);
+        point2.set_y(100_m);
+        QVERIFY(point1 == point2);
     }
 
 }
 
 void Unit_Test::test_point_algorithm()
 {
-    // {
-    //     point2d point1{0,0};
-    //     point2d point2{5,5};
-    //     auto value = Angle(angle(point1, point2));
-    //     QVERIFY(value == 45_deg);
-    // }
+    {
+        {
+            agl::point::decart::point2d<double> point1{0,0};
+            agl::point::decart::point2d<double> point2{5,5};
+            auto value = agl::algorithm::direction<agl::unit::angle>(point1, point2);
+            QVERIFY(value == 45_deg);
+        }
+        {
+            agl::point::decart::point2d<unit::distance> point1{0_m,0_m};
+            agl::point::decart::point2d<unit::distance> point2{5_m,5_m};
+            auto value = agl::algorithm::direction<agl::unit::angle>(point1, point2);
+            QVERIFY(value == 45_deg);
+        }
+    }
 
-    // {
-    //     point2d point1{5,5};
-    //     point2d point2{10,10};
-    //     auto value = distance(point1, point2);
-    //     QVERIFY(algorithm::compare(value, 5 * std::sqrt(2)));
-    // }
+    {
+        agl::point::decart::point2d<double> point1{0,0};
+        agl::point::decart::point2d<double> point2{5,5};
+        auto value = agl::algorithm::distance(point1, point2);
+        QVERIFY(agl::algorithm::compare(value, 5 * std::sqrt(2)));
+    }
 
-    // {//new_point
-    //     {
-    //         point2d point1{10,10};
-    //         auto value = new_point(point1, (90._deg).radian(), 10.);
-    //         QVERIFY(algorithm::compare(value.x(), 20.));
-    //         QVERIFY(algorithm::compare(value.y(), 10.));
-    //     }
-    //     {
-    //         point2d point1{10,10};
-    //         auto value = new_point(point1, (0._deg).radian(), 10.);
-    //         QVERIFY(algorithm::compare(value.x(), 10.));
-    //         QVERIFY(algorithm::compare(value.y(), 20.));
-    //     }
-    //     {
-    //         point2d point1{10,10};
-    //         auto value = new_point(point1, (180._deg).radian(), 10.);
-    //         QVERIFY(algorithm::compare(value.x(), 10.));
-    //         QVERIFY(algorithm::compare(value.y(), 0.));
-    //     }
-    //     {
-    //         point2d point1{10,10};
-    //         auto value = new_point(point1, (270._deg).radian(), 10.);
-    //         QVERIFY(algorithm::compare(value.x(), 0.));
-    //         QVERIFY(algorithm::compare(value.y(), 10.));
-    //     }
-    // }
+    {//create_point
+        {
+            agl::point::decart::point2d<double> point{10,10};
+            auto value = algorithm::create_point(point, 90_deg, 10.);
+            QVERIFY(algorithm::compare(value.x(), 20.));
+            QVERIFY(algorithm::compare(value.y(), 10.));
 
-    // {
-    //     point2d point1{10,10};
-    //     auto value = rotate(point1, (90._deg).radian(), point2d{5,5});
-    //     QVERIFY(algorithm::compare(value.x(), 10.));
-    //     QVERIFY(algorithm::compare(value.y(), 0.));
-    // }
+        }
+        {
+            agl::point::decart::point2d<double> point{10,10};
+            auto value = algorithm::create_point(point, 0_deg, 10.);
+            QVERIFY(algorithm::compare(value.x(), 10.));
+            QVERIFY(algorithm::compare(value.y(), 20.));
+        }
+        {
+            agl::point::decart::point2d<double> point{10,10};
+            auto value = algorithm::create_point(point, 180_deg, 10.);
+            QVERIFY(algorithm::compare(value.x(), 10.));
+            QVERIFY(algorithm::compare(value.y(), 0.));
+        }
+        {
+            agl::point::decart::point2d<double> point{10,10};
+            auto value = algorithm::create_point(point, 270_deg, 10.);
+            QVERIFY(algorithm::compare(value.x(), 0.));
+            QVERIFY(algorithm::compare(value.y(), 10.));
+        }
+    }
 
-    // {
-    //     auto value = midplane(point2d{10,10}, point2d{5,5});
-    //     QVERIFY(algorithm::compare(value.x(), 7.5));
-    //     QVERIFY(algorithm::compare(value.y(), 7.5));
-    // }
+    {
+        agl::point::decart::point2d<double> point{10,10};
+        auto value = algorithm::rotate(point, 90_deg, agl::point::decart::point2d<double>{5,5});
+        QVERIFY(algorithm::compare(value.x(), 10.));
+        QVERIFY(algorithm::compare(value.y(), 0.));
+    }
+
+    {
+        agl::point::decart::point2d<double> point1{10,10};
+        agl::point::decart::point2d<double> point2{5,5};
+        auto value = algorithm::midplane(point1, point2);
+        QVERIFY(algorithm::compare(value.x(), 7.5));
+        QVERIFY(algorithm::compare(value.y(), 7.5));
+    }
 
     // {
     //     auto value = convert_polar(point2d{10,10}, point2d{5,5});
@@ -887,21 +837,22 @@ void Unit_Test::test_line_algorithm()
     // }
 }
 
-// void Unit_Test::test_circle()
-// {
-//     {
-//         auto arc = Arc({1.,1.}, 5., 0_deg, 90_deg);
-//         QVERIFY((arc.center() == point2d(1.,1.))&& algorithm::compare(arc.radius(), 5.)
-//                 && (arc.start_angle() == 0_deg) && (arc.stop_angle() == 90_deg));
-//     }
-//     {
-//         auto circle = Circle({1.,1.}, 5.);
-//         QVERIFY((circle.center() == point2d(1.,1.)) && algorithm::compare(circle.radius(), 5.));
-//     }
-// }
+void Unit_Test::test_circle()
+{
+    {
+        agl::circle::decart::arc<agl::point::decart::point2d<double>, double, unit::angle> arc{{1.,1.}, 5., 0_deg, 90_deg};
+        QVERIFY((arc.center() == agl::point::decart::point2d<double>(1.,1.))
+                && algorithm::compare(arc.radius(), 5.) && (arc.start() == 0_deg) && (arc.stop() == 90_deg));
+    }
+    {
+        agl::circle::decart::circle<agl::point::decart::point2d<double>, double> circle{{1.,1.}, 5.};
+        QVERIFY((circle.center() == agl::point::decart::point2d<double>(1.,1.)) && algorithm::compare(circle.radius(), 5.));
+        std::cout << circle << std::endl;
+    }
+}
 
-// void Unit_Test::test_circle_algorithm()
-// {
+void Unit_Test::test_circle_algorithm()
+{
 //     {//length_arc
 //         {
 //             auto arc = Arc({1.,1.}, 5., 0_deg, 90_deg);
@@ -1210,10 +1161,10 @@ void Unit_Test::test_line_algorithm()
 //             QVERIFY((temp.first == point2d(-2.071068, 12.071068)) && (temp.second == point2d(12.071068, -2.071068)));
 //         }
 //     }
-// }
+}
 
-// void Unit_Test::test_polygon()
-// {
+void Unit_Test::test_polygon()
+{
 //     {//ConvexPolygon
 //         {
 //             auto polygon = ConvexPolygon({point2d(0,0), point2d(5,5), point2d(5,0)});
@@ -1308,10 +1259,10 @@ void Unit_Test::test_line_algorithm()
 //             QVERIFY(points[4] == point2d(-4.045085, 1.314328));
 //         }
 //     }
-// }
+}
 
-// void Unit_Test::test_polygon_algorithm()
-// {
+void Unit_Test::test_polygon_algorithm()
+{
 //     {//get_lines
 //         auto polygon = ConvexPolygon({point2d(0,10), point2d(10,10), point2d(10,0), point2d(0,0)});
 //         auto lines = polygon_algo::get_lines(polygon);
@@ -1501,10 +1452,10 @@ void Unit_Test::test_line_algorithm()
 //         // }
 
 //     }
-// }
+}
 
-// void Unit_Test::test_geo_algorithm()
-// {
+void Unit_Test::test_geo_algorithm()
+{
 //     {//common_survey_comp
 //         auto value = geo_algo::common_survey_comp(100'000., (0_deg).radian(), PointGeo(0_deg, 0_deg));
 //         QVERIFY(value.latitude() == 0.898316_deg);
@@ -1620,10 +1571,15 @@ void Unit_Test::test_line_algorithm()
 //         auto points = std::vector{LineSection{point2d(0,0), point2d(0,10)}, LineSection{point2d(10,10), point2d(10,0)}};
 //         auto geo_points = geo_algo::convert<LineSectionGeo>(points, PointGeo(0_deg, 0_deg));
 //     }
-// }
+}
 
-// void Unit_Test::test_approximation()
-// {
+void Unit_Test::test_convert()
+{
+
+}
+
+void Unit_Test::test_approximation()
+{
 //     {
 //         auto points = approximation_algo::splitting_evenly(point2d(0,0), point2d(4,3), 5);
 //         // for(auto i : points){
@@ -1737,14 +1693,16 @@ void Unit_Test::test_line_algorithm()
 //         // 48.90738003669028 10.395584540887972
 //         // 49.72609476841367 5.226423163382684
 //     }
-// }
+}
 
 void Unit_Test::test_matrix()
 {
+    using namespace agl;
+
     {
         {
-            matrix<int, 3, 3> m1;
-            matrix<int, 3, 3> m2;
+            agl::matrix<int, 3, 3> m1;
+            agl::matrix<int, 3, 3> m2;
             QVERIFY(m1 == m2);
         }
 
@@ -2221,6 +2179,7 @@ void Unit_Test::test_matrix()
 
 void Unit_Test::test_vector()
 {
+    using namespace agl;
     {//vector_product
         {
             vector<double, 3> v1{1,2,3};

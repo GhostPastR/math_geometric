@@ -1,12 +1,12 @@
 #ifndef LINE_IMPL_H
 #define LINE_IMPL_H
 
-#include "point_impl.h"
-#include "../unit/angle.h"
-#include "../algorithm/line_algorithm.h"
-#include "../system/system_concept.h"
-#include "../algorithm/math_algorithm.h"
-#include <iostream>
+// #include "point_impl.h"
+// #include "../unit/angle.h"
+// #include "../algorithm/line_algorithm.h"
+// #include "../system/system_concept.h"
+// #include "../algorithm/math_algorithm.h"
+// #include <iostream>
 
 // namespace agl {
 

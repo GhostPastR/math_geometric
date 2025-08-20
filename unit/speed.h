@@ -1,7 +1,7 @@
 #ifndef AGL_UNIT_SPEED_H
 #define AGL_UNIT_SPEED_H
 
-#include "system/system_unit.h"
+#include "unit/unit.h"
 #include "distance.h"
 #include "time.h"
 

@@ -11,6 +11,11 @@ inline constexpr auto midplane(const Object &a, const Object &b){
     return geometry::midplane<Object>(a,b);
 }
 
+template<typename Figure>
+inline constexpr auto midplane(const Figure &figure){
+    return geometry::midplane<Figure>(figure);
+}
+
 }
 
 #endif // AGL_ALGORITHM_MIDPLANE_INTERFACE_H

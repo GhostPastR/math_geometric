@@ -4,6 +4,7 @@
 #include <format>
 #include "system/tag.h"
 #include "algorithm/math_algorithm.h"
+#include "algorithm/traits.h"
 
 
 namespace agl::point::polar {
@@ -46,11 +47,65 @@ protected:
 
 }
 
+
+
+namespace agl::traits {
+
+// template<typename TypePsi, typename TypeFi>
+// struct type_coordinate<point::polar::polar2d<TypePsi, TypeFi>>{
+//     using type_psi = TypePsi;
+//     using type_fi = TypeFi;
+// };
+
+// template<typename TypePsi, typename TypeFi>
+// struct access_point<point::polar::polar2d<TypePsi, TypeFi>, 0>{
+//     inline constexpr static auto get(const point::polar::polar2d<TypePsi, TypeFi> &point){
+//         return agl::system::tag::value<TypePsi>::get(point.psi());
+//     }
+// };
+
+// template<typename TypePsi, typename TypeFi>
+// struct access_point<point::polar::polar2d<TypePsi, TypeFi>, 1>{
+//     inline constexpr static auto get(const point::polar::polar2d<TypePsi, TypeFi> &point){
+//         return agl::system::tag::value<TypeFi>::get(point.fi());
+//     }
+// };
+
+template<typename TypePsi, typename TypeFi>
+struct tag<point::polar::polar2d<TypePsi, TypeFi>>{
+    using type_tag = tag_point;
+};
+
+template<typename TypePsi, typename TypeFi>
+struct coordinate_system<point::polar::polar2d<TypePsi, TypeFi>>{
+    using system = polar;
+};
+
+template<typename TypePsi, typename TypeFi>
+struct dimension<point::polar::polar2d<TypePsi, TypeFi>>{
+    inline static constexpr std::size_t value(){
+        return 2;
+    }
+};
+
+}
+
+template<typename TypePsi, typename TypeFi>
+struct std::formatter<agl::point::polar::polar2d<TypePsi, TypeFi>> {
+    std::formatter<std::string> _formatter;
+    constexpr auto parse(std::format_parse_context& parse_context) {
+        return _formatter.parse(parse_context);
+    }
+
+    auto format(const agl::point::polar::polar2d<TypePsi, TypeFi>& point, std::format_context& format_context) const {
+        return _formatter.format(std::format("PointPolar(psi={} fi={})", point.psi(), point.fi()), format_context);
+    }
+};
+
+
 template<typename TypePsi, typename TypeFi>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::polar::polar2d<TypePsi, TypeFi> &point){
-    os << std::format("psi={} fi={}",
-                      agl::system::tag::value<TypePsi>::get(point.psi()),
-                      agl::system::tag::value<TypePsi>::get(point.fi()));
+    os << std::format("psi={} fi={}", point);
     return os;
 }
 

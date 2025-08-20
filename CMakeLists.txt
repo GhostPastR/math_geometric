@@ -18,9 +18,9 @@ qt_add_executable(math_geometric
     algorithm/point_algorithm.h
     algorithm/polygon_algorithm.h
     algorithm/matrix_algorithm.h
-    structs/circle_impl.h
+
     structs/line_impl.h
-    structs/point_impl.h
+
     structs/polygon_impl.h
     structs/struct_geo_imp.h
     structs/matrix.h
@@ -28,7 +28,7 @@ qt_add_executable(math_geometric
     system/system_concept.h
     system/system_function.h
     user_type.h
-    system/system_unit.h
+
     unit/angle.h
     unit/distance.h
     unit/speed.h
@@ -53,6 +53,16 @@ qt_add_executable(math_geometric
 
 
     system/tag.h
+
+    structs/circle/circle.h
+    structs/circle/arc.h
+    unit/unit.h
+
+    structs/line/straight_line.h
+    structs/line/half_line.h
+    structs/line/line_section.h
+    algorithm/distance/implementation_arc_cartesian.h
+
 
 )
 

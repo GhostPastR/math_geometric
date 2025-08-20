@@ -1,7 +1,7 @@
 #ifndef AGL_UNIT_TIME_H
 #define AGL_UNIT_TIME_H
 
-#include "system/system_unit.h"
+#include "unit/unit.h"
 
 namespace agl::unit {
 

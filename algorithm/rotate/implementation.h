@@ -4,6 +4,7 @@
 #include "algorithm/matrix_algorithm.h"
 #include "algorithm/tag_algoritm.h"
 #include "algorithm/traits.h"
+#include "system/tag.h"
 #include <cmath>
 
 namespace agl::algorithm::dispatch {
@@ -19,14 +20,14 @@ struct rotate{
 template<typename Object, typename ObjectDirection, typename Point>
 struct rotate<Object, ObjectDirection, Point, tag_point, cartesian, 2, direction_angle>{
     inline constexpr static auto get(const Object &object, const ObjectDirection &direction, const Point &point){
-        using Type = traits::type_coordinate<Object>::type;
-        const auto x = traits::access_point<Point, 0>::get(object);
-        const auto y = traits::access_point<Point, 1>::get(object);
-        const auto rx = traits::access_point<Point, 0>::get(point);
-        const auto ry = traits::access_point<Point, 1>::get(point);
+        using Type = traits::traits_point::type_property<Object>::type;
+        const auto x = traits::traits_point::access_point<Point, 0>::get(object);
+        const auto y = traits::traits_point::access_point<Point, 1>::get(object);
+        const auto rx = traits::traits_point::access_point<Point, 0>::get(point);
+        const auto ry = traits::traits_point::access_point<Point, 1>::get(point);
 
-        const auto sinAngle = -std::sin(direction);
-        const auto cosAngle = std::cos(direction);
+        const auto sinAngle = -std::sin(system::tag::value<ObjectDirection>::get(direction));
+        const auto cosAngle = std::cos(system::tag::value<ObjectDirection>::get(direction));
         auto vector = matrix_algo::mul<Type, 2>({cosAngle, -sinAngle, sinAngle, cosAngle}, {x - rx, y - ry});
         return Object{vector[0] + rx, vector[1] + ry};
     }
@@ -34,14 +35,13 @@ struct rotate<Object, ObjectDirection, Point, tag_point, cartesian, 2, direction
 
 }
 
-
 namespace agl::algorithm::geometry {
 
 template<typename Object, typename ObjectDirection, typename Point>
 inline constexpr auto rotate(const Object &object, const ObjectDirection &direction, const Point &point){
     using type_coordinate_system = traits::coordinate_system<Object>::system;
     using direction_object = direction_object<ObjectDirection>::type_direction_object;
-    using tag = traits::tag<ObjectDirection>::type_tag;
+    using tag = traits::tag<Object>::type_tag;
     constexpr auto dimension = traits::dimension<Object>::value();
 
     static_assert(!std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");

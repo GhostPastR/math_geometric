@@ -16,17 +16,17 @@ struct midplane{
 template<typename Object>
 struct midplane<Object, cartesian, 2>{
     inline constexpr static auto get(const Object &a, const Object &b){
-        return Object{std::midpoint(traits::access_point<Object, 0>::get(a), traits::access_point<Object, 0>::get(b)),
-                      std::midpoint(traits::access_point<Object, 1>::get(a), traits::access_point<Object, 1>::get(b))};
+        return Object{std::midpoint(traits::traits_point::access_point<Object, 0>::get(a), traits::traits_point::access_point<Object, 0>::get(b)),
+                      std::midpoint(traits::traits_point::access_point<Object, 1>::get(a), traits::traits_point::access_point<Object, 1>::get(b))};
     }
 };
 
 template<typename Object>
 struct midplane<Object, cartesian, 3>{
     inline constexpr static auto get(const Object &a, const Object &b){
-        return Object{std::midpoint(traits::access_point<Object, 0>::get(a), traits::access_point<Object, 0>::get(b)),
-                      std::midpoint(traits::access_point<Object, 1>::get(a), traits::access_point<Object, 1>::get(b)),
-                      std::midpoint(traits::access_point<Object, 2>::get(a), traits::access_point<Object, 2>::get(b))};
+        return Object{std::midpoint(traits::traits_point::access_point<Object, 0>::get(a), traits::traits_point::access_point<Object, 0>::get(b)),
+                      std::midpoint(traits::traits_point::access_point<Object, 1>::get(a), traits::traits_point::access_point<Object, 1>::get(b)),
+                      std::midpoint(traits::traits_point::access_point<Object, 2>::get(a), traits::traits_point::access_point<Object, 2>::get(b))};
     }
 };
 
@@ -40,7 +40,7 @@ inline constexpr auto midplane(const Object &a, const Object &b){
     using type_coordinate_system = traits::coordinate_system<Object>::system;
     constexpr auto dimension = traits::dimension<Object>::value();
 
-    static_assert(std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");
+    static_assert(!std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");
     static_assert((dimension > decltype(dimension){}), "Error!");
 
     return dispatch::midplane<Object, type_coordinate_system, dimension>::get(a, b);

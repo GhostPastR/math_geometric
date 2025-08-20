@@ -5,6 +5,26 @@
 
 namespace agl::algorithm {
 
+namespace d1 {
+
+struct distance_arc final{};
+struct distance_line final{};
+
+template<typename Figure>
+struct algorithm_distance{
+    using type_algorithm = undefined;
+};
+
+template<> struct algorithm_distance<tag_arc>{
+    using type_algorithm = distance_arc;
+};
+
+}
+
+
+
+namespace d2 {
+
 struct distance_point final{};
 
 template<typename Object1, typename Object2>
@@ -15,6 +35,10 @@ struct algorithm_distance{
 template<> struct algorithm_distance<tag_point, tag_point>{
     using type_algorithm = distance_point;
 };
+
+
+}
+
 
 
 
@@ -37,8 +61,6 @@ template<> struct direction_object<double>{
 template<> struct direction_object<long double>{
     using type_direction_object = direction_angle;
 };
-
-
 
 }
 

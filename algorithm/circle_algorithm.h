@@ -19,21 +19,6 @@
 
 // }
 
-// //Функция возвращает длину дуги
-// template<c_arc Arc>
-// constexpr auto length_arc(const Arc &arc) -> Arc::type_coefficients{
-//     if(algorithm::compare(arc.start(), arc.stop())){
-//         return 0.;
-//     }
-//     return magnitude_arc_angle(arc.start(), arc.stop()) * arc.radius();
-// }
-// template<std::floating_point Type, std::floating_point AngleType>
-// constexpr Type length_arc(const Type &radius, const AngleType &start, const AngleType &stop){
-//     if(algorithm::compare(start, stop)){
-//         return 0.;
-//     }
-//     return magnitude_arc_angle(start, stop) * radius;
-// }
 
 
 

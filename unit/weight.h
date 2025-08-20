@@ -1,7 +1,7 @@
 #ifndef AGL_UNIT_WEIGHT_H
 #define AGL_UNIT_WEIGHT_H
 
-#include "system/system_unit.h"
+#include "unit/unit.h"
 
 namespace agl::unit {
 

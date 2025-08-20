@@ -1,6 +1,9 @@
 #ifndef UNIT_SYSTEM_H
 #define UNIT_SYSTEM_H
 
+#include "algorithm/math_algorithm.h"
+#include <string>
+#include <format>
 #include <utility>
 #include <tuple>
 
@@ -89,8 +92,52 @@ struct Value final{
         }
     }
 
+    constexpr const Value &operator+=(const Value &value){
+        value_ += value.value_;
+        return *this;
+    }
+
+    constexpr const Value &operator-=(const Value &value){
+        value_ -= value.value_;
+        return *this;
+    }
+
+    template<std::floating_point Type>
+    constexpr const Value &operator+=(const Type &value){
+        value_ += value;
+        return *this;
+    }
+
+    template<std::floating_point Type>
+    constexpr const Value &operator-=(const Type &value){
+        value_ -= value;
+        return *this;
+    }
+
+    friend constexpr bool operator==(const Value &value1, const Value &value2){
+        return algorithm::compare(value1.value_, value2.value_);
+    }
+
     friend constexpr auto operator<=>(const Value &value1, const Value &value2){
         return value1.value_ <=> value2.value_;
+    }
+
+    friend constexpr Value operator+(const Value &value1, const Value &value2){
+        return Value(value1.value_ + value2.value_);
+    }
+
+    friend constexpr Value operator-(const Value &value1, const Value &value2){
+        return Value(value1.value_ - value2.value_);
+    }
+
+    template<std::floating_point Type>
+    friend constexpr Value operator+(const Value &value1, const Type &value2){
+        return Value(value1.value_ + value2);
+    }
+
+    template<std::floating_point Type>
+    friend constexpr Value operator-(const Value &value1, const Type &value2){
+        return Value(value1.value_ - value2);
     }
 
     template<typename D1, typename D2>
@@ -140,6 +187,27 @@ constexpr bool find_type(const Tuple &tuple){
 
 }
 
+template<typename UnitValue, agl::unit::c_type_value TypeValue>
+    requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
+struct std::formatter<agl::unit::Value<UnitValue, TypeValue>> {
+    std::formatter<std::string> _formatter;
+    constexpr auto parse(std::format_parse_context& parse_context) {
+        return _formatter.parse(parse_context);
+    }
+
+    auto format(const agl::unit::Value<UnitValue, TypeValue>& value, std::format_context& format_context) const {
+        return _formatter.format(std::format("{}", value.value()), format_context);
+    }
+};
+
+template<typename UnitValue, agl::unit::c_type_value TypeValue>
+    requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
+constexpr std::ostream& operator<<(std::ostream& os, const agl::unit::Value<UnitValue, TypeValue>& value){
+    os << std::format("{}", value);
+    return os;
+}
+
+
 #define OPERATOR_QM(VALUE, PREFIX, UNIT_PREFIX) \
 inline constexpr VALUE operator ""_##PREFIX (long double value){ \
         return VALUE(agl::unit::Convert<UNIT_PREFIX, VALUE::type_value, VALUE::unit_value, agl::unit::basic>::convert(value)); \
@@ -147,6 +215,11 @@ inline constexpr VALUE operator ""_##PREFIX (long double value){ \
 \
 inline constexpr VALUE operator ""_##PREFIX (unsigned long long value){ \
         return VALUE(agl::unit::Convert<UNIT_PREFIX, VALUE::type_value, VALUE::unit_value, agl::unit::basic>::convert(value)); \
+} \
+
+#define CASE_VALUE(PREFIX, UNIT_STR, UNIT_TEMLATE) \
+if(attributes == PREFIX){ \
+        return std::format_to(out, "{}_"#UNIT_STR, value.value<UNIT_TEMLATE>()); \
 } \
 
 #endif // UNIT_SYSTEM_H

@@ -5,9 +5,9 @@
 
 namespace agl::algorithm {
 
-template<typename Object1, typename Object2, typename ObjectDirection = traits::type_coordinate<Object1>::type>
+template<typename ObjectOut, typename Object1, typename Object2>
 inline constexpr auto direction(const Object1 &a, const Object2 &b){
-    return geometry::direction<Object1, Object2, ObjectDirection>(a, b);
+    return geometry::direction<Object1, Object2, ObjectOut>(a, b);
 }
 
 }

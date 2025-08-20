@@ -18,7 +18,7 @@ public:
     constexpr auto z() const{
         return z_;
     }
-    constexpr void set_psi(const TypeZ &z){
+    constexpr void set_z(const TypeZ &z){
         z_ = z;
     }
 

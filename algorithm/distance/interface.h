@@ -10,6 +10,11 @@ inline constexpr auto distance(const Object1 &a, const Object2 &b){
     return geometry::distance<Object1, Object2>(a, b);
 }
 
+template<typename Figure>
+inline constexpr auto distance(const Figure &figure){
+    return geometry::distance<Figure>(figure);
+}
+
 }
 
 
