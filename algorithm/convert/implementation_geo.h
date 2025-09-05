@@ -2,7 +2,7 @@
 #define AGL_ALGORITHM_CONVERT_IMPLEMENTATION_GEO_H
 
 #include "algorithm/math_algorithm.h"
-#include "algorithm/traits.h"
+#include "system/traits.h"
 
 //https://geoproj.ru/
 //https://racurs.ru/downloads/documentation/gost_r_32453-2017.pdf
@@ -17,7 +17,7 @@ struct convert{
 };
 
 template<typename Point, typename PointOut>
-struct convert<Point, PointOut, sc_default, polar, 2>{
+struct convert<Point, PointOut, agl::system_coordinat::geo::sc_default, agl::system_coordinat::polar, 2>{
     inline constexpr static auto get(const Point &a, const Point &b = {}){
         using Type = traits::traits_point::type_property<Point>::type;
         const auto a_latitude = traits::traits_point::access_point<Point, 0>::get(a);
@@ -70,7 +70,7 @@ struct convert<Point, PointOut, sc_default, polar, 2>{
 };
 
 template<typename Point, typename PointOut>
-struct convert<Point, PointOut, polar, sc_default, 2>{
+struct convert<Point, PointOut, agl::system_coordinat::polar, agl::system_coordinat::geo::sc_default, 2>{
     inline constexpr static auto get(const Point &object){
         static_assert(false, "Error release.");
     }
@@ -78,28 +78,28 @@ struct convert<Point, PointOut, polar, sc_default, 2>{
 
 
 template<typename Point, typename PointOut>
-struct convert<Point, PointOut, wgs_84, polar, 2>{
+struct convert<Point, PointOut, agl::system_coordinat::geo::wgs_84, agl::system_coordinat::polar, 2>{
     inline constexpr static auto get(const Point &){
         static_assert(false, "Error release.");
     }
 };
 
 template<typename Point, typename PointOut>
-struct convert<Point, PointOut, polar, wgs_84, 2>{
+struct convert<Point, PointOut, agl::system_coordinat::polar, agl::system_coordinat::geo::wgs_84, 2>{
     inline constexpr static auto get(const Point &){
         static_assert(false, "Error release.");
     }
 };
 
 template<typename Point, typename PointOut>
-struct convert<Point, PointOut, pz_90_02, polar, 2>{
+struct convert<Point, PointOut, agl::system_coordinat::geo::pz_90_02, agl::system_coordinat::polar, 2>{
     inline constexpr static auto get(const Point &){
         static_assert(false, "Error release.");
     }
 };
 
 template<typename Point, typename PointOut>
-struct convert<Point, PointOut, polar, pz_90_02, 2>{
+struct convert<Point, PointOut, agl::system_coordinat::polar, agl::system_coordinat::geo::pz_90_02, 2>{
     inline constexpr static auto get(const Point &){
         static_assert(false, "Error release.");
     }

@@ -1,13 +1,13 @@
-#ifndef AGL_ALGORITHM_DISTANCE_IMPLEMENTATION_CARTESIAN_H
-#define AGL_ALGORITHM_DISTANCE_IMPLEMENTATION_CARTESIAN_H
+#ifndef AGL_ALGORITHM_DISTANCE_IMPLEMENTATION_ARC_CARTESIAN_H
+#define AGL_ALGORITHM_DISTANCE_IMPLEMENTATION_ARC_CARTESIAN_H
 
 #include "algorithm/math_algorithm.h"
-#include "algorithm/traits.h"
+#include "system/traits.h"
 #include <cmath>
 
-namespace agl::algorithm::dispatch::distance_arc_algo {
+namespace agl::algorithm::dispatch::d1::distance_arc_algo {
 
-template<typename Figure, typename CoordinateSystem, std::size_t Dimension>
+template<typename Figure, typename Tag, typename CoordinateSystem, std::size_t Dimension>
 struct distance{
     inline constexpr static auto get(const Figure &figure){
         static_assert(false, "No 'distance' calculations have been implemented for these points.");
@@ -15,9 +15,11 @@ struct distance{
 };
 
 template<typename Figure>
-struct distance<Figure, cartesian, 2>{
+struct distance<Figure, agl::tag::tag_arc, system_coordinat::cartesian, 2>{
     inline constexpr static auto get(const Figure &figure){
         using Point = traits::traits_arc::type_property<Figure>::type_center;
+        using Angle = traits::traits_arc::type_property<Figure>::type_angle;
+        using Type = agl::traits::type<Angle>::type_value;
 
         const auto &start = traits::traits_arc::access_angle<Figure, 0>::get(figure);
         const auto &stop = traits::traits_arc::access_angle<Figure, 1>::get(figure);
@@ -28,7 +30,7 @@ struct distance<Figure, cartesian, 2>{
         }
         auto a = stop - start;
         if(start > stop){
-            a += algorithm::pi_in_2<decltype(start)>;
+            a += algorithm::pi_in_2<Type>;
         }
         return a * radius;
     }

@@ -2,8 +2,8 @@
 #define AGL_STRUCT_POINT_GEO_POINT2D_H
 
 #include <format>
-#include "system/tag.h"
 #include "algorithm/math_algorithm.h"
+#include "system/traits.h"
 
 
 namespace agl::point::geo {
@@ -49,8 +49,8 @@ protected:
 template<typename Angle>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::geo::point_geo2d<Angle> &point){
     os << std::format("latitude={} longitude={}",
-                      agl::system::tag::value<Angle>::get(point.latitude()),
-                      agl::system::tag::value<Angle>::get(point.longitude()));
+                      agl::traits::value<Angle>::get(point.latitude()),
+                      agl::traits::value<Angle>::get(point.longitude()));
     return os;
 }
 

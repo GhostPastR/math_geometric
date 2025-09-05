@@ -3,8 +3,8 @@
 
 #include "algorithm/matrix_algorithm.h"
 #include "algorithm/tag_algoritm.h"
-#include "algorithm/traits.h"
-#include "system/tag.h"
+#include "system/assert.h"
+#include "system/traits.h"
 #include <cmath>
 
 namespace agl::algorithm::dispatch {
@@ -18,16 +18,16 @@ struct rotate{
 
 //метод преобразует текущие координаты относительно заданной точки и угла поворота
 template<typename Object, typename ObjectDirection, typename Point>
-struct rotate<Object, ObjectDirection, Point, tag_point, cartesian, 2, direction_angle>{
+struct rotate<Object, ObjectDirection, Point, agl::tag::tag_point, system_coordinat::cartesian, 2, direction_angle>{
     inline constexpr static auto get(const Object &object, const ObjectDirection &direction, const Point &point){
-        using Type = traits::traits_point::type_property<Object>::type;
+        using Type = traits::traits_point::type_property<Object>::type_point;
         const auto x = traits::traits_point::access_point<Point, 0>::get(object);
         const auto y = traits::traits_point::access_point<Point, 1>::get(object);
         const auto rx = traits::traits_point::access_point<Point, 0>::get(point);
         const auto ry = traits::traits_point::access_point<Point, 1>::get(point);
 
-        const auto sinAngle = -std::sin(system::tag::value<ObjectDirection>::get(direction));
-        const auto cosAngle = std::cos(system::tag::value<ObjectDirection>::get(direction));
+        const auto sinAngle = -std::sin(traits::value<ObjectDirection>::get(direction));
+        const auto cosAngle = std::cos(traits::value<ObjectDirection>::get(direction));
         auto vector = matrix_algo::mul<Type, 2>({cosAngle, -sinAngle, sinAngle, cosAngle}, {x - rx, y - ry});
         return Object{vector[0] + rx, vector[1] + ry};
     }
@@ -44,9 +44,9 @@ inline constexpr auto rotate(const Object &object, const ObjectDirection &direct
     using tag = traits::tag<Object>::type_tag;
     constexpr auto dimension = traits::dimension<Object>::value();
 
-    static_assert(!std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");
-    static_assert(!std::is_same_v<direction_object, undefined>, "Error!");
-    static_assert((dimension > decltype(dimension){}), "Error!");
+    static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
+    static_assert(agl::assert::is_correct<direction_object>(), "Error!");
+    static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
     return dispatch::rotate<Object, ObjectDirection, Point, tag,
                             type_coordinate_system, dimension, direction_object>::get(object, direction, point);

@@ -1,7 +1,7 @@
 #ifndef AGL_UNIT_DISTANCE_H
 #define AGL_UNIT_DISTANCE_H
 
-#include "system/tag.h"
+#include "system/traits.h"
 #include "unit/unit.h"
 
 namespace agl::unit {
@@ -119,7 +119,12 @@ template<> struct std::formatter<agl::unit::distance> {
 
 
 
-namespace agl::system::tag{
+namespace agl::traits{
+
+template<>
+struct type<agl::unit::distance>{
+    using type_value = double;
+};
 
 template<> struct value<agl::unit::distance>{
     inline constexpr static auto get(const agl::unit::distance &temp){

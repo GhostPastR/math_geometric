@@ -2,9 +2,9 @@
 #define AGL_ALGORITHM_DISTANCE_IMPLEMENTATION_GEO_H
 
 #include "algorithm/convert/implementation_geo.h"
-#include "algorithm/traits.h"
+#include "system/traits.h"
 
-namespace agl::algorithm::dispatch::geo_distance {
+namespace agl::algorithm::dispatch::d2::geo_distance {
 
 template<typename Point, typename CoordinateSystemGeo, std::size_t Dimension>
 struct distance{
@@ -14,10 +14,10 @@ struct distance{
 };
 
 template<typename Point>
-struct distance<Point, agl::sc_default, 2>{
+struct distance<Point, agl::system_coordinat::geo::sc_default, 2>{
     inline constexpr static auto get(const Point &a, const Point &b){
         return traits::traits_point::access_point<Point, 0>::get(
-            agl::algorithm::dispatch::geo::convert<Point, Point, sc_default, polar, 2>(a,b));
+            agl::algorithm::dispatch::geo::convert<Point, Point, agl::system_coordinat::geo::sc_default, system_coordinat::polar, 2>(a,b));
     }
 };
 

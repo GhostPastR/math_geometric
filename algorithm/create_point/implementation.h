@@ -2,8 +2,8 @@
 #define AGL_ALGORITHM_CREATE_POINT_IMPLEMENTATION_H
 
 #include "algorithm/tag_algoritm.h"
-#include "algorithm/traits.h"
-#include "system/tag.h"
+#include "system/assert.h"
+#include "system/traits.h"
 #include <cmath>
 
 namespace agl::algorithm::dispatch {
@@ -16,19 +16,19 @@ struct create_point{
 };
 
 template<typename Point, typename Turning, typename Range, typename NewPoint>
-struct create_point<Point, Turning, Range, NewPoint, cartesian, 2, direction_angle>{
+struct create_point<Point, Turning, Range, NewPoint, system_coordinat::cartesian, 2, direction_angle>{
     inline constexpr static auto get(const Point &point, const Turning &turning, const Range &range){
         return NewPoint{traits::traits_point::access_point<Point, 0>::get(point)
-                            + system::tag::value<Range>::get(range)
-                                  * std::sin(system::tag::value<Turning>::get(turning)),
+                            + traits::value<Range>::get(range)
+                                  * std::sin(traits::value<Turning>::get(turning)),
                         traits::traits_point::access_point<Point, 1>::get(point)
-                            + system::tag::value<Range>::get(range)
-                                  * std::cos(system::tag::value<Turning>::get(turning))};
+                            + traits::value<Range>::get(range)
+                                  * std::cos(traits::value<Turning>::get(turning))};
     }
 };
 
 template<typename Point, typename Turning, typename Range, typename NewPoint>
-struct create_point<Point, Turning, Range, NewPoint, geographical, 2, direction_angle>{
+struct create_point<Point, Turning, Range, NewPoint, system_coordinat::geographical, 2, direction_angle>{
     inline constexpr static auto get(const Point &point, const Turning &turning, const Range &range){
         // return NewPoint{traits::access_point<Point, 0>::get(point) + range * std::sin(turning),
         //                 traits::access_point<Point, 1>::get(point) + range * std::cos(turning)};
@@ -36,14 +36,14 @@ struct create_point<Point, Turning, Range, NewPoint, geographical, 2, direction_
 };
 
 template<typename Point, typename Turning, typename Range, typename NewPoint>
-struct create_point<Point, Turning, Range, NewPoint, cartesian, 2, direction_vector>{
+struct create_point<Point, Turning, Range, NewPoint, system_coordinat::cartesian, 2, direction_vector>{
     inline constexpr static auto get(const Point &point, const Turning &turning, const Range &range){
         static_assert(false, "Not implemented.");
     }
 };
 
 template<typename Point, typename Turning, typename Range, typename NewPoint>
-struct create_point<Point, Turning, Range, NewPoint, cartesian, 3, direction_vector>{
+struct create_point<Point, Turning, Range, NewPoint, system_coordinat::cartesian, 3, direction_vector>{
     inline constexpr static auto get(const Point &point, const Turning &turning, const Range &range){
         static_assert(false, "Not implemented.");
     }
@@ -61,8 +61,8 @@ inline constexpr auto create_point(const Point &point, const Turning &angle, con
     using direction_object = direction_object<Turning>::type_direction_object;
     constexpr auto dimension = traits::dimension<Point>::value();
 
-    static_assert(!std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");
-    static_assert((dimension > decltype(dimension){}), "Error!");
+    static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
+    static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
     return dispatch::create_point<Point, Turning, Range, NewPoint,
                                   type_coordinate_system, dimension, direction_object>::get(point, angle, range);

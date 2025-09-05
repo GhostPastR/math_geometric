@@ -2,9 +2,8 @@
 #define AGL_STRUCT_POINT_POLAR_POINT2D_H
 
 #include <format>
-#include "system/tag.h"
 #include "algorithm/math_algorithm.h"
-#include "algorithm/traits.h"
+#include "system/traits.h"
 
 
 namespace agl::point::polar {
@@ -73,12 +72,12 @@ namespace agl::traits {
 
 template<typename TypePsi, typename TypeFi>
 struct tag<point::polar::polar2d<TypePsi, TypeFi>>{
-    using type_tag = tag_point;
+    using type_tag = agl::tag::tag_point;
 };
 
 template<typename TypePsi, typename TypeFi>
 struct coordinate_system<point::polar::polar2d<TypePsi, TypeFi>>{
-    using system = polar;
+    using system = system_coordinat::polar;
 };
 
 template<typename TypePsi, typename TypeFi>

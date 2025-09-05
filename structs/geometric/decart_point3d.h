@@ -2,7 +2,7 @@
 #define AGL_STRUCT_POINT_DECART_POINT3D_H
 
 #include <format>
-#include "structs/point/decart_point2d.h"
+#include "structs/geometric/decart_point2d.h"
 
 
 namespace agl::point::decart {
@@ -43,9 +43,9 @@ protected:
 template<typename Type>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::decart::point3d<Type> &point){
     os << std::format("x={} y={} z={}",
-                      agl::system::tag::value<Type>::get(point.x()),
-                      agl::system::tag::value<Type>::get(point.y()),
-                      agl::system::tag::value<Type>::get(point.z()));
+                      agl::traits::value<Type>::get(point.x()),
+                      agl::traits::value<Type>::get(point.y()),
+                      agl::traits::value<Type>::get(point.z()));
     return os;
 }
 

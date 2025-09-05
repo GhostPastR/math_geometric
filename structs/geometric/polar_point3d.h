@@ -2,7 +2,7 @@
 #define AGL_STRUCT_POINT_POLAR_POINT3D_H
 
 #include "algorithm/math_algorithm.h"
-#include "structs/point/polar_point2d.h"
+#include "structs/geometric/polar_point2d.h"
 #include <format>
 
 namespace agl::point::polar {
@@ -41,9 +41,9 @@ protected:
 template<typename TypePsi, typename TypeFi, typename TypeZ>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::polar::polar3d<TypePsi, TypeFi, TypeZ> &point){
     os << std::format("psi={} fi={} z={}",
-                      agl::system::tag::value<TypePsi>::get(point.psi()),
-                      agl::system::tag::value<TypePsi>::get(point.fi()),
-                      agl::system::tag::value<TypePsi>::get(point.z()));
+                      agl::traits::value<TypePsi>::get(point.psi()),
+                      agl::traits::value<TypePsi>::get(point.fi()),
+                      agl::traits::value<TypePsi>::get(point.z()));
     return os;
 }
 

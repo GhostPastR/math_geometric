@@ -2,7 +2,7 @@
 #define AGL_STRUCT_POINT_GEO_POINT3D_H
 
 #include "algorithm/math_algorithm.h"
-#include "structs/point/geo_point2d.h"
+#include "structs/geometric/geo_point2d.h"
 #include <format>
 
 namespace agl::point::geo {
@@ -42,9 +42,9 @@ protected:
 template<typename Angle, typename TypeAltitude>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::geo::point_geo3d<Angle, TypeAltitude> &point){
     os << std::format("latitude={} longitude={} altitude={}",
-                      agl::system::tag::value<Angle>::get(point.latitude()),
-                      agl::system::tag::value<Angle>::get(point.longitude()),
-                      agl::system::tag::value<TypeAltitude>::get(point.altitude()));
+                      agl::traits::value<Angle>::get(point.latitude()),
+                      agl::traits::value<Angle>::get(point.longitude()),
+                      agl::traits::value<TypeAltitude>::get(point.altitude()));
     return os;
 }
 

@@ -1,7 +1,6 @@
 #ifndef AGL_UNIT_ANGLE_H
 #define AGL_UNIT_ANGLE_H
 
-#include "system/tag.h"
 #include "unit/unit.h"
 #include "algorithm/tag_algoritm.h"
 
@@ -85,7 +84,12 @@ template<> struct std::formatter<agl::unit::angle> {
 
 
 
-namespace agl::system::tag{
+namespace agl::traits{
+
+template<>
+struct type<agl::unit::angle>{
+    using type_value = double;
+};
 
 template<> struct value<agl::unit::angle>{
     inline constexpr static auto get(const agl::unit::angle &temp){

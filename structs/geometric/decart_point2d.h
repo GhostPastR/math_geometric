@@ -2,9 +2,8 @@
 #define AGL_STRUCT_POINT_DECART_POINT2D_H
 
 #include <format>
-#include "system/tag.h"
 #include "algorithm/math_algorithm.h"
-#include "algorithm/traits.h"
+#include "system/traits.h"
 
 namespace agl::point::decart {
 
@@ -56,12 +55,12 @@ namespace agl::traits {
 
 template<typename Type>
 struct tag<point::decart::point2d<Type>>{
-    using type_tag = tag_point;
+    using type_tag = agl::tag::tag_point;
 };
 
 template<typename Type>
 struct coordinate_system<point::decart::point2d<Type>>{
-    using system = cartesian;
+    using system = system_coordinat::cartesian;
 };
 
 template<typename Type>
@@ -75,20 +74,20 @@ namespace traits_point {
 
 template<typename Type>
 struct type_property<point::decart::point2d<Type>>{
-    using type = Type;
+    using type_point = Type;
 };
 
 template<typename Type>
 struct access_point<point::decart::point2d<Type>, 0>{
     inline constexpr static auto get(const point::decart::point2d<Type> &point){
-        return agl::system::tag::value<Type>::get(point.x());
+        return agl::traits::value<Type>::get(point.x());
     }
 };
 
 template<typename Type>
 struct access_point<point::decart::point2d<Type>, 1>{
     inline constexpr static auto get(const point::decart::point2d<Type> &point){
-        return agl::system::tag::value<Type>::get(point.y());
+        return agl::traits::value<Type>::get(point.y());
     }
 };
 

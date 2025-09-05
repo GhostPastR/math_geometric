@@ -1,46 +1,9 @@
 #ifndef AGL_ALGORITM_TAG_H
 #define AGL_ALGORITM_TAG_H
 
-#include "algorithm/traits.h"
+#include "system/traits.h"
 
 namespace agl::algorithm {
-
-namespace d1 {
-
-struct distance_arc final{};
-struct distance_line final{};
-
-template<typename Figure>
-struct algorithm_distance{
-    using type_algorithm = undefined;
-};
-
-template<> struct algorithm_distance<tag_arc>{
-    using type_algorithm = distance_arc;
-};
-
-}
-
-
-
-namespace d2 {
-
-struct distance_point final{};
-
-template<typename Object1, typename Object2>
-struct algorithm_distance{
-    using type_algorithm = undefined;
-};
-
-template<> struct algorithm_distance<tag_point, tag_point>{
-    using type_algorithm = distance_point;
-};
-
-
-}
-
-
-
 
 struct direction_angle final{};
 struct direction_vector final{};
@@ -61,6 +24,64 @@ template<> struct direction_object<double>{
 template<> struct direction_object<long double>{
     using type_direction_object = direction_angle;
 };
+
+
+
+namespace tag::intersection {
+
+struct line_to_line final{};
+struct line_to_circle final{};
+struct circle_to_circle final{};
+
+template<typename Figure1, typename Figure2>
+struct tag{
+    using object_to_object = undefined;
+};
+
+template<>
+struct tag<group::group_line, group::group_line>{
+    using object_to_object = line_to_line;
+};
+
+template<>
+struct tag<group::group_elements_circle, group::group_elements_circle>{
+    using object_to_object = line_to_circle;
+};
+
+template<>
+struct tag<group::group_line, group::group_elements_circle>{
+    using object_to_object = line_to_circle;
+};
+
+template<>
+struct tag<group::group_elements_circle, group::group_line>{
+    using object_to_object = line_to_circle;
+};
+
+}
+
+
+
+namespace strategy {
+
+struct create_rectangle_point_sides final{};
+struct create_rectangle_center_sides final{};
+
+struct create_square_point_sides final{};
+struct create_square_center_sides final{};
+
+struct create_triangle_point_sides final{};
+struct create_triangle_point_sides_angle final{};
+struct create_triangle_point_sides_angles final{};
+struct create_triangle_rectangular_sides final{};
+struct create_triangle_rectangular_sides_angles final{};
+struct create_triangle_isosceles_sides final{};
+struct create_triangle_isosceles_sides_angles final{};
+struct create_triangle_regular final{};
+
+struct create_polygon_regular final{};
+
+}
 
 }
 

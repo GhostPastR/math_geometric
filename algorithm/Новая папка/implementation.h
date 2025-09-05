@@ -27,7 +27,7 @@ inline constexpr auto <>(){
     static_assert(std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");
     static_assert((dimension > decltype(dimension){}), "Error!");
 
-    return dispatch::<><P>::get();
+    return dispatch::<><>::get();
 }
 
 }

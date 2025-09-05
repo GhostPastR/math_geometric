@@ -13,20 +13,18 @@ qt_add_executable(math_geometric
     algorithm/approximation_algorithm.h
     algorithm/circle_algorithm.h
     algorithm/geo_algorithm.h
-    algorithm/line_algorithm.h
+
     algorithm/math_algorithm.h
     algorithm/point_algorithm.h
     algorithm/polygon_algorithm.h
     algorithm/matrix_algorithm.h
-
-    structs/line_impl.h
 
     structs/polygon_impl.h
     structs/struct_geo_imp.h
     structs/matrix.h
     structs/vector.h
     system/system_concept.h
-    system/system_function.h
+
     user_type.h
 
     unit/angle.h
@@ -39,31 +37,45 @@ qt_add_executable(math_geometric
     special_algorithms/navigation_route/figure_route.h
     unit_test_sa.h unit_test_sa.cpp
     special_algorithms/navigation_route/algorithm_route.h
-    structs/point/decart_point2d.h structs/point/decart_point3d.h structs/point/geo_point2d.h structs/point/geo_point3d.h structs/point/polar_point2d.h structs/point/polar_point3d.h
     algorithm/distance/implementation.h algorithm/distance/interface.h
     algorithm/distance/test_distance.h
     algorithm/direction/implementation.h algorithm/direction/interface.h
     algorithm/convert/implementation.h algorithm/convert/interface.h algorithm/create_point/implementation.h algorithm/create_point/interface.h algorithm/midplane/implementation.h algorithm/midplane/interface.h algorithm/rotate/implementation.h algorithm/rotate/interface.h
     algorithm/tag_algoritm.h
-    algorithm/traits.h
+
     algorithm/convert/implementation_geo.h
     algorithm/create_point/implementation_geo.h
     algorithm/distance/implementation_cartesian.h
     algorithm/distance/implementation_geo.h
 
-
-    system/tag.h
-
-    structs/circle/circle.h
-    structs/circle/arc.h
     unit/unit.h
-
-    structs/line/straight_line.h
-    structs/line/half_line.h
-    structs/line/line_section.h
     algorithm/distance/implementation_arc_cartesian.h
-
-
+    algorithm/equation_of_line/implementation.h algorithm/equation_of_line/interface.h
+    algorithm/distance/implementation_line_cartesian.h
+    algorithm/belongs_to_area_of_line/implementation.h algorithm/belongs_to_area_of_line/interface.h
+    algorithm/point_on_curve/implementation.h algorithm/point_on_curve/interface.h
+    algorithm/intersection/implementation.h algorithm/intersection/interface.h
+    algorithm/intersection/implementation_cartesian.h
+    algorithm/contain/implementation.h algorithm/contain/interface.h
+    algorithm/perpendicular/implementation.h algorithm/perpendicular/interface.h
+    algorithm/parallel/implementation.h algorithm/parallel/interface.h
+    testunit.h testunit.cpp
+    algorithm/algorithm.h
+    structs/geometric/arc.h structs/geometric/circle.h structs/geometric/decart_point2d.h structs/geometric/decart_point3d.h structs/geometric/geo_point2d.h structs/geometric/geo_point3d.h structs/geometric/half_line.h structs/geometric/line_section.h structs/geometric/polar_point2d.h structs/geometric/polar_point3d.h structs/geometric/straight_line.h
+    structs/geometric_object.h
+    unit/unit_object.h
+    testgeometricstruct.h testgeometricstruct.cpp
+    system/traits.h
+    system/tag.h
+    system/assert.h
+    testalgorithm.h testalgorithm.cpp
+    algorithm/distance/implementation_d2.h
+    algorithm/located_inside/implementation.h algorithm/located_inside/interface.h
+    algorithm/located_inside/implementation_circle.h
+    structs/geometric/polygon.h
+    algorithm/is_correct_polygon/implementation.h algorithm/is_correct_polygon/interface.h
+    algorithm/center/implementation.h algorithm/center/interface.h
+    algorithm/create_polygon/implementation.h algorithm/create_polygon/interface.h
 )
 
 target_link_libraries(math_geometric PRIVATE Qt::Core Qt6::Test)

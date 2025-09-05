@@ -1,8 +1,8 @@
 #ifndef UNIT_SYSTEM_H
 #define UNIT_SYSTEM_H
 
+#include "system/traits.h"
 #include "algorithm/math_algorithm.h"
-#include <string>
 #include <format>
 #include <utility>
 #include <tuple>
@@ -186,6 +186,14 @@ constexpr bool find_type(const Tuple &tuple){
 }
 
 }
+
+
+template<typename UnitValue, agl::unit::c_type_value TypeValue>
+    requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
+struct agl::traits::type<agl::unit::Value<UnitValue, TypeValue>>{
+    using type_value = TypeValue;
+};
+
 
 template<typename UnitValue, agl::unit::c_type_value TypeValue>
     requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>

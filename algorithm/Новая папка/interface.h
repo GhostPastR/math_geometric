@@ -5,10 +5,10 @@
 
 namespace agl::algorithm {
 
-//метод расчитывает координаты новой точки
+//
 template<>
 inline constexpr auto <>(){
-    return geometry::create_point<>();
+    return geometry::<><>();
 }
 
 }
