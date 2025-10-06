@@ -2,7 +2,6 @@
 #define AGL_STRUCT_LINE_SECTION_H
 
 #include <format>
-#include "system/traits.h"
 
 namespace agl::line {
 
@@ -37,58 +36,6 @@ private:
 
 
 
-namespace agl::traits {
-
-template<typename Point>
-struct tag<agl::line::line_section<Point>>{
-    using type_tag = agl::tag::tag_line_section;
-};
-
-template<typename Point>
-struct group<agl::line::line_section<Point>>{
-    using type_group = agl::group::group_line;
-};
-
-template<typename Point>
-struct coordinate_system<agl::line::line_section<Point>>{
-    using system = coordinate_system<Point>::system;;
-};
-
-template<typename Point>
-struct dimension<agl::line::line_section<Point>>{
-    inline static constexpr std::size_t value(){
-        return 2;
-    }
-};
-
-namespace traits_line_section {
-
-template<typename Point>
-struct type_property<agl::line::line_section<Point>>{
-    using type_point = Point;
-};
-
-template<typename Point>
-struct access_start<agl::line::line_section<Point>>{
-    inline constexpr static auto get(const agl::line::line_section<Point> &object){
-        return object.start();
-    }
-};
-
-template<typename Point>
-struct access_stop<agl::line::line_section<Point>>{
-    inline constexpr static auto get(const agl::line::line_section<Point> &object){
-        return object.stop();
-    }
-};
-
-}
-
-}
-
-
-
-
 template<typename Point>
 struct std::formatter<agl::line::line_section<Point>> {
     std::formatter<std::string> _formatter;
@@ -101,7 +48,7 @@ struct std::formatter<agl::line::line_section<Point>> {
     }
 };
 
-template<typename Point, typename Angle>
+template<typename Point>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::line::line_section<Point> &line_section){
     os << std::format("{}", line_section);
     return os;

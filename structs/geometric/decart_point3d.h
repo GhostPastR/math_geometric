@@ -2,6 +2,7 @@
 #define AGL_STRUCT_POINT_DECART_POINT3D_H
 
 #include <format>
+#include "system/traits.h"
 #include "structs/geometric/decart_point2d.h"
 
 

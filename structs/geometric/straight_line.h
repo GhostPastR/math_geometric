@@ -3,7 +3,6 @@
 
 #include <format>
 #include "algorithm/math_algorithm.h"
-#include "system/traits.h"
 #include "algorithm/equation_of_line/interface.h"
 
 namespace agl::line {
@@ -57,65 +56,6 @@ private:
     Type b_{};
     Type c_{};
 };
-
-}
-
-
-
-namespace agl::traits {
-
-template<typename Type, typename CoordinateSystem>
-struct tag<agl::line::straight_line<Type,CoordinateSystem>>{
-    using type_tag = agl::tag::tag_straight_line;
-};
-
-template<typename Type, typename CoordinateSystem>
-struct group<agl::line::straight_line<Type,CoordinateSystem>>{
-    using type_group = agl::group::group_line;
-};
-
-template<typename Type, typename CoordinateSystem>
-struct coordinate_system<agl::line::straight_line<Type,CoordinateSystem>>{
-    using system = CoordinateSystem;
-};
-
-template<typename Type, typename CoordinateSystem>
-struct dimension<agl::line::straight_line<Type,CoordinateSystem>>{
-    inline static constexpr std::size_t value(){
-        return 2;
-    }
-};
-
-namespace traits_straight_line {
-
-template<typename Type, typename CoordinateSystem>
-struct type_property<agl::line::straight_line<Type,CoordinateSystem>>{
-    using type_parameter = Type;
-};
-
-template<typename Type, typename CoordinateSystem>
-struct access_parameter<agl::line::straight_line<Type,CoordinateSystem>, 0>{
-    inline constexpr static auto get(const agl::line::straight_line<Type,CoordinateSystem> &object){
-        return object.a();
-    }
-};
-
-template<typename Type, typename CoordinateSystem>
-struct access_parameter<agl::line::straight_line<Type,CoordinateSystem>, 1>{
-    inline constexpr static auto get(const agl::line::straight_line<Type,CoordinateSystem> &object){
-        return object.b();
-    }
-};
-
-template<typename Type, typename CoordinateSystem>
-struct access_parameter<agl::line::straight_line<Type,CoordinateSystem>, 2>{
-    inline constexpr static auto get(const agl::line::straight_line<Type,CoordinateSystem> &object){
-        return object.c();
-    }
-};
-
-
-}
 
 }
 

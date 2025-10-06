@@ -11,7 +11,7 @@ qt_add_executable(math_geometric
     unit_test.h
     unit_test.cpp
     algorithm/approximation_algorithm.h
-    algorithm/circle_algorithm.h
+
     algorithm/geo_algorithm.h
 
     algorithm/math_algorithm.h
@@ -19,7 +19,7 @@ qt_add_executable(math_geometric
     algorithm/polygon_algorithm.h
     algorithm/matrix_algorithm.h
 
-    structs/polygon_impl.h
+
     structs/struct_geo_imp.h
     structs/matrix.h
     structs/vector.h
@@ -38,7 +38,7 @@ qt_add_executable(math_geometric
     unit_test_sa.h unit_test_sa.cpp
     special_algorithms/navigation_route/algorithm_route.h
     algorithm/distance/implementation.h algorithm/distance/interface.h
-    algorithm/distance/test_distance.h
+
     algorithm/direction/implementation.h algorithm/direction/interface.h
     algorithm/convert/implementation.h algorithm/convert/interface.h algorithm/create_point/implementation.h algorithm/create_point/interface.h algorithm/midplane/implementation.h algorithm/midplane/interface.h algorithm/rotate/implementation.h algorithm/rotate/interface.h
     algorithm/tag_algoritm.h
@@ -76,6 +76,14 @@ qt_add_executable(math_geometric
     algorithm/is_correct_polygon/implementation.h algorithm/is_correct_polygon/interface.h
     algorithm/center/implementation.h algorithm/center/interface.h
     algorithm/create_polygon/implementation.h algorithm/create_polygon/interface.h
+    algorithm/tangent_circle/implementation.h algorithm/tangent_circle/interface.h
+    algorithm/create_circle/implementation.h algorithm/create_circle/interface.h
+    algorithm/get_lines/implementation.h algorithm/get_lines/interface.h
+    algorithm/point_coupling/implementation.h algorithm/point_coupling/interface.h
+    system/traits_standart.h
+    algorithm/scaling/implementation.h algorithm/scaling/interface.h
+    structs/traits/traits_arc.h structs/traits/traits_circle.h structs/traits/traits_decart_point2d.h structs/traits/traits_decart_point3d.h structs/traits/traits_geo_point2d.h structs/traits/traits_geo_point3d.h structs/traits/traits_half_line.h structs/traits/traits_line_section.h structs/traits/traits_polar_point2d.h structs/traits/traits_polar_point3d.h structs/traits/traits_polygon.h structs/traits/traits_straight_line.h
+    algorithm/point_coupling/implementation_line.h
 )
 
 target_link_libraries(math_geometric PRIVATE Qt::Core Qt6::Test)

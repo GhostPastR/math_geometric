@@ -5,11 +5,23 @@
 
 namespace agl::algorithm {
 
-//
-template<typename Line, typename Object>
-inline constexpr bool belongs_to_area_of_line(const Line &line, const Object &object){
-    return geometry::belongs_to_area_of_line<Line, Object>(line, object);
+template<typename Border,
+         typename Point>
+inline constexpr auto belongs_to_area_of_line(const Border &left, const Border &right, const Point &point){
+    return geometry::belongs_to_area_of_line<Border, Point>(left, right, point);
 }
+
+
+//
+template<typename Line,
+         typename Object>
+inline constexpr bool belongs_to_area_of_line(const Line &line,
+                                              const Object &object){
+    return geometry::belongs_to_area_of_line<Line,
+                                             Object>(line, object);
+}
+
+
 
 }
 

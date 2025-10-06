@@ -2,7 +2,6 @@
 #define ALGORITHM_ROUTE_H
 
 #include "figure_route.h"
-#include "../../algorithm/circle_algorithm.h"
 #include "../../structs/vector.h"
 
 namespace sa {

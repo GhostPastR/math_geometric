@@ -15,7 +15,7 @@ struct distance{
 };
 
 template<typename Figure>
-struct distance<Figure, agl::tag::tag_arc, system_coordinat::cartesian, 2>{
+struct distance<Figure, agl::tag::elements_circle::arc, system_coordinat::cartesian, 2>{
     inline constexpr static auto get(const Figure &figure){
         using Point = traits::traits_arc::type_property<Figure>::type_center;
         using Angle = traits::traits_arc::type_property<Figure>::type_angle;

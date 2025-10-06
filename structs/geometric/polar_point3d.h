@@ -4,6 +4,7 @@
 #include "algorithm/math_algorithm.h"
 #include "structs/geometric/polar_point2d.h"
 #include <format>
+#include "system/traits.h"
 
 namespace agl::point::polar {
 

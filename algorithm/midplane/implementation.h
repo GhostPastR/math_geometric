@@ -8,7 +8,9 @@
 
 namespace agl::algorithm::dispatch::d2 {
 
-template<typename Object, typename CoordinateSystem, std::size_t Dimension>
+template<typename Object,
+         typename CoordinateSystem,
+         std::size_t Dimension>
 struct midplane{
     inline constexpr static auto get(const Object &a, const Object &b){
         static_assert(false, "No '' calculations have been implemented for these objects.");
@@ -16,7 +18,9 @@ struct midplane{
 };
 
 template<typename Object>
-struct midplane<Object, system_coordinat::cartesian, 2>{
+struct midplane<Object,
+                system_coordinat::cartesian,
+                2>{
     inline constexpr static auto get(const Object &a, const Object &b){
         using namespace traits::traits_point;
         return Object{std::midpoint(access_point<Object, 0>::get(a), access_point<Object, 0>::get(b)),
@@ -25,7 +29,9 @@ struct midplane<Object, system_coordinat::cartesian, 2>{
 };
 
 template<typename Object>
-struct midplane<Object, system_coordinat::cartesian, 3>{
+struct midplane<Object,
+                system_coordinat::cartesian,
+                3>{
     inline constexpr static auto get(const Object &a, const Object &b){
         using namespace traits::traits_point;
         return Object{std::midpoint(access_point<Object, 0>::get(a), access_point<Object, 0>::get(b)),
@@ -40,7 +46,10 @@ struct midplane<Object, system_coordinat::cartesian, 3>{
 
 namespace agl::algorithm::dispatch::d1 {
 
-template<typename Figure, typename Tag, typename CoordinateSystem, std::size_t Dimension>
+template<typename Figure,
+         typename Tag,
+         typename CoordinateSystem,
+         std::size_t Dimension>
 struct midplane{
     inline constexpr static auto get(const Figure &figure){
         static_assert(false, "No '' calculations have been implemented for these objects.");
@@ -48,7 +57,10 @@ struct midplane{
 };
 
 template<typename Figure>
-struct midplane<Figure, agl::tag::tag_arc, system_coordinat::cartesian, 2>{
+struct midplane<Figure,
+                agl::tag::elements_circle::arc,
+                system_coordinat::cartesian,
+                2>{
     inline constexpr static auto get(const Figure &figure){
         using Point = traits::traits_arc::type_property<Figure>::type_center;
         using Type = traits::traits_point::type_property<Point>::type_point;

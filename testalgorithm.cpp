@@ -113,6 +113,38 @@ void TestAlgorithm::test_rotate()
         QVERIFY(agl::algorithm::compare(value.x(), 10.));
         QVERIFY(agl::algorithm::compare(value.y(), 0.));
     }
+    {
+        agl::point::decart::point2d<double> point{10,10};
+        auto value = agl::algorithm::rotate(point, 90_deg, agl::point::decart::point2d<double>{5,5});
+        QVERIFY(agl::algorithm::compare(value.x(), 10.));
+        QVERIFY(agl::algorithm::compare(value.y(), 0.));
+    }
+
+    {
+        auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,10),
+                                                                                                             agl::point::decart::point2d<double>(10,10),
+                                                                                                             agl::point::decart::point2d<double>(10,0),
+                                                                                                             agl::point::decart::point2d<double>(0,0)});
+        auto center = agl::algorithm::center<agl::point::decart::point2d<double>>(polygon);
+        auto new_polygon = agl::algorithm::rotate(polygon, 90_deg, center);
+
+        QVERIFY(new_polygon.points()[0] == agl::point::decart::point2d<double>(10,10));
+        QVERIFY(new_polygon.points()[1] == agl::point::decart::point2d<double>(10,0));
+        QVERIFY(new_polygon.points()[2] == agl::point::decart::point2d<double>(0,0));
+        QVERIFY(new_polygon.points()[3] == agl::point::decart::point2d<double>(0,10));
+    }
+    {
+        auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,10),
+                                                                                                             agl::point::decart::point2d<double>(10,10),
+                                                                                                             agl::point::decart::point2d<double>(10,0),
+                                                                                                             agl::point::decart::point2d<double>(0,0)});
+        auto new_polygon = agl::algorithm::rotate(polygon, 90_deg, agl::point::decart::point2d<double>(0,0));
+
+        QVERIFY(new_polygon.points()[0] == agl::point::decart::point2d<double>(10,0));
+        QVERIFY(new_polygon.points()[1] == agl::point::decart::point2d<double>(10,-10));
+        QVERIFY(new_polygon.points()[2] == agl::point::decart::point2d<double>(0,-10));
+        QVERIFY(new_polygon.points()[3] == agl::point::decart::point2d<double>(0,0));
+    }
 }
 
 void TestAlgorithm::test_midplane()
@@ -449,7 +481,7 @@ void TestAlgorithm::test_located_inside()
 void TestAlgorithm::test_create_polygon()
 {
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 4, agl::tag::tag_rectangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::rectangle>,
                                                       agl::algorithm::strategy::create_rectangle_point_sides>(agl::point::decart::point2d<double>{0., 0.}, 5., 2.);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0,0));
@@ -458,7 +490,7 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[3] == agl::point::decart::point2d<double>(0,2));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 4, agl::tag::tag_rectangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::rectangle>,
                                                       agl::algorithm::strategy::create_rectangle_center_sides>(agl::point::decart::point2d<double>{0., 0.}, 5., 2.);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(-2.5, -1));
@@ -467,7 +499,7 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[3] == agl::point::decart::point2d<double>(-2.5, 1));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 4, agl::tag::tag_rectangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::regular>,
                                                       agl::algorithm::strategy::create_square_point_sides>(agl::point::decart::point2d<double>{0., 0.}, 5.);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0,0));
@@ -476,7 +508,7 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[3] == agl::point::decart::point2d<double>(0,5));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 4, agl::tag::tag_rectangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::regular>,
                                                       agl::algorithm::strategy::create_square_center_sides>(agl::point::decart::point2d<double>{0., 0.}, 5.);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(-2.5, -2.5));
@@ -484,27 +516,9 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[2] == agl::point::decart::point2d<double>(2.5, 2.5));
         QVERIFY(points[3] == agl::point::decart::point2d<double>(-2.5, 2.5));
     }
+//     //------------------------------------------
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 4, agl::tag::tag_regular_polygon>,
-                                                      agl::algorithm::strategy::create_square_point_sides>(agl::point::decart::point2d<double>{0., 0.}, 5.);
-        auto points = polygon.points();
-        QVERIFY(points[0] == agl::point::decart::point2d<double>(0,0));
-        QVERIFY(points[1] == agl::point::decart::point2d<double>(5,0));
-        QVERIFY(points[2] == agl::point::decart::point2d<double>(5,5));
-        QVERIFY(points[3] == agl::point::decart::point2d<double>(0,5));
-    }
-    {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 4, agl::tag::tag_regular_polygon>,
-                                                      agl::algorithm::strategy::create_square_center_sides>(agl::point::decart::point2d<double>{0., 0.}, 5.);
-        auto points = polygon.points();
-        QVERIFY(points[0] == agl::point::decart::point2d<double>(-2.5, -2.5));
-        QVERIFY(points[1] == agl::point::decart::point2d<double>(2.5, -2.5));
-        QVERIFY(points[2] == agl::point::decart::point2d<double>(2.5, 2.5));
-        QVERIFY(points[3] == agl::point::decart::point2d<double>(-2.5, 2.5));
-    }
-    //------------------------------------------
-    {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_triangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::triangle>,
                                                       agl::algorithm::strategy::create_triangle_point_sides>(agl::point::decart::point2d<double>{0., 0.}, 3., 4., 6.);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 0));
@@ -512,7 +526,7 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[2] == agl::point::decart::point2d<double>(4.833333, -3.555122));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_triangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::triangle>,
                                                       agl::algorithm::strategy::create_triangle_point_sides_angle>(agl::point::decart::point2d<double>{0., 0.}, 3., 4., 45_deg);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 0));
@@ -520,7 +534,7 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[2] == agl::point::decart::point2d<double>(2.121320, 2.121320));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_triangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::triangle>,
                                                       agl::algorithm::strategy::create_triangle_point_sides_angles>(agl::point::decart::point2d<double>{0., 0.}, 5., 30_deg, 80_deg);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 0));
@@ -528,16 +542,16 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[2] == agl::point::decart::point2d<double>(-3.868146, 5.120026));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_triangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::triangle>,
                                                       agl::algorithm::strategy::create_triangle_rectangular_sides>(agl::point::decart::point2d<double>{0., 0.}, 5., 7.);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 0));
         QVERIFY(points[1] == agl::point::decart::point2d<double>(5, 0));
         QVERIFY(points[2] == agl::point::decart::point2d<double>(0, 7));
     }
-    // std::cout << polygon << std::endl;
+//     // std::cout << polygon << std::endl;
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_triangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::triangle>,
                                                       agl::algorithm::strategy::create_triangle_rectangular_sides_angles>(agl::point::decart::point2d<double>{0., 0.}, 5., 80_deg);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 0));
@@ -545,7 +559,7 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[2] == agl::point::decart::point2d<double>(0, 28.356409));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_triangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::triangle>,
                                                       agl::algorithm::strategy::create_triangle_isosceles_sides>(agl::point::decart::point2d<double>{0., 0.}, 5., 3.);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 0));
@@ -553,7 +567,7 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[2] == agl::point::decart::point2d<double>(0.9, -2.861818));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_triangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::triangle>,
                                                       agl::algorithm::strategy::create_triangle_isosceles_sides_angles>(agl::point::decart::point2d<double>{0., 0.}, 5., 80_deg);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 0));
@@ -561,7 +575,7 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[2] == agl::point::decart::point2d<double>(0.868241, 4.924039));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_triangle>,
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::triangle>,
                                                       agl::algorithm::strategy::create_triangle_regular>(agl::point::decart::point2d<double>{0., 0.}, 5.);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 0));
@@ -569,8 +583,8 @@ void TestAlgorithm::test_create_polygon()
         QVERIFY(points[2] == agl::point::decart::point2d<double>(0.669873, -2.5));
     }
     {
-        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_regular_polygon>,
-                                                      agl::algorithm::strategy::create_triangle_regular>(agl::point::decart::point2d<double>{0., 0.}, 5.);
+        auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::regular>,
+                                                      agl::algorithm::strategy::create_triangle_regular>(agl::point::decart::point2d<double>{0., 0.}, 5., 3);
         auto points = polygon.points();
         QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 0));
         QVERIFY(points[1] == agl::point::decart::point2d<double>(5, 0));
@@ -578,16 +592,16 @@ void TestAlgorithm::test_create_polygon()
     }
     {
         {
-            auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 3, agl::tag::tag_regular_polygon>,
-                                                          agl::algorithm::strategy::create_polygon_regular>(agl::point::decart::point2d<double>{0., 0.}, 5.);
+            auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::regular>,
+                                                          agl::algorithm::strategy::create_polygon_regular>(agl::point::decart::point2d<double>{0., 0.}, 5., 3);
             auto points = polygon.points();
             QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 2.886751));
             QVERIFY(points[1] == agl::point::decart::point2d<double>(2.5, -1.443376));
             QVERIFY(points[2] == agl::point::decart::point2d<double>(-2.5, -1.443376));
         }
         {
-            auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 4, agl::tag::tag_regular_polygon>,
-                                                          agl::algorithm::strategy::create_polygon_regular>(agl::point::decart::point2d<double>{0., 0.}, 5.);
+            auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::regular>,
+                                                          agl::algorithm::strategy::create_polygon_regular>(agl::point::decart::point2d<double>{0., 0.}, 5., 4);
             auto points = polygon.points();
             QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 3.535534));
             QVERIFY(points[1] == agl::point::decart::point2d<double>(3.535534, 0));
@@ -595,8 +609,8 @@ void TestAlgorithm::test_create_polygon()
             QVERIFY(points[3] == agl::point::decart::point2d<double>(-3.535534, 0));
         }
         {
-            auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, 5, agl::tag::tag_regular_polygon>,
-                                                          agl::algorithm::strategy::create_polygon_regular>(agl::point::decart::point2d<double>{0., 0.}, 5.);
+            auto polygon = agl::algorithm::create_polygon<agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::regular>,
+                                                          agl::algorithm::strategy::create_polygon_regular>(agl::point::decart::point2d<double>{0., 0.}, 5., 5);
             auto points = polygon.points();
             QVERIFY(points[0] == agl::point::decart::point2d<double>(0, 4.253254));
             QVERIFY(points[1] == agl::point::decart::point2d<double>(4.045085, 1.314328));
@@ -605,6 +619,238 @@ void TestAlgorithm::test_create_polygon()
             QVERIFY(points[4] == agl::point::decart::point2d<double>(-4.045085, 1.314328));
         }
     }
+}
+
+void TestAlgorithm::test_tangent_circle()
+{
+    {//scaling_tangent_out
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{5.,5.}, 5.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::external{});
+            QVERIFY(line1.has_value() && (line1->start() == agl::point::decart::point2d<double>(0, 10)) && (line1->stop() == agl::point::decart::point2d<double>(5, 10)));
+            QVERIFY(line2.has_value() && (line2->start() == agl::point::decart::point2d<double>(0, 0)) && (line2->stop() == agl::point::decart::point2d<double>(5, 0)));
+        }
+
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{0.,5.}, 5.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::external{});
+            QVERIFY(!line1.has_value());
+            QVERIFY(!line2.has_value());
+        }
+
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{10.,5.}, 50.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::external{});
+            QVERIFY(!line1.has_value());
+            QVERIFY(!line2.has_value());
+        }
+
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{10.,5.}, 8.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::external{});
+            QVERIFY(line1.has_value() && (line1->start() == agl::point::decart::point2d<double>(-1.5, 0.230304)) && (line1->stop() == agl::point::decart::point2d<double>(7.6, -2.631514)));
+            QVERIFY(line2.has_value() && (line2->start() == agl::point::decart::point2d<double>(-1.5, 9.769696)) && (line2->stop() == agl::point::decart::point2d<double>(7.6, 12.631514)));
+        }
+    }
+
+    {//scaling_tangent_inboard
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{5.,5.}, 5.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::internal{});
+            QVERIFY(!line1.has_value());
+            QVERIFY(!line2.has_value());
+        }
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{0.,5.}, 5.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::internal{});
+            QVERIFY(!line1.has_value());
+            QVERIFY(!line2.has_value());
+        }
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{10.,5.}, 50.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::internal{});
+            QVERIFY(!line1.has_value());
+            QVERIFY(!line2.has_value());
+        }
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{10.,5.}, 8.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::internal{});
+            QVERIFY(!line1.has_value());
+            QVERIFY(!line2.has_value());
+        }
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{20.,5.}, 5.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::internal{});
+            QVERIFY(line1.has_value() && (line1->start() == agl::point::decart::point2d<double>(2.5, 9.330127)) && (line1->stop() == agl::point::decart::point2d<double>(17.5, 0.669873)));
+            QVERIFY(line2.has_value() && (line2->start() == agl::point::decart::point2d<double>(2.5,  0.669873)) && (line2->stop() == agl::point::decart::point2d<double>(17.5,  9.330127)));
+        }
+
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle1{{0.,5.}, 5.};
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle2{{100.,5.}, 50.};
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle1, circle2, agl::algorithm::type_tangent::internal{});
+            QVERIFY(line1.has_value() && (line1->start() == agl::point::decart::point2d<double>(2.75, 9.175823)) && (line1->stop() == agl::point::decart::point2d<double>(72.5, -36.758233)));
+            QVERIFY(line2.has_value() && (line2->start() == agl::point::decart::point2d<double>(2.75, 0.824177)) && (line2->stop() == agl::point::decart::point2d<double>(72.5,  46.758233)));
+        }
+    }
+
+    {
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle{{0.,0.}, 5.};
+            auto point = agl::point::decart::point2d<double>(10., 0.);
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle, point, agl::algorithm::type_tangent::external{});
+            QVERIFY(line1.has_value() && (line1->start() == agl::point::decart::point2d<double>(2.5, -4.330127)) && (line1->stop() == agl::point::decart::point2d<double>(10, 0)));
+            QVERIFY(line2.has_value() && (line2->start() == agl::point::decart::point2d<double>(2.5, 4.330127)) && (line2->stop() == agl::point::decart::point2d<double>(10, 0)));
+        }
+
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle{{0.,0.}, 5.};
+            auto point = agl::point::decart::point2d<double>(1., 0.);
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle, point, agl::algorithm::type_tangent::external{});
+            QVERIFY(!line1.has_value());
+            QVERIFY(!line2.has_value());
+        }
+
+        {
+            agl::circle::circle<agl::point::decart::point2d<double>, double> circle{{5.,5.}, 5.};
+            auto point = agl::point::decart::point2d<double>(30., 45.);
+            auto [line1, line2] = agl::algorithm::tangent_circle<agl::line::line_section<agl::point::decart::point2d<double>>>(circle, point, agl::algorithm::type_tangent::external{});
+            QVERIFY(line1.has_value() && (line1->start() == agl::point::decart::point2d<double>(9.497003, 2.814373)) && (line1->stop() == agl::point::decart::point2d<double>(30, 45)));
+            QVERIFY(line2.has_value() && (line2->start() == agl::point::decart::point2d<double>(1.064795, 8.084503)) && (line2->stop() == agl::point::decart::point2d<double>(30, 45)));
+        }
+    }
+}
+
+void TestAlgorithm::test_create_circle()
+{
+    {//center_circle_in_line
+        {
+            auto point = agl::point::decart::point2d<double>(0, 5);
+            auto [circle1, circle2] = agl::algorithm::create_circle<agl::circle::circle<agl::point::decart::point2d<double>, double>,
+                                                                    agl::algorithm::strategy::create_circle_angle_point>(0_deg, point, 10.);
+            QVERIFY((circle1->center() == agl::point::decart::point2d<double>(-10, 5)) && (circle2->center() == agl::point::decart::point2d<double>(10, 5)));
+        }
+        {
+            auto point = agl::point::decart::point2d<double>(0, 0);
+            auto [circle1, circle2] = agl::algorithm::create_circle<agl::circle::circle<agl::point::decart::point2d<double>, double>,
+                                                                    agl::algorithm::strategy::create_circle_angle_point>(0_deg, point, 10.);
+            QVERIFY((circle1->center() == agl::point::decart::point2d<double>(-10, 0)) && (circle2->center() == agl::point::decart::point2d<double>(10, 0)));
+        }
+        {
+            auto point = agl::point::decart::point2d<double>(5, 5);
+            auto [circle1, circle2] = agl::algorithm::create_circle<agl::circle::circle<agl::point::decart::point2d<double>, double>,
+                                                                    agl::algorithm::strategy::create_circle_angle_point>(45_deg, point, 10.);
+            QVERIFY((circle1->center() == agl::point::decart::point2d<double>(-2.071068, 12.071068)) && (circle2->center() == agl::point::decart::point2d<double>(12.071068, -2.071068)));
+        }
+    }
+}
+
+void TestAlgorithm::test_get_lines()
+{
+    {//get_lines
+        auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,10),
+                                                                                                             agl::point::decart::point2d<double>(10,10),
+                                                                                                             agl::point::decart::point2d<double>(10,0),
+                                                                                                             agl::point::decart::point2d<double>(0,0)});
+        auto lines = agl::algorithm::get_lines<agl::line::line_section<agl::point::decart::point2d<double>>>(polygon);
+        std::vector<agl::line::line_section<agl::point::decart::point2d<double>>> temp{
+                                      {agl::point::decart::point2d<double>(0,10),agl::point::decart::point2d<double>(10,10)},
+                                      {agl::point::decart::point2d<double>(10,10), agl::point::decart::point2d<double>(10,0)},
+                                      {agl::point::decart::point2d<double>(10,0), agl::point::decart::point2d<double>(0,0)},
+                                      {agl::point::decart::point2d<double>(0,0), agl::point::decart::point2d<double>(0,10)}};
+        QVERIFY(lines.size() == polygon.points().size());
+        for(size_t i = 0; i < lines.size(); ++i){
+            QVERIFY(lines[i] == temp[i]);
+        }
+    }
+}
+
+void TestAlgorithm::point_coupling()
+{
+    {//point_coupling
+        {
+            auto line_section = agl::line::line_section(agl::point::decart::point2d<double>{0,10},
+                                                        agl::point::decart::point2d<double>{10,10});
+            auto point = agl::algorithm::point_coupling(line_section, agl::point::decart::point2d<double>{-1,1}, true);
+            QVERIFY(!point.has_value());
+        }
+        {
+            auto line_section = agl::line::line_section(agl::point::decart::point2d<double>{0,10},
+                                                        agl::point::decart::point2d<double>{10,10});
+            auto point = agl::algorithm::point_coupling(line_section, agl::point::decart::point2d<double>{-1,1}, false);
+            QVERIFY(point == agl::point::decart::point2d<double>(0.,10.));
+        }
+        {
+            auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,0),
+                                                                                                                 agl::point::decart::point2d<double>(0,0)});
+            {
+                auto point = agl::algorithm::point_coupling(polygon, agl::point::decart::point2d<double>(-1,1), true);
+                QVERIFY(point == agl::point::decart::point2d<double>(0.,1.));
+            }
+            {
+                auto point = agl::algorithm::point_coupling(polygon, agl::point::decart::point2d<double>(-1,1), false);
+                QVERIFY(point == agl::point::decart::point2d<double>(0.,1.));
+            }
+        }
+        {
+            auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,0),
+                                                                                                                 agl::point::decart::point2d<double>(0,0)});
+            {
+                auto point = agl::algorithm::point_coupling(polygon, agl::point::decart::point2d<double>(-1,-1), true);
+                QVERIFY(!point.has_value());
+            }
+            {
+                auto point = agl::algorithm::point_coupling(polygon, agl::point::decart::point2d<double>(-1,-1), false);
+                QVERIFY(point == agl::point::decart::point2d<double>(0.,0.));
+            }
+        }
+        {
+            auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,0),
+                                                                                                                 agl::point::decart::point2d<double>(0,0)});
+            {
+                auto point = agl::algorithm::point_coupling(polygon, agl::point::decart::point2d<double>(5,50), true);
+                QVERIFY(point == agl::point::decart::point2d<double>(5.,10.));
+            }
+            {
+                auto point = agl::algorithm::point_coupling(polygon, agl::point::decart::point2d<double>(5,50), false);
+                QVERIFY(point == agl::point::decart::point2d<double>(5.,10.));
+            }
+        }
+        {
+            auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,0),
+                                                                                                                 agl::point::decart::point2d<double>(0,0)});
+            {
+                auto point = agl::algorithm::point_coupling(polygon, agl::point::decart::point2d<double>(4,3), true);
+                QVERIFY(point == agl::point::decart::point2d<double>(4.,0.));
+            }
+            {
+                auto point = agl::algorithm::point_coupling(polygon, agl::point::decart::point2d<double>(4,3), false);
+                QVERIFY(point == agl::point::decart::point2d<double>(4.,0.));
+            }
+        }
+
+    }
+
+
+
+
 
 
 

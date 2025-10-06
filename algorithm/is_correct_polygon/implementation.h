@@ -11,23 +11,29 @@
 
 namespace agl::algorithm::dispatch {
 
-template<typename Polygon, typename Tag, typename CoordinateSystem, std::size_t Dimension>
+template<typename Polygon,
+         typename Tag,
+         typename CoordinateSystem,
+         std::size_t Dimension>
 struct is_correct_polygon{
     inline constexpr static auto get(const Polygon &polygon){
         static_assert(false, "No '' calculations have been implemented for these objects.");
     }
 };
 
-template<typename Polygon>
-struct is_correct_polygon<Polygon, agl::tag::tag_polygon, agl::system_coordinat::cartesian, 2>{
-    inline constexpr static auto get(const Polygon &polygon){
-        return true;
-    }
-};
+// template<typename Polygon>
+// struct is_correct_polygon<Polygon, agl::tag::tag_polygon, agl::system_coordinat::cartesian, 2>{
+//     inline constexpr static auto get(const Polygon &polygon){
+//         return true;
+//     }
+// };
 
 
 template<typename Polygon>
-struct is_correct_polygon<Polygon, agl::tag::tag_convex_polygone, agl::system_coordinat::cartesian, 2>{
+struct is_correct_polygon<Polygon,
+                          agl::tag::polygon::convex,
+                          agl::system_coordinat::cartesian,
+                          2>{
     inline constexpr static auto get(const Polygon &polygon){
         using Point = agl::traits::traits_polygon::type_property<Polygon>::type_point;
         const auto &points = agl::traits::traits_polygon::access_points<Polygon>::get(polygon);
@@ -52,7 +58,10 @@ struct is_correct_polygon<Polygon, agl::tag::tag_convex_polygone, agl::system_co
 };
 
 template<typename Polygon>
-struct is_correct_polygon<Polygon, agl::tag::tag_rectangle, agl::system_coordinat::cartesian, 2>{
+struct is_correct_polygon<Polygon,
+                          agl::tag::polygon::rectangle,
+                          agl::system_coordinat::cartesian,
+                          2>{
     inline constexpr static auto get(const Polygon &polygon){
         using Point = agl::traits::traits_polygon::type_property<Polygon>::type_point;
         const auto &points = agl::traits::traits_polygon::access_points<Polygon>::get(polygon);
@@ -71,13 +80,14 @@ struct is_correct_polygon<Polygon, agl::tag::tag_rectangle, agl::system_coordina
     }
 };
 
-template<typename Polygon>
-struct is_correct_polygon<Polygon, agl::tag::tag_triangle, agl::system_coordinat::cartesian, 2>{
+template<typename Polygon,
+         typename Tag> requires (!std::is_same_v<Tag, agl::tag::polygon::regular>)
+struct is_correct_polygon<Polygon,
+                          Tag,
+                          agl::system_coordinat::cartesian,
+                          2>{
     inline constexpr static auto get(const Polygon &polygon){
         const auto &points = agl::traits::traits_polygon::access_points<Polygon>::get(polygon);
-        if(points.size() != 3){
-            return false;
-        }
         const auto l1 = agl::algorithm::distance(points[0], points[1]);
         const auto l2 = agl::algorithm::distance(points[1], points[2]);
         const auto l3 = agl::algorithm::distance(points[0], points[2]);
@@ -86,7 +96,10 @@ struct is_correct_polygon<Polygon, agl::tag::tag_triangle, agl::system_coordinat
 };
 
 template<typename Polygon>
-struct is_correct_polygon<Polygon, agl::tag::tag_regular_polygon, agl::system_coordinat::cartesian, 2>{
+struct is_correct_polygon<Polygon,
+                          agl::tag::polygon::regular,
+                          agl::system_coordinat::cartesian,
+                          2>{
     inline constexpr static auto get(const Polygon &polygon){
         using Point = agl::traits::traits_polygon::type_property<Polygon>::type_point;
         using Type = agl::traits::traits_point::type_property<Point>::type_point;

@@ -22,9 +22,10 @@ private slots:
     void test_point_on_curve();
     void test_located_inside();
     void test_create_polygon();
-
-
-    // void test_();
+    void test_tangent_circle();
+    void test_create_circle();
+    void test_get_lines();
+    void point_coupling();
 };
 
 #endif // TESTALGORITHM_H

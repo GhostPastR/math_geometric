@@ -11,7 +11,7 @@
 
 
 int main(int argc, char *argv[])
-{
+{  
     QCoreApplication a(argc, argv);
     // QTest::qExec(new TestUnit, argc, argv);
     // QTest::qExec(new TestGeometricStruct, argc, argv);

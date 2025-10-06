@@ -2,7 +2,6 @@
 #define USER_TYPE_H
 
 #include "structs/geometric/decart_point2d.h"
-#include "structs/polygon_impl.h"
 #include "structs/struct_geo_imp.h"
 
 #include "unit/distance.h"
@@ -45,7 +44,7 @@ namespace agl{
 namespace agl::traits {
 
 template<> struct tag<point::decart::point2d<unit::distance>>{
-    using type_tag = agl::tag::tag_point;
+    using type_tag = agl::tag::point::point;
 };
 
 template<> struct coordinate_system<point::decart::point2d<unit::distance>>{

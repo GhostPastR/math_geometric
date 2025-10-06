@@ -19,7 +19,7 @@ struct distance{
 };
 
 template<typename Figure, typename CoordinateSystem, std::size_t Dimension>
-struct distance<Figure, agl::group::group_elements_circle, CoordinateSystem, Dimension>{
+struct distance<Figure, agl::group::elements_circles, CoordinateSystem, Dimension>{
     inline constexpr static auto get(const Figure &figure){
         using tag_object = traits::tag<Figure>::type_tag;
         return distance_arc_algo::distance<Figure, tag_object, CoordinateSystem, Dimension>::get(figure);
@@ -27,7 +27,7 @@ struct distance<Figure, agl::group::group_elements_circle, CoordinateSystem, Dim
 };
 
 template<typename Figure, typename CoordinateSystem, std::size_t Dimension>
-struct distance<Figure, agl::group::group_line, CoordinateSystem, Dimension>{
+struct distance<Figure, agl::group::lines, CoordinateSystem, Dimension>{
     inline constexpr static auto get(const Figure &figure){
         using tag_object = traits::tag<Figure>::type_tag;
         return distance_line_algo::distance<Figure, tag_object, CoordinateSystem, Dimension>::get(figure);
@@ -47,14 +47,14 @@ struct distance{
 };
 
 template<typename Point, typename CoordinateSystem, std::size_t Dimension>
-struct distance<Point, Point, agl::tag::tag_point, agl::tag::tag_point, CoordinateSystem, Dimension>{
+struct distance<Point, Point, agl::tag::point::point, agl::tag::point::point, CoordinateSystem, Dimension>{
     inline constexpr static auto get(const Point &a, const Point &b){
         return distance_point_algo::distance<Point, CoordinateSystem, Dimension>(a, b);
     }
 };
 
 template<typename Point, std::size_t Dimension>
-struct distance<Point, Point, agl::tag::tag_point, agl::tag::tag_point, system_coordinat::geographical, Dimension>{
+struct distance<Point, Point, agl::tag::point::point, agl::tag::point::point, system_coordinat::geographical, Dimension>{
     inline constexpr static auto get(const Point &a, const Point &b){
         using system = traits::geo_coordinate_system<Point>::system;
         return geo_distance::distance<Point, system, Dimension>(a, b);
@@ -62,14 +62,14 @@ struct distance<Point, Point, agl::tag::tag_point, agl::tag::tag_point, system_c
 };
 
 template<typename Object1, typename Object2, typename Tag, typename CoordinateSystem, std::size_t Dimension>
-struct distance<Object1, Object2, agl::tag::tag_point, Tag, CoordinateSystem, Dimension>{
+struct distance<Object1, Object2, agl::tag::point::point, Tag, CoordinateSystem, Dimension>{
     inline constexpr static auto get(const Object1 &a, const Object2 &b){
         return agl::algorithm::dispatch::d2::point_to_object::distance<Object1, Object2, Tag, CoordinateSystem, Dimension>(a, b);
     }
 };
 
 template<typename Object1, typename Object2, typename Tag, typename CoordinateSystem, std::size_t Dimension>
-struct distance<Object1, Object2, Tag, agl::tag::tag_point, CoordinateSystem, Dimension>{
+struct distance<Object1, Object2, Tag, agl::tag::point::point, CoordinateSystem, Dimension>{
     inline constexpr static auto get(const Object1 &a, const Object2 &b){
         return agl::algorithm::dispatch::d2::point_to_object::distance<Object2, Object1, Tag, CoordinateSystem, Dimension>(b, a);
     }

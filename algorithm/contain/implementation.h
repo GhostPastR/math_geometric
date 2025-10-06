@@ -9,15 +9,26 @@
 
 namespace agl::algorithm::dispatch {
 
-template<typename Object1, typename Object2, typename Tag1, typename Tag2, typename CoordinateSystem, std::size_t Dimension>
+template<typename Object1,
+         typename Object2,
+         typename Tag1,
+         typename Tag2,
+         typename CoordinateSystem,
+         std::size_t Dimension>
 struct contain{
     inline constexpr static auto get(const Object1 &object1, const Object2 &object2){
         static_assert(false, "No '' calculations have been implemented for these objects.");
     }
 };
 
-template<typename Object1, typename Object2>
-struct contain<Object1, Object2, agl::tag::tag_straight_line, agl::tag::tag_point, agl::system_coordinat::cartesian, 2>{
+template<typename Object1,
+         typename Object2>
+struct contain<Object1,
+               Object2,
+               agl::tag::line::straight_line,
+               agl::tag::point::point,
+               agl::system_coordinat::cartesian,
+               2>{
     inline constexpr static auto get(const Object1 &object1, const Object2 &object2){
         using namespace agl::traits::traits_straight_line;
         using Type = type_property<Object1>::type_parameter;
@@ -30,8 +41,14 @@ struct contain<Object1, Object2, agl::tag::tag_straight_line, agl::tag::tag_poin
     }
 };
 
-template<typename Object1, typename Object2>
-struct contain<Object1, Object2, agl::tag::tag_half_line, agl::tag::tag_point, agl::system_coordinat::cartesian, 2>{
+template<typename Object1,
+         typename Object2>
+struct contain<Object1,
+               Object2,
+               agl::tag::line::half_line,
+               agl::tag::point::point,
+               agl::system_coordinat::cartesian,
+               2>{
     inline constexpr static auto get(const Object1 &object1, const Object2 &object2){
         const auto [a,b,c] = agl::algorithm::equation_of_line(object1);
         const auto &x = agl::traits::traits_point::access_point<Object2, 0>::get(object2);
@@ -43,10 +60,21 @@ struct contain<Object1, Object2, agl::tag::tag_half_line, agl::tag::tag_point, a
     }
 };
 
-template<typename Object1, typename Object2>
-struct contain<Object1, Object2, agl::tag::tag_line_section, agl::tag::tag_point, agl::system_coordinat::cartesian, 2>{
+template<typename Object1,
+         typename Object2>
+struct contain<Object1,
+               Object2,
+               agl::tag::line::line_section,
+               agl::tag::point::point,
+               agl::system_coordinat::cartesian,
+               2>{
     inline constexpr static auto get(const Object1 &object1, const Object2 &object2){
-        return contain<Object1, Object2, agl::tag::tag_half_line, agl::tag::tag_point, agl::system_coordinat::cartesian, 2>::get(object1, object2);
+        return contain<Object1,
+                       Object2,
+                       agl::tag::line::half_line,
+                       agl::tag::point::point,
+                       agl::system_coordinat::cartesian,
+                       2>::get(object1, object2);
     }
 };
 
@@ -55,7 +83,8 @@ struct contain<Object1, Object2, agl::tag::tag_line_section, agl::tag::tag_point
 
 namespace agl::algorithm::geometry {
 
-template<typename Object1, typename Object2>
+template<typename Object1,
+         typename Object2>
 inline constexpr auto contain(const Object1 &object1, const Object2 &object2){
     using type_cs1 = traits::coordinate_system<Object1>::system;
     using type_cs2 = traits::coordinate_system<Object2>::system;
@@ -69,7 +98,12 @@ inline constexpr auto contain(const Object1 &object1, const Object2 &object2){
     static_assert(agl::assert::is_correct_compare<type_cs1, type_cs2>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
 
-    return dispatch::contain<Object1, Object2, tag1, tag2, type_cs1, dimension1>::get(object1, object2);
+    return dispatch::contain<Object1,
+                             Object2,
+                             tag1,
+                             tag2,
+                             type_cs1,
+                             dimension1>::get(object1, object2);
 }
 
 }

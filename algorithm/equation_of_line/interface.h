@@ -18,6 +18,16 @@ inline constexpr auto equation_of_line(const Object &a, const Object &b){
     return geometry::equation_of_line<Object>(a, b);
 }
 
+template<typename OutLine, typename Figure>
+inline constexpr auto equation_of_line(const Figure &figure){
+    return geometry::equation_of_line<Figure, OutLine>(figure);
+}
+
+template<typename OutLine, typename Object>
+inline constexpr auto equation_of_line(const Object &a, const Object &b){
+    return geometry::equation_of_line<Object, OutLine>(a, b);
+}
+
 }
 
 #endif // AGL_ALGORITHM_EQYATION_OF_LINE_INTERFACE_H

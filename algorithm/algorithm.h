@@ -15,5 +15,9 @@
 #include <algorithm/located_inside/interface.h>
 #include <algorithm/is_correct_polygon/interface.h>
 #include <algorithm/create_polygon/interface.h>
+#include <algorithm/tangent_circle/interface.h>
+#include <algorithm/create_circle/interface.h>
+#include <algorithm/get_lines/interface.h>
+#include <algorithm/point_coupling/interface.h>
 
 #endif // ALGORITHM_H

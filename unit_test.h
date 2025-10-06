@@ -11,7 +11,6 @@ public:
 
 private slots:
     void test_point_algorithm();
-    void test_circle_algorithm();
     void test_polygon_algorithm();
     void test_geo_algorithm();
 

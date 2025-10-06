@@ -174,36 +174,4 @@ constexpr roots_equation<Type> get_roots_equation(const quadratic<Type> &equatio
 
 }
 
-template<std::floating_point Type>
-struct function_angle{
-    inline constexpr static Type sin(Type value) {
-        return std::sin(value);
-    }
-    inline constexpr static Type cos(Type value) {
-        return std::cos(value);
-    }
-    inline constexpr static Type tan(Type value){
-        return std::tan(value);
-    }
-    inline constexpr static Type ctan(Type value){
-        return 1.0 / std::tan(value);
-    }
-    inline constexpr static Type atan2(Type value1, Type value2){
-        return std::atan2(value1, value2);
-    }
-
-    inline constexpr static Type asin(Type value){
-        return std::asin(value);
-    }
-    inline constexpr static Type acos(Type value){
-        return std::acos(value);
-    }
-    inline constexpr static Type atan(Type value){
-        return std::atan(value);
-    }
-    inline constexpr static Type actan(Type value){
-        return agl::algorithm::pi_on_2<Type> - std::atan(value);
-    }
-};
-
 #endif // MATH_ALGORITHM_H

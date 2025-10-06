@@ -8,15 +8,25 @@
 
 namespace agl::algorithm::cartesian::d2::dispatch {
 
-template<typename Figure1, typename Figure2, typename PointOut, typename Group1, typename Group2>
+template<typename Figure1,
+         typename Figure2,
+         typename PointOut,
+         typename Group1,
+         typename Group2>
 struct intersection{
     inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2){
         static_assert(false, "No '' calculations have been implemented for these objects.");
     }
 };
 
-template<typename Figure1, typename Figure2, typename PointOut>
-struct intersection<Figure1, Figure2, PointOut, agl::group::group_line, agl::group::group_line>{
+template<typename Figure1,
+         typename Figure2,
+         typename PointOut>
+struct intersection<Figure1,
+                    Figure2,
+                    PointOut,
+                    agl::group::lines,
+                    agl::group::lines>{
     inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2) -> std::optional<PointOut>{
         const auto [a1,b1,c1] = agl::algorithm::equation_of_line(figure1);
         const auto [a2,b2,c2] = agl::algorithm::equation_of_line(figure2);
@@ -32,8 +42,14 @@ struct intersection<Figure1, Figure2, PointOut, agl::group::group_line, agl::gro
     }
 };
 
-template<typename Figure1, typename Figure2, typename PointOut>
-struct intersection<Figure1, Figure2, PointOut, agl::group::group_elements_circle, agl::group::group_line>{
+template<typename Figure1,
+         typename Figure2,
+         typename PointOut>
+struct intersection<Figure1,
+                    Figure2,
+                    PointOut,
+                    agl::group::elements_circles,
+                    agl::group::lines>{
     inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2)
         -> std::pair<std::optional<PointOut>, std::optional<PointOut>>{
         using Point = agl::traits::traits_circle::type_property<Figure1>::type_center;
@@ -73,8 +89,14 @@ struct intersection<Figure1, Figure2, PointOut, agl::group::group_elements_circl
     }
 };
 
-template<typename Figure1, typename Figure2, typename PointOut>
-struct intersection<Figure1, Figure2, PointOut, agl::group::group_elements_circle, agl::group::group_elements_circle>{
+template<typename Figure1,
+         typename Figure2,
+         typename PointOut>
+struct intersection<Figure1,
+                    Figure2,
+                    PointOut,
+                    agl::group::elements_circles,
+                    agl::group::elements_circles>{
     inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2)
         -> std::pair<std::optional<PointOut>, std::optional<PointOut>>{
         using Point1 = agl::traits::traits_circle::type_property<Figure1>::type_center;
@@ -118,9 +140,17 @@ struct intersection<Figure1, Figure2, PointOut, agl::group::group_elements_circl
 
 namespace agl::algorithm::geometry::cartesian {
 
-template<typename Figure1, typename Figure2, typename PointOut, typename Group1, typename Group2>
+template<typename Figure1,
+         typename Figure2,
+         typename PointOut,
+         typename Group1,
+         typename Group2>
 inline constexpr auto intersection(const Figure1 &figure1, const Figure2 &figure2){
-    return agl::algorithm::cartesian::d2::dispatch::intersection<Figure1, Figure2, PointOut, Group1, Group2>::get(figure1, figure2);
+    return agl::algorithm::cartesian::d2::dispatch::intersection<Figure1,
+                                                                 Figure2,
+                                                                 PointOut,
+                                                                 Group1,
+                                                                 Group2>::get(figure1, figure2);
 }
 
 }

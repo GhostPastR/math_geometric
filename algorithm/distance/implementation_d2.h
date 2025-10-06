@@ -5,6 +5,9 @@
 #include "algorithm/equation_of_line/interface.h"
 #include "algorithm/distance/implementation_cartesian.h"
 
+#include "algorithm/intersection/interface.h"
+#include "algorithm/perpendicular/interface.h"
+
 
 #include "system/traits.h"
 #include <cmath>
@@ -21,9 +24,11 @@ struct distance{
 };
 
 template<typename Object1, typename Object2>
-struct distance<Object1, Object2, agl::tag::tag_straight_line, agl::system_coordinat::cartesian, 2>{
+struct distance<Object1, Object2, agl::tag::line::straight_line, agl::system_coordinat::cartesian, 2>{
     inline constexpr static auto get(const Object1 &point, const Object2 &object){
-        const auto [a,b,c] = agl::algorithm::equation_of_line(object);
+        const auto a = agl::traits::traits_straight_line::access_parameter<Object2, 0>::get(object);
+        const auto b = agl::traits::traits_straight_line::access_parameter<Object2, 1>::get(object);
+        const auto c = agl::traits::traits_straight_line::access_parameter<Object2, 2>::get(object);
         const auto x = agl::traits::traits_point::access_point<Object1, 0>::get(point);
         const auto y = agl::traits::traits_point::access_point<Object1, 1>::get(point);
         return std::abs(algorithm::determine(a, -b, y, x) + c) / sqrt(algorithm::determine(a, -b, b, a));
@@ -31,50 +36,42 @@ struct distance<Object1, Object2, agl::tag::tag_straight_line, agl::system_coord
 };
 
 template<typename Object1, typename Object2>
-struct distance<Object1, Object2, agl::tag::tag_half_line, agl::system_coordinat::cartesian, 2>{
+struct distance<Object1, Object2, agl::tag::line::half_line, agl::system_coordinat::cartesian, 2>{
     inline constexpr static auto get(const Object1 &point, const Object2 &object){
-        const auto [a1,b1,c1] = agl::algorithm::equation_of_line(object);
+        using str_line = agl::traits::traits_half_line::type_straight_line<Object2>::type;
+        const auto line = agl::algorithm::equation_of_line<str_line>(object);
         const auto x = agl::traits::traits_point::access_point<Object1, 0>::get(point);
         const auto y = agl::traits::traits_point::access_point<Object1, 1>::get(point);
-        const auto dist = std::abs(algorithm::determine(a1, -b1, y, x) + c1) / sqrt(algorithm::determine(a1, -b1, b1, a1));
-        const auto a2 = -b1;
-        const auto b2 = a1;
-        const auto c2 = algorithm::determine(b1, a1, x, y);
-
-        if(const auto d = algorithm::determine(a1, a2, b1, b2); !algorithm::compare(d, decltype(d){})){
-            auto temp = Object1{algorithm::determine(b1, b2, c1, c2) / d,
-                                  algorithm::determine(c1, c2, a1, a2) / d};
-            if(!agl::algorithm::belongs_to_area_of_line(object, temp)){
-                const auto start = agl::traits::traits_half_line::access_start<Object2>::get(object);
-                return agl::algorithm::dispatch::d2::distance_point_algo::distance<Object1, agl::system_coordinat::cartesian, 2>(start, point);
-            }
+        const auto p_line = agl::algorithm::perpendicular<str_line>(line, point);
+        if(agl::algorithm::intersection<Object1>(object, p_line).has_value()){
+            const auto &a = agl::traits::traits_straight_line::access_parameter<str_line, 0>::get(line);
+            const auto &b = agl::traits::traits_straight_line::access_parameter<str_line, 1>::get(line);
+            const auto &c = agl::traits::traits_straight_line::access_parameter<str_line, 2>::get(line);
+            return std::abs(algorithm::determine(a, -b, y, x) + c) / sqrt(algorithm::determine(a, -b, b, a));
         }
-        return dist;
+        const auto start = agl::traits::traits_half_line::access_start<Object2>::get(object);
+        return agl::algorithm::dispatch::d2::distance_point_algo::distance<Object1, agl::system_coordinat::cartesian, 2>(start, point);
     }
 };
 
 template<typename Object1, typename Object2>
-struct distance<Object1, Object2, agl::tag::tag_line_section, agl::system_coordinat::cartesian, 2>{
+struct distance<Object1, Object2, agl::tag::line::line_section, agl::system_coordinat::cartesian, 2>{
     inline constexpr static auto get(const Object1 &point, const Object2 &object){
-        const auto [a1,b1,c1] = agl::algorithm::equation_of_line(object);
+        using str_line = agl::traits::traits_line_section::type_straight_line<Object2>::type;
+        const auto line = agl::algorithm::equation_of_line<str_line>(object);
         const auto x = agl::traits::traits_point::access_point<Object1, 0>::get(point);
         const auto y = agl::traits::traits_point::access_point<Object1, 1>::get(point);
-        const auto dist = std::abs(algorithm::determine(a1, -b1, y, x) + c1) / sqrt(algorithm::determine(a1, -b1, b1, a1));
-        const auto a2 = -b1;
-        const auto b2 = a1;
-        const auto c2 = algorithm::determine(b1, a1, x, y);
-
-        if(const auto d = algorithm::determine(a1, a2, b1, b2); !algorithm::compare(d, decltype(d){})){
-            auto temp = Object1{algorithm::determine(b1, b2, c1, c2) / d,
-                                algorithm::determine(c1, c2, a1, a2) / d};
-            if(!agl::algorithm::belongs_to_area_of_line(object, temp)){
-                const auto start = agl::traits::traits_line_section::access_start<Object2>::get(object);
-                const auto stop = agl::traits::traits_line_section::access_start<Object2>::get(object);
-                return std::min(agl::algorithm::dispatch::d2::distance_point_algo::distance<Object1, agl::system_coordinat::cartesian, 2>(start, point),
-                                agl::algorithm::dispatch::d2::distance_point_algo::distance<Object1, agl::system_coordinat::cartesian, 2>(stop, point));
-            }
+        const auto p_line = agl::algorithm::perpendicular<str_line>(line, point);
+        if(agl::algorithm::intersection<Object1>(object, p_line).has_value()){
+            const auto &a = agl::traits::traits_straight_line::access_parameter<str_line, 0>::get(line);
+            const auto &b = agl::traits::traits_straight_line::access_parameter<str_line, 1>::get(line);
+            const auto &c = agl::traits::traits_straight_line::access_parameter<str_line, 2>::get(line);
+            return std::abs(algorithm::determine(a, -b, y, x) + c) / sqrt(algorithm::determine(a, -b, b, a));
         }
-        return dist;
+        const auto start = agl::traits::traits_line_section::access_start<Object2>::get(object);
+        const auto stop = agl::traits::traits_line_section::access_start<Object2>::get(object);
+        return std::min(agl::algorithm::dispatch::d2::distance_point_algo::distance<Object1, agl::system_coordinat::cartesian, 2>(start, point),
+                        agl::algorithm::dispatch::d2::distance_point_algo::distance<Object1, agl::system_coordinat::cartesian, 2>(stop, point));
     }
 };
 

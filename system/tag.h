@@ -1,6 +1,9 @@
 #ifndef TAG_H
 #define TAG_H
 
+#include <cstddef>
+#include <type_traits>
+
 namespace agl{
 
 struct undefined final{};
@@ -22,34 +25,54 @@ struct pz_90_02 final{};
 
 }
 
-namespace tag {
+namespace tag::point {
 
-struct tag_point final{};
-
-struct tag_circle final{};
-struct tag_arc final{};
-
-struct tag_straight_line final{};
-struct tag_half_line final{};
-struct tag_line_section final{};
-
-struct tag_polygon final{};
-struct tag_convex_polygone final{};
-struct tag_rectangle final{};
-struct tag_triangle final{};
-struct tag_regular_polygon final{};
+struct point final{};
 
 }
+
+namespace tag::elements_circle {
+
+struct circle final{};
+struct arc final{};
+
+}
+
+namespace tag::line {
+
+struct straight_line final{};
+struct half_line final{};
+struct line_section final{};
+
+}
+
+namespace tag::polygon {
+
+//tag polygon
+struct non_convex final{};
+struct convex final{};
+struct self_intersecting final{};
+struct regular final{};
+//triangles
+struct triangle final{};
+struct rectangular_triangle final{};
+
+//quadrilaterals
+struct rectangle final{};
+
+}
+
 
 namespace group {
 
-struct group_point final {};
-struct group_line final {};
-struct group_elements_circle final {};
-struct group_polygon final {};
+struct points final {};
+struct lines final {};
+struct elements_circles final {};
+struct polygons final {};
 
 }
 
 }
+
 
 #endif // TAG_H

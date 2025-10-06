@@ -39,22 +39,22 @@ struct tag{
 };
 
 template<>
-struct tag<group::group_line, group::group_line>{
+struct tag<group::lines, group::lines>{
     using object_to_object = line_to_line;
 };
 
 template<>
-struct tag<group::group_elements_circle, group::group_elements_circle>{
+struct tag<group::elements_circles, group::elements_circles>{
     using object_to_object = line_to_circle;
 };
 
 template<>
-struct tag<group::group_line, group::group_elements_circle>{
+struct tag<group::lines, group::elements_circles>{
     using object_to_object = line_to_circle;
 };
 
 template<>
-struct tag<group::group_elements_circle, group::group_line>{
+struct tag<group::elements_circles, group::lines>{
     using object_to_object = line_to_circle;
 };
 
@@ -80,6 +80,16 @@ struct create_triangle_isosceles_sides_angles final{};
 struct create_triangle_regular final{};
 
 struct create_polygon_regular final{};
+
+
+struct create_circle_angle_point final{};
+
+}
+
+namespace type_tangent {
+
+struct external final{};
+struct internal final{};
 
 }
 

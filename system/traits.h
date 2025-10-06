@@ -1,8 +1,8 @@
 #ifndef TRAITS_H
 #define TRAITS_H
 
-#include <array>
 #include <concepts>
+#include <vector>
 #include "tag.h"
 
 namespace agl{
@@ -46,6 +46,13 @@ struct type_property{
 template<typename Object, std::size_t NumberPoint>
 struct access_point{
     inline constexpr static auto get(const Object &object){
+        static_assert(false, "Access is not implemented for this object.");
+    }
+};
+
+template<typename Object, typename ... Value>
+struct access_create{
+    inline constexpr static auto get(Value&&... value){
         static_assert(false, "Access is not implemented for this object.");
     }
 };
@@ -124,6 +131,15 @@ struct access_parameter{
     }
 };
 
+template<typename Object>
+struct access_create{
+    template<typename Type>
+    inline constexpr static auto get(Type &&a, Type &&b, Type &&c){
+        static_assert(false, "Access is not implemented for this object.");
+    }
+};
+
+
 }
 
 namespace traits_half_line {
@@ -133,6 +149,12 @@ struct type_property{
     using type_start = undefined;
     using type_direction = undefined;
 };
+
+template<typename Object>
+struct type_straight_line{
+    using type = undefined;
+};
+
 
 template<typename Object>
 struct access_start{
@@ -158,6 +180,12 @@ struct type_property{
 };
 
 template<typename Object>
+struct type_straight_line{
+    using type = undefined;
+};
+
+
+template<typename Object>
 struct access_start{
     inline constexpr static auto get(const Object &object){
         static_assert(false, "Access is not implemented for this object.");
@@ -171,15 +199,32 @@ struct access_stop{
     }
 };
 
+template<typename Object, typename Point>
+struct access_create{
+    inline constexpr static auto get(const Point &point1, const Point &point2){
+        static_assert(false, "Access is not implemented for this object.");
+    }
+};
+
 }
 
 
 namespace traits_polygon {
 
 template<typename Object>
+struct type_polygon{
+    using regular = std::false_type;
+    using type = undefined;
+};
+
+template<typename Object>
 struct type_property{
     using type_point = undefined;
-    static constexpr std::size_t size = 0;
+};
+
+template<typename Object>
+struct type_line_section{
+    using type = undefined;
 };
 
 template<typename Object>
@@ -191,7 +236,7 @@ struct access_points{
 
 template<typename Object>
 struct access_create{
-    inline constexpr static auto get(std::array<typename type_property<Object>::type_point, type_property<Object>::size> &&points){
+    inline constexpr static auto get(std::vector<typename type_property<Object>::type_point> &&points){
         static_assert(false, "Access is not implemented for this object.");
     }
 };
