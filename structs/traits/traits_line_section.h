@@ -29,17 +29,17 @@ struct dimension<agl::line::line_section<Point>>{
     }
 };
 
-namespace traits_line_section {
+namespace line_section {
 
 template<typename Point>
-struct type_property<agl::line::line_section<Point>>{
-    using type_point = Point;
+struct access_types<agl::line::line_section<Point>>{
+    using point = Point;
 };
 
 
 template<typename Point>
-struct type_straight_line<agl::line::line_section<Point>>{
-    using type = agl::line::straight_line<typename agl::traits::traits_point::type_property<Point>::type_point,
+struct access_straight_line<agl::line::line_section<Point>>{
+    using type = agl::line::straight_line<typename agl::traits::point::access_types<Point>::point,
                                           typename agl::traits::coordinate_system<agl::line::line_section<Point>>::system>;
 };
 
@@ -59,7 +59,7 @@ struct access_stop<agl::line::line_section<Point>>{
 };
 
 template<typename Point>
-struct access_create<agl::line::line_section<Point>, Point>{
+struct access_create<agl::line::line_section<Point>>{
     inline constexpr static auto get(const Point &point1, const Point &point2){
         return agl::line::line_section<Point>{point1, point2};
     }

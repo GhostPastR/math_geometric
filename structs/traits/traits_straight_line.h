@@ -28,11 +28,11 @@ struct dimension<agl::line::straight_line<Type,CoordinateSystem>>{
     }
 };
 
-namespace traits_straight_line {
+namespace straight_line {
 
 template<typename Type, typename CoordinateSystem>
-struct type_property<agl::line::straight_line<Type,CoordinateSystem>>{
-    using type_parameter = Type;
+struct access_types<agl::line::straight_line<Type,CoordinateSystem>>{
+    using parameter = Type;
 };
 
 template<typename Type, typename CoordinateSystem>

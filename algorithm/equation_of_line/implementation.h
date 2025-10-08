@@ -52,8 +52,8 @@ struct equation_of_line<Object,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Object &a, const Object &b){
-        using namespace agl::traits::traits_point;
-        using Type = type_property<Object>::type_point;
+        using namespace agl::traits::point;
+        using Type = access_types<Object>::point;
         const auto &x1 = access_point<Object, 0>::get(a);
         const auto &y1 = access_point<Object, 1>::get(a);
         const auto &x2 = access_point<Object, 0>::get(b);
@@ -94,7 +94,7 @@ struct equation_of_line<Object,
                                                         agl::tag::point::point,
                                                         system_coordinat::cartesian,
                                                         2>::get(p1, p2);
-        return agl::traits::traits_straight_line::access_create<OutLine>::get(a,b,c);
+        return agl::traits::straight_line::access_create<OutLine>::get(a,b,c);
     }
 };
 
@@ -122,8 +122,8 @@ struct equation_of_line<Figure,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
-        using namespace agl::traits::traits_straight_line;
-        using Type = type_property<Figure>::type_parameter;
+        using namespace agl::traits::straight_line;
+        using Type = access_types<Figure>::parameter;
         const auto &a = access_parameter<Figure, 0>::get(figure);
         const auto &b = access_parameter<Figure, 1>::get(figure);
         const auto &c = access_parameter<Figure, 2>::get(figure);
@@ -137,12 +137,12 @@ struct equation_of_line<Figure,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
-        using Angle = agl::traits::traits_half_line::type_property<Figure>::type_direction;
-        const auto &start = agl::traits::traits_half_line::access_start<Figure>::get(figure);
-        const auto direction = agl::traits::traits_half_line::access_direction<Figure>::get(figure);
+        using Angle = agl::traits::half_line::access_types<Figure>::direction;
+        const auto &start = agl::traits::half_line::access_start<Figure>::get(figure);
+        const auto direction = agl::traits::half_line::access_direction<Figure>::get(figure);
 
-        using Point = agl::traits::traits_half_line::type_property<Figure>::type_start;
-        using Type = agl::traits::traits_point::type_property<Point>::type_point;
+        using Point = agl::traits::half_line::access_types<Figure>::start;
+        using Type = agl::traits::point::access_types<Point>::point;
         const auto point = agl::algorithm::create_point(start, direction, 1.);
         return agl::algorithm::dispatch::d2::default_data::equation_of_line<Point,
                                                                             agl::tag::point::point,
@@ -157,7 +157,7 @@ struct equation_of_line<Figure,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
-        using namespace agl::traits::traits_line_section;
+        using namespace agl::traits::line_section;
         const auto &start = access_start<Figure>::get(figure);
         const auto &stop = access_stop<Figure>::get(figure);
         return agl::algorithm::geometry::equation_of_line(start, stop);
@@ -189,10 +189,10 @@ struct equation_of_line<Figure,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
-        const auto &a = traits::traits_straight_line::access_parameter<Figure, 0>::get(figure);
-        const auto &b = traits::traits_straight_line::access_parameter<Figure, 1>::get(figure);
-        const auto &c = traits::traits_straight_line::access_parameter<Figure, 2>::get(figure);
-        return agl::traits::traits_straight_line::access_create<OutLine>::get(a,b,c);
+        const auto &a = traits::straight_line::access_parameter<Figure, 0>::get(figure);
+        const auto &b = traits::straight_line::access_parameter<Figure, 1>::get(figure);
+        const auto &c = traits::straight_line::access_parameter<Figure, 2>::get(figure);
+        return agl::traits::straight_line::access_create<OutLine>::get(a,b,c);
     }
 };
 
@@ -208,7 +208,7 @@ struct equation_of_line<Figure,
                                                               agl::tag::line::half_line,
                                                               system_coordinat::cartesian,
                                                               2>::get(figure);
-        return agl::traits::traits_straight_line::access_create<OutLine>::get(a,b,c);
+        return agl::traits::straight_line::access_create<OutLine>::get(a,b,c);
     }
 };
 
@@ -224,7 +224,7 @@ struct equation_of_line<Figure,
                                                               agl::tag::line::line_section,
                                                               system_coordinat::cartesian,
                                                               2>::get(figure);
-        return agl::traits::traits_straight_line::access_create<OutLine>::get(0,0,0);
+        return agl::traits::straight_line::access_create<OutLine>::get(0,0,0);
     }
 };
 

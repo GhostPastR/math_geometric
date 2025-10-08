@@ -16,7 +16,7 @@ struct distance{
 template<typename Point>
 struct distance<Point, agl::system_coordinat::geo::sc_default, 2>{
     inline constexpr static auto get(const Point &a, const Point &b){
-        return traits::traits_point::access_point<Point, 0>::get(
+        return traits::point::access_point<Point, 0>::get(
             agl::algorithm::dispatch::geo::convert<Point, Point, agl::system_coordinat::geo::sc_default, system_coordinat::polar, 2>(a,b));
     }
 };

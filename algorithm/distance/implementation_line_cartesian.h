@@ -17,7 +17,7 @@ struct distance{
 template<typename Figure, typename CoordinateSystem, std::size_t Dimension>
 struct distance<Figure, agl::tag::line::straight_line, CoordinateSystem, Dimension>{
     inline constexpr static auto get(const Figure &figure){
-        using Type = traits::traits_straight_line::type_property<Figure>::type_parameter;
+        using Type = traits::straight_line::access_types<Figure>::parameter;
         return std::numeric_limits<Type>::infinity;
     }
 };
@@ -25,7 +25,7 @@ struct distance<Figure, agl::tag::line::straight_line, CoordinateSystem, Dimensi
 template<typename Figure, typename CoordinateSystem, std::size_t Dimension>
 struct distance<Figure, agl::tag::line::half_line, CoordinateSystem, Dimension>{
     inline constexpr static auto get(const Figure &figure){
-        using Type = traits::traits_half_line::type_property<Figure>::type_parameter;
+        using Type = traits::half_line::access_types<Figure>::parameter;
         return std::numeric_limits<Type>::infinity;
     }
 };
@@ -33,9 +33,9 @@ struct distance<Figure, agl::tag::line::half_line, CoordinateSystem, Dimension>{
 template<typename Figure, typename CoordinateSystem, std::size_t Dimension>
 struct distance<Figure, agl::tag::line::line_section, CoordinateSystem, Dimension>{
     inline constexpr static auto get(const Figure &figure){
-        using Point = traits::traits_line_section::type_property<Figure>::type_point;
-        const auto &a = traits::traits_line_section::access_start<Figure>::get(figure);
-        const auto &b = traits::traits_line_section::access_stop<Figure>::get(figure);
+        using Point = traits::line_section::access_types<Figure>::point;
+        const auto &a = traits::line_section::access_start<Figure>::get(figure);
+        const auto &b = traits::line_section::access_stop<Figure>::get(figure);
         return agl::algorithm::dispatch::d2::distance_point_algo::distance<Point, CoordinateSystem, Dimension>(a, b);
     }
 };

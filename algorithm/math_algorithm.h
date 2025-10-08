@@ -78,10 +78,10 @@ inline constexpr bool interval_slack(const Value &value, const Value &left, cons
 template<std::floating_point Value>
 inline constexpr bool compare_common(const Value &value1, const Value &value2, const Value &epsilon){
     static_assert(std::is_floating_point_v<typename std::remove_reference<Value>::type>, "Not floating point type");
-    // if((value1 == 0) || (value2 == 0)){
+    if((value1 == 0) || (value2 == 0)){
         return std::abs(value1 - value2) < epsilon;
-    // }
-    // return std::abs((value1 - value2) / value2) < epsilon;
+    }
+    return std::abs((value1 - value2) / value2) < epsilon;
 }
 
 template<std::floating_point Value1, std::integral Value2>

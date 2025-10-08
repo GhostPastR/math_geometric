@@ -19,11 +19,11 @@ struct convert{
 template<typename Point, typename PointOut>
 struct convert<Point, PointOut, agl::system_coordinat::geo::sc_default, agl::system_coordinat::polar, 2>{
     inline constexpr static auto get(const Point &a, const Point &b = {}){
-        using Type = traits::traits_point::type_property<Point>::type;
-        const auto a_latitude = traits::traits_point::access_point<Point, 0>::get(a);
-        const auto a_longitude = traits::traits_point::access_point<Point, 1>::get(a);
-        const auto b_latitude = traits::traits_point::access_point<Point, 0>::get(b);
-        const auto b_longitude = traits::traits_point::access_point<Point, 1>::get(b);
+        using Type = traits::point::access_types<Point>::type;
+        const auto a_latitude = traits::point::access_point<Point, 0>::get(a);
+        const auto a_longitude = traits::point::access_point<Point, 1>::get(a);
+        const auto b_latitude = traits::point::access_point<Point, 0>::get(b);
+        const auto b_longitude = traits::point::access_point<Point, 1>::get(b);
 
         if(a == b){
             return PointOut{};

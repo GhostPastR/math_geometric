@@ -41,42 +41,42 @@ namespace agl{
 
 }
 
-namespace agl::traits {
+// namespace agl::traits {
 
-template<> struct tag<point::decart::point2d<unit::distance>>{
-    using type_tag = agl::tag::point::point;
-};
+// template<> struct tag<point::decart::point2d<unit::distance>>{
+//     using type_tag = agl::tag::point::point;
+// };
 
-template<> struct coordinate_system<point::decart::point2d<unit::distance>>{
-    using system = system_coordinat::cartesian;
-};
+// template<> struct coordinate_system<point::decart::point2d<unit::distance>>{
+//     using system = system_coordinat::cartesian;
+// };
 
-template<> struct dimension<point::decart::point2d<unit::distance>>{
-    inline static constexpr std::size_t value(){
-        return 2;
-    }
-};
+// template<> struct dimension<point::decart::point2d<unit::distance>>{
+//     inline static constexpr std::size_t value(){
+//         return 2;
+//     }
+// };
 
-namespace traits_point {
+// namespace traits_point {
 
-template<> struct type_property<point::decart::point2d<unit::distance>>{
-    using type_point = unit::distance::type_value;
-};
+// template<> struct type_property<point::decart::point2d<unit::distance>>{
+//     using type_point = unit::distance::type_value;
+// };
 
-template<> struct access_point<point::decart::point2d<unit::distance>, 0>{
-    inline constexpr static auto get(const point::decart::point2d<unit::distance> &point){
-        return agl::traits::value<unit::distance>::get(point.x());
-    }
-};
+// template<> struct access_point<point::decart::point2d<unit::distance>, 0>{
+//     inline constexpr static auto get(const point::decart::point2d<unit::distance> &point){
+//         return agl::traits::value<unit::distance>::get(point.x());
+//     }
+// };
 
-template<> struct access_point<point::decart::point2d<unit::distance>, 1>{
-    inline constexpr static auto get(const point::decart::point2d<unit::distance> &point){
-        return agl::traits::value<unit::distance>::get(point.y());
-    }
-};
+// template<> struct access_point<point::decart::point2d<unit::distance>, 1>{
+//     inline constexpr static auto get(const point::decart::point2d<unit::distance> &point){
+//         return agl::traits::value<unit::distance>::get(point.y());
+//     }
+// };
 
-}
+// }
 
-}
+// }
 
 #endif // USER_TYPE_H

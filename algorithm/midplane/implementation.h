@@ -22,7 +22,7 @@ struct midplane<Object,
                 system_coordinat::cartesian,
                 2>{
     inline constexpr static auto get(const Object &a, const Object &b){
-        using namespace traits::traits_point;
+        using namespace traits::point;
         return Object{std::midpoint(access_point<Object, 0>::get(a), access_point<Object, 0>::get(b)),
                       std::midpoint(access_point<Object, 1>::get(a), access_point<Object, 1>::get(b))};
     }
@@ -33,7 +33,7 @@ struct midplane<Object,
                 system_coordinat::cartesian,
                 3>{
     inline constexpr static auto get(const Object &a, const Object &b){
-        using namespace traits::traits_point;
+        using namespace traits::point;
         return Object{std::midpoint(access_point<Object, 0>::get(a), access_point<Object, 0>::get(b)),
                       std::midpoint(access_point<Object, 1>::get(a), access_point<Object, 1>::get(b)),
                       std::midpoint(access_point<Object, 2>::get(a), access_point<Object, 2>::get(b))};
@@ -62,13 +62,13 @@ struct midplane<Figure,
                 system_coordinat::cartesian,
                 2>{
     inline constexpr static auto get(const Figure &figure){
-        using Point = traits::traits_arc::type_property<Figure>::type_center;
-        using Type = traits::traits_point::type_property<Point>::type_point;
+        using Point = traits::arc::access_types<Figure>::center;
+        using Type = traits::point::access_types<Point>::point;
 
-        const auto &start = traits::traits_arc::access_angle<Figure, 0>::get(figure);
-        const auto &stop = traits::traits_arc::access_angle<Figure, 1>::get(figure);
-        const auto &radius = traits::traits_arc::access_radius<Figure>::get(figure);
-        const auto &center = traits::traits_arc::access_center<Figure>::get(figure);
+        const auto &start = traits::arc::access_angle<Figure, 0>::get(figure);
+        const auto &stop = traits::arc::access_angle<Figure, 1>::get(figure);
+        const auto &radius = traits::arc::access_radius<Figure>::get(figure);
+        const auto &center = traits::arc::access_center<Figure>::get(figure);
 
         auto a = stop - start;
         if(start > stop){

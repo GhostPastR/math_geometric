@@ -5,10 +5,12 @@
 
 namespace agl::algorithm {
 
-//
-template<typename PointOut, typename Figure>
+//Функция возвращает центр фигуры
+template<typename PointOut,
+         typename Figure>
 inline constexpr auto center(const Figure &figure){
-    return geometry::center<Figure, PointOut>(figure);
+    return geometry::center<Figure,
+                            PointOut>(figure);
 }
 
 }

@@ -19,8 +19,8 @@ struct direction{
 template<typename Point, typename ObjectOut>
 struct direction<Point, Point, ObjectOut, system_coordinat::cartesian, 2, direction_angle>{
     inline constexpr static auto get(const Point &a, const Point &b){
-        ObjectOut temp(std::atan2(traits::traits_point::access_point<Point, 0>::get(b) - traits::traits_point::access_point<Point, 0>::get(a),
-                              traits::traits_point::access_point<Point, 1>::get(b) - traits::traits_point::access_point<Point, 1>::get(a)));
+        ObjectOut temp(std::atan2(traits::point::access_point<Point, 0>::get(b) - traits::point::access_point<Point, 0>::get(a),
+                              traits::point::access_point<Point, 1>::get(b) - traits::point::access_point<Point, 1>::get(a)));
         using Type = agl::traits::type<ObjectOut>::type_value;
         if(temp < ObjectOut{}){
             return temp += agl::algorithm::pi_in_2<Type>;

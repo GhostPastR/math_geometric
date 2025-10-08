@@ -35,14 +35,14 @@ struct is_correct_polygon<Polygon,
                           agl::system_coordinat::cartesian,
                           2>{
     inline constexpr static auto get(const Polygon &polygon){
-        using Point = agl::traits::traits_polygon::type_property<Polygon>::type_point;
-        const auto &points = agl::traits::traits_polygon::access_points<Polygon>::get(polygon);
+        using Point = agl::traits::polygon::access_types<Polygon>::point;
+        const auto &points = agl::traits::polygon::access_points<Polygon>::get(polygon);
         if(points.size() < 3){
             return false;
         }
         auto calc_direct = [](const Point &p1, const Point &p2, const Point &p3){
-            using x = agl::traits::traits_point::access_point<Point, 0>;
-            using y = agl::traits::traits_point::access_point<Point, 1>;
+            using x = agl::traits::point::access_point<Point, 0>;
+            using y = agl::traits::point::access_point<Point, 1>;
             const Point v1 = {x::get(p2) - x::get(p1), y::get(p2) - y::get(p1)};
             const Point v2 = {x::get(p3) - x::get(p2), y::get(p3) - y::get(p2)};
             return algorithm::determine(x::get(v1), y::get(v1), x::get(v2), y::get(v2));
@@ -63,15 +63,15 @@ struct is_correct_polygon<Polygon,
                           agl::system_coordinat::cartesian,
                           2>{
     inline constexpr static auto get(const Polygon &polygon){
-        using Point = agl::traits::traits_polygon::type_property<Polygon>::type_point;
-        const auto &points = agl::traits::traits_polygon::access_points<Polygon>::get(polygon);
+        using Point = agl::traits::polygon::access_types<Polygon>::point;
+        const auto &points = agl::traits::polygon::access_points<Polygon>::get(polygon);
         if(points.size() != 4){
             return false;
         }
         if((agl::algorithm::distance(points[0], points[1]) == agl::algorithm::distance(points[2], points[3]))
             && (agl::algorithm::distance(points[1], points[2]) == agl::algorithm::distance(points[0], points[3]))){
-            using x = agl::traits::traits_point::access_point<Point, 0>;
-            using y = agl::traits::traits_point::access_point<Point, 1>;
+            using x = agl::traits::point::access_point<Point, 0>;
+            using y = agl::traits::point::access_point<Point, 1>;
             const Point point1 = {x::get(points[0]) - x::get(points[1]), y::get(points[0]) - y::get(points[1])};
             const Point point2 = {x::get(points[2]) - x::get(points[1]), y::get(points[2]) - y::get(points[1])};
             return algorithm::compare(algorithm::determine(x::get(point1), y::get(point1), y::get(point2), x::get(point2)), 0.);
@@ -87,7 +87,7 @@ struct is_correct_polygon<Polygon,
                           agl::system_coordinat::cartesian,
                           2>{
     inline constexpr static auto get(const Polygon &polygon){
-        const auto &points = agl::traits::traits_polygon::access_points<Polygon>::get(polygon);
+        const auto &points = agl::traits::polygon::access_points<Polygon>::get(polygon);
         const auto l1 = agl::algorithm::distance(points[0], points[1]);
         const auto l2 = agl::algorithm::distance(points[1], points[2]);
         const auto l3 = agl::algorithm::distance(points[0], points[2]);
@@ -101,9 +101,9 @@ struct is_correct_polygon<Polygon,
                           agl::system_coordinat::cartesian,
                           2>{
     inline constexpr static auto get(const Polygon &polygon){
-        using Point = agl::traits::traits_polygon::type_property<Polygon>::type_point;
-        using Type = agl::traits::traits_point::type_property<Point>::type_point;
-        const auto &points = agl::traits::traits_polygon::access_points<Polygon>::get(polygon);
+        using Point = agl::traits::polygon::access_types<Polygon>::point;
+        using Type = agl::traits::point::access_types<Point>::point;
+        const auto &points = agl::traits::polygon::access_points<Polygon>::get(polygon);
         if(points.size() < 3){
             return false;
         }

@@ -1,151 +1,131 @@
 #ifndef SYSTEM_CONCEPT_H
 #define SYSTEM_CONCEPT_H
 
-// #include <iterator>
+#include "traits.h"
 
-// namespace agl{
+namespace agl {
 
-// template<typename View>
-// struct view{
-//     View value{};
-//     const bool is_view;
-// };
+template<typename Object>
+concept c_geometric = requires(Object object){
+    typename traits::tag<Object>::type_tag;
+    typename agl::traits::group<Object>::type_group;
+    typename agl::traits::coordinate_system<Object>::system;
+    agl::traits::dimension<Object>::value();
+};
 
-// template<typename Type>
-// concept c_point2d_decard = requires(Type temp){
-//     temp.x(); temp.y();
-// };
+template<typename Object>
+concept c_point_2d = requires(Object object){
+    requires c_geometric<Object>;
+    typename agl::traits::point::access_types<Object>::point;
+    agl::traits::point::access_point<Object, 0>::get(object);
+    agl::traits::point::access_point<Object, 1>::get(object);
+};
 
-// template<typename Type>
-// concept c_point2d_polar = requires(Type temp){
-//     temp.psi(); temp.fi();
-// };
+template<typename Object, typename Type>
+concept c_create_point_2d = requires(Object object){
+    requires c_point_2d<Object>;
+    agl::traits::point::access_create<Object>::get(Type{}, Type{});
+};
 
-// template<typename Type>
-// concept c_point2d_geo = requires(Type temp){
-//     temp.latitude(); temp.longitude();
-// };
+template<typename Object>
+concept c_circle = requires(Object object){
+    requires c_geometric<Object>;
+    typename agl::traits::arc::access_types<Object>::center;
+    typename agl::traits::arc::access_types<Object>::radius;
+    agl::traits::arc::access_center<Object>::get(object);
+    agl::traits::arc::access_radius<Object>::get(object);
+};
 
-// template<typename Type>
-// concept c_point2d = c_point2d_decard<Type> || c_point2d_geo<Type>;
+template<typename Object>
+concept c_arc = requires(Object object){
+    requires c_circle<Object>;
+    typename agl::traits::arc::access_types<Object>::angle;
+    agl::traits::arc::access_angle<Object, 0>::get(object);
+    agl::traits::arc::access_angle<Object, 1>::get(object);
+};
 
-// template<typename Type>
-// concept c_point3d_decard = requires(Type temp){
-//     temp.x(); temp.y(); temp.h();
-// };
+template<typename Object>
+concept c_straight_line = requires(Object object){
+    requires c_geometric<Object>;
+    typename agl::traits::straight_line::access_types<Object>::parameter;
+};
 
-// template<typename Type>
-// concept c_point3d_geo = requires(Type temp){
-//     temp.latitude(); temp.longitude(); temp.altitude();
-// };
+template<typename Object>
+concept c_straight_line_2d = requires(Object object){
+    requires c_straight_line<Object>;
+    agl::traits::straight_line::access_parameter<Object, 0>::get(object);
+    agl::traits::straight_line::access_parameter<Object, 1>::get(object);
+    agl::traits::straight_line::access_parameter<Object, 2>::get(object);
+};
 
-// template<typename Type>
-// concept c_point3d = c_point3d_decard<Type> || c_point3d_geo<Type>;
+template<typename Object>
+concept c_half_line_2d = requires(Object object){
+    requires c_geometric<Object>;
+    typename agl::traits::half_line::access_types<Object>::start;
+    typename agl::traits::half_line::access_types<Object>::direction;
+    agl::traits::half_line::access_start<Object>::get(object);
+    agl::traits::half_line::access_direction<Object>::get(object);
+};
 
-// template<typename Type>
-// concept c_polar2d = requires(Type temp){
-//     temp.psi(); temp.fi();
-// };
+template<typename Object>
+concept c_half_line_to_straight_line_2d = requires(Object object){
+    requires c_half_line_2d<Object>;
+    typename agl::traits::half_line::access_straight_line<Object>::type;
+};
 
-// template<typename Type>
-// concept c_angle = requires(Type type){
-//     type.radian();
-//     type.asin(typename Type::type_angle());
-//     type.acos(typename Type::type_angle());
-//     type.atan(typename Type::type_angle());
-//     type.actan(typename Type::type_angle());
-//     type.sin();
-//     type.cos();
-//     type.tan();
-//     type.ctan();
-//     type.operator+=(Type());
-//     type.operator-=(Type());
-//     operator*(typename Type::type_angle(), Type());
-// };
+template<typename Object>
+concept c_line_section = requires(Object object){
+    requires c_geometric<Object>;
+    typename agl::traits::line_section::access_types<Object>::point;
+    agl::traits::line_section::access_start<Object>::get(object);
+    agl::traits::line_section::access_stop<Object>::get(object);
+};
 
-// template<typename Type>
-// concept c_straight_line = requires(Type temp){
-//     temp.a();
-//     temp.b();
-//     temp.c();
-// };
+template<typename Object, typename Point>
+concept c_create_line_section = requires(Object object){
+    requires c_line_section<Object>;
+    agl::traits::line_section::access_create<Object>::get(Point{}, Point{});
+};
 
-// template<typename Type>
-// concept c_half_line = requires(Type temp){
-//     typename Type::type_point;
-//     {temp.start()} -> std::same_as<typename Type::type_point>;
-//     temp.direction();
-// };
+template<typename Object>
+concept c_line_section_to_straight_line = requires(Object object){
+    requires c_line_section<Object>;
+    typename agl::traits::line_section::access_straight_line<Object>::type;
+};
 
-// template<typename Type>
-// concept c_line_section = requires(Type temp){
-//     typename Type::type_point;
-//     {temp.start()} -> std::same_as<typename Type::type_point>;
-//     {temp.stop()} -> std::same_as<typename Type::type_point>;
-// };
+template<typename Object>
+concept c_polygon = requires(Object object){
+    requires c_geometric<Object>;
+    typename agl::traits::polygon::access_polygon<Object>::regular;
+    typename agl::traits::polygon::access_polygon<Object>::type;
+    typename agl::traits::polygon::access_types<Object>::point;
+    typename agl::traits::polygon::access_line_section<Object>::type;
+    agl::traits::polygon::access_points<Object>::get(object);
+};
 
-// template<typename Type>
-// concept c_arc = requires(Type temp){
-//     temp.center();
-//     temp.radius();
-//     {temp.start()} -> std::floating_point;
-//     {temp.stop()} -> std::floating_point;
-// } && std::is_same_v<typename Type::figure, std::false_type>;
+template<typename Object, typename Point>
+concept c_create_polygon = requires(Object object){
+    requires c_polygon<Object>;
+    typename agl::traits::polygon::access_polygon<Object>::regular;
+    typename agl::traits::polygon::access_polygon<Object>::type;
+    typename agl::traits::polygon::access_types<Object>::point;
+    typename agl::traits::polygon::access_line_section<Object>::type;
+    agl::traits::polygon::access_create<Object>::get(std::vector<Point>{});
+};
 
-// template<typename Type>
-// concept c_circle = requires(Type temp){
-//     temp.center();
-//     temp.radius();
-// } && std::is_same_v<typename Type::figure, std::true_type>;
+template<typename Object>
+concept c_group_line = requires(Object object){
+    requires c_geometric<Object>;
+    requires std::is_same_v<typename agl::traits::tag<Object>::type_tag, agl::tag::line::straight_line>
+                 || std::is_same_v<typename agl::traits::tag<Object>::type_tag, agl::tag::line::half_line>
+                 || std::is_same_v<typename agl::traits::tag<Object>::type_tag, agl::tag::line::line_section>;
+};
 
-// template<typename Type>
-// concept c_polugon = requires(Type temp){
-//     typename Type::type_point;
-//     std::begin(temp.get_points());
-//     std::end(temp.get_points());
-// };
+template<typename Object>
+concept c_group_polygon = requires(Object object){
+    requires c_polygon<Object>;
+};
 
-// template<typename Type>
-// concept c_rectangle = requires(Type temp){
-//     typename Type::type_point;
-//     std::begin(temp.get_points());
-//     std::end(temp.get_points());
-//     temp.get_top_left();
-//     temp.width();
-//     temp.height();
-// };
-
-// template<typename Type>
-// concept c_square = requires(Type temp){
-//     typename Type::type_point;
-//     std::begin(temp.get_points());
-//     std::end(temp.get_points());
-//     temp.get_top_left();
-//     temp.lenght();
-// };
-
-// template<typename Type>
-// concept c_triangle = requires(Type temp){
-//     typename Type::type_point;
-//     std::begin(temp.get_points());
-//     std::end(temp.get_points());
-//     temp.get_top_left();
-//     temp.a();
-//     temp.b();
-//     temp.c();
-// };
-
-// template<typename Type>
-// concept c_regular_polygon = requires(Type temp){
-//     typename Type::type_point;
-//     std::begin(temp.get_points());
-//     std::end(temp.get_points());
-//     temp.get_center();
-//     temp.get_lenght();
-//     temp.get_count();
-// };
-
-// }
-
+}
 
 #endif // SYSTEM_CONCEPT_H

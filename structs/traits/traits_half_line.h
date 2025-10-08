@@ -29,18 +29,18 @@ struct dimension<agl::line::half_line<Point, Angle>>{
     }
 };
 
-namespace traits_half_line {
+namespace half_line {
 
 template<typename Point, typename Angle>
-struct type_straight_line<agl::line::half_line<Point, Angle>>{
-    using type = agl::line::straight_line<typename agl::traits::traits_point::type_property<Point>::type_point,
-                                   typename agl::traits::coordinate_system<agl::line::half_line<Point, Angle>>::system>;
+struct access_straight_line<agl::line::half_line<Point, Angle>>{
+    using type = agl::line::straight_line<typename agl::traits::point::access_types<Point>::point,
+                                          typename agl::traits::coordinate_system<agl::line::half_line<Point, Angle>>::system>;
 };
 
 template<typename Point, typename Angle>
-struct type_property<agl::line::half_line<Point, Angle>>{
-    using type_start = Point;
-    using type_direction = agl::traits::type<Angle>::type_value;
+struct access_types<agl::line::half_line<Point, Angle>>{
+    using start = Point;
+    using direction = agl::traits::type<Angle>::type_value;
 };
 
 template<typename Point, typename Angle>

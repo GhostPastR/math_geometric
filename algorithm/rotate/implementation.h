@@ -34,11 +34,11 @@ struct rotate<Object,
               2,
               direction_angle>{
     inline constexpr static auto get(const Object &object, const ObjectDirection &direction, const Point &point){
-        using Type = traits::traits_point::type_property<Object>::type_point;
-        const auto x = traits::traits_point::access_point<Point, 0>::get(object);
-        const auto y = traits::traits_point::access_point<Point, 1>::get(object);
-        const auto rx = traits::traits_point::access_point<Point, 0>::get(point);
-        const auto ry = traits::traits_point::access_point<Point, 1>::get(point);
+        using Type = traits::point::access_types<Object>::point;
+        const auto x = traits::point::access_point<Point, 0>::get(object);
+        const auto y = traits::point::access_point<Point, 1>::get(object);
+        const auto rx = traits::point::access_point<Point, 0>::get(point);
+        const auto ry = traits::point::access_point<Point, 1>::get(point);
 
         const auto sinAngle = -std::sin(traits::value<ObjectDirection>::get(direction));
         const auto cosAngle = std::cos(traits::value<ObjectDirection>::get(direction));
@@ -58,8 +58,8 @@ struct rotate<Object,
               2,
               direction_angle>{
     inline constexpr static auto get(const Object &object, const ObjectDirection &direction, const Point &point){
-        using PointPolygon = agl::traits::traits_polygon::type_property<Object>::type_point;
-        const auto &points = agl::traits::traits_polygon::access_points<Object>::get(object);
+        using PointPolygon = agl::traits::polygon::access_types<Object>::point;
+        const auto &points = agl::traits::polygon::access_points<Object>::get(object);
         std::vector<PointPolygon> new_points;
         new_points.reserve(points.size());
         std::ranges::transform(points, std::back_inserter(new_points), [point, direction](const auto &item){
@@ -71,7 +71,7 @@ struct rotate<Object,
                           2,
                           direction_angle>::get(item, direction, point);
         });
-        return agl::traits::traits_polygon::access_create<Object>::get(std::move(new_points));
+        return agl::traits::polygon::access_create<Object>::get(std::move(new_points));
     }
 };
 

@@ -10,8 +10,26 @@
 #include "unit_test_sa.h"
 
 
+// #include "system/system_concept.h"
+// #include "structs/geometric_object.h"
+// #include "iostream"
+
+// template<agl::c_point_2d T>
+// void foo(T t){
+//     std::cout << "2" << std::endl;
+// }
+
 int main(int argc, char *argv[])
-{  
+{
+    // agl::point::decart::point2d<double> p{0,0};
+    // using tt = agl::traits::tag<agl::point::decart::point2d<double>>::type_tag;
+
+    // foo(p);
+
+
+
+
+
     QCoreApplication a(argc, argv);
     // QTest::qExec(new TestUnit, argc, argv);
     // QTest::qExec(new TestGeometricStruct, argc, argv);

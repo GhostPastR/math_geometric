@@ -37,13 +37,13 @@ struct create_polygon<PolygonOut,
                       Distance,
                       Distance>{
     inline constexpr static auto get(const Point &point, const Distance &w, const Distance &h){
-        using PointPolyg = agl::traits::traits_polygon::type_property<PolygonOut>::type_point;
-        const auto x = agl::traits::traits_point::access_point<Point, 0>::get(point);
-        const auto y = agl::traits::traits_point::access_point<Point, 1>::get(point);
+        using PointPolyg = agl::traits::polygon::access_types<PolygonOut>::point;
+        const auto x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto y = agl::traits::point::access_point<Point, 1>::get(point);
         const auto width = agl::traits::value<Distance>::get(w);
         const auto height = agl::traits::value<Distance>::get(h);
         std::vector<PointPolyg> temp({{x, y}, {x + width, y}, {x + width, y + height}, {x, y + height}});
-        return agl::traits::traits_polygon::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::polygon::access_create<PolygonOut>::get(std::move(temp));
     }
 };
 
@@ -59,8 +59,8 @@ struct create_polygon<PolygonOut,
                       Distance,
                       Distance>{
     inline constexpr static auto get(const Point &center, const Distance &w, const Distance &h){
-        const auto &x = agl::traits::traits_point::access_point<Point, 0>::get(center);
-        const auto &y = agl::traits::traits_point::access_point<Point, 1>::get(center);
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(center);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(center);
         const auto &width = agl::traits::value<Distance>::get(w);
         const auto &height = agl::traits::value<Distance>::get(h);
         return agl::algorithm::dispatch::create_polygon<PolygonOut,
@@ -132,9 +132,9 @@ struct create_polygon<PolygonOut,
                       Distance,
                       Distance>{
     inline constexpr static auto get(const Point &point, const Distance &a, const Distance &b, const Distance &c){
-        using PointPolyg = agl::traits::traits_polygon::type_property<PolygonOut>::type_point;
-        const auto &x = agl::traits::traits_point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::traits_point::access_point<Point, 1>::get(point);
+        using PointPolyg = agl::traits::polygon::access_types<PolygonOut>::point;
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
         const auto &_a = agl::traits::value<Distance>::get(a);
         const auto &_b = agl::traits::value<Distance>::get(b);
         const auto &_c = agl::traits::value<Distance>::get(c);
@@ -144,7 +144,7 @@ struct create_polygon<PolygonOut,
         }
         const auto p2 = PointPolyg{x + _a, y};
         std::vector<PointPolyg> temp({{x, y}, p2, agl::algorithm::rotate(PointPolyg{x + _a - b, y}, -acos(_acos), p2)});
-        return agl::traits::traits_polygon::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::polygon::access_create<PolygonOut>::get(std::move(temp));
     }
 };
 
@@ -163,15 +163,15 @@ struct create_polygon<PolygonOut,
                       Distance,
                       Angle>{
     inline constexpr static auto get(const Point &point, const Distance &a, const Distance &c, const Angle &ac){
-        using PointPolyg = agl::traits::traits_polygon::type_property<PolygonOut>::type_point;
-        const auto &x = agl::traits::traits_point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::traits_point::access_point<Point, 1>::get(point);
+        using PointPolyg = agl::traits::polygon::access_types<PolygonOut>::point;
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
         const auto &_a = agl::traits::value<Distance>::get(a);
         const auto &_c = agl::traits::value<Distance>::get(c);
         const auto &_ac = agl::traits::value<Angle>::get(ac);
         const auto p2 = PointPolyg{x + _a, y};
         std::vector<PointPolyg> temp({{x, y}, p2, agl::algorithm::rotate(p2, -_ac, point)});
-        return agl::traits::traits_polygon::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::polygon::access_create<PolygonOut>::get(std::move(temp));
     }
 };
 
@@ -190,17 +190,17 @@ struct create_polygon<PolygonOut,
                       Angle,
                       Angle>{
     inline constexpr static auto get(const Point &point, const Distance &a, const Angle &ac, const Angle &ab){
-        using PointPolyg = agl::traits::traits_polygon::type_property<PolygonOut>::type_point;
+        using PointPolyg = agl::traits::polygon::access_types<PolygonOut>::point;
         using Type = agl::traits::type<Angle>::type_value;
-        const auto &x = agl::traits::traits_point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::traits_point::access_point<Point, 1>::get(point);
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
         const auto &_a = agl::traits::value<Distance>::get(a);
         const auto &_ac = agl::traits::value<Angle>::get(ac);
         const auto &_ab = agl::traits::value<Angle>::get(ab);
         const auto p2 = PointPolyg{x + _a, y};
         const auto b = _a * std::sin(_ab) / std::sin(agl::algorithm::pi<Type> - _ac - _ab);
         std::vector<PointPolyg> temp({{x, y}, p2, agl::algorithm::rotate(PointPolyg{x - b, y}, _ac, p2)});
-        return agl::traits::traits_polygon::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::polygon::access_create<PolygonOut>::get(std::move(temp));
     }
 };
 
@@ -216,13 +216,13 @@ struct create_polygon<PolygonOut,
                       Distance,
                       Distance>{
     inline constexpr static auto get(const Point &point, const Distance &w, const Distance &h){
-        using PointPolyg = agl::traits::traits_polygon::type_property<PolygonOut>::type_point;
-        const auto &x = agl::traits::traits_point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::traits_point::access_point<Point, 1>::get(point);
+        using PointPolyg = agl::traits::polygon::access_types<PolygonOut>::point;
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
         const auto &_w = agl::traits::value<Distance>::get(w);
         const auto &_h = agl::traits::value<Distance>::get(h);
         std::vector<PointPolyg> temp({{x, y}, {x + _w, y}, {x, y + _h}});
-        return agl::traits::traits_polygon::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::polygon::access_create<PolygonOut>::get(std::move(temp));
     }
 };
 
@@ -239,14 +239,14 @@ struct create_polygon<PolygonOut,
                       Distance,
                       Angle>{
     inline constexpr static auto get(const Point &point, const Distance &w, const Angle &angle){
-        using PointPolyg = agl::traits::traits_polygon::type_property<PolygonOut>::type_point;
-        const auto &x = agl::traits::traits_point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::traits_point::access_point<Point, 1>::get(point);
+        using PointPolyg = agl::traits::polygon::access_types<PolygonOut>::point;
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
         const auto &_w = agl::traits::value<Distance>::get(w);
         const auto &_angle = agl::traits::value<Angle>::get(angle);
         const auto height = _w * std::tan(_angle);
         std::vector<PointPolyg> temp({{x, y}, {x + _w, y}, {x, y + height}});
-        return agl::traits::traits_polygon::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::polygon::access_create<PolygonOut>::get(std::move(temp));
     }
 };
 
@@ -312,14 +312,14 @@ struct create_polygon<PolygonOut,
                       Point,
                       Distance>{
     inline constexpr static auto get(const Point &point, const Distance &a){
-        using PointPolyg = agl::traits::traits_polygon::type_property<PolygonOut>::type_point;
+        using PointPolyg = agl::traits::polygon::access_types<PolygonOut>::point;
         using Type = agl::traits::type<Distance>::type_value;
-        const auto &x = agl::traits::traits_point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::traits_point::access_point<Point, 1>::get(point);
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
         const auto &_a = agl::traits::value<Distance>::get(a);
         const auto p2 = PointPolyg{x + _a, y};
         std::vector<PointPolyg> temp({{x, y}, p2, agl::algorithm::rotate(PointPolyg{x, y}, -agl::algorithm::pi<Type> / 6, p2)});
-        return agl::traits::traits_polygon::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::polygon::access_create<PolygonOut>::get(std::move(temp));
     }
 };
 
@@ -358,7 +358,7 @@ struct create_polygon<PolygonOut,
                       Distance,
                       int>{
     inline constexpr static auto get(const Point &center, const Distance &length, int count){
-        using PointPolyg = agl::traits::traits_polygon::type_property<PolygonOut>::type_point;
+        using PointPolyg = agl::traits::polygon::access_types<PolygonOut>::point;
         using Type = agl::traits::type<Distance>::type_value;
         const auto &_length = agl::traits::value<Distance>::get(length);
         Type angle = algorithm::pi_in_2<Type> / static_cast<Type>(count);
@@ -368,11 +368,11 @@ struct create_polygon<PolygonOut,
         points.reserve(count);
         const auto numbers = std::ranges::iota_view{int{}, count};
         std::ranges::transform(numbers, std::back_inserter(points), [center, radius, angle](const auto &i){
-            const auto &x = agl::traits::traits_point::access_point<Point, 0>::get(center);
-            const auto &y = agl::traits::traits_point::access_point<Point, 1>::get(center);
+            const auto &x = agl::traits::point::access_point<Point, 0>::get(center);
+            const auto &y = agl::traits::point::access_point<Point, 1>::get(center);
             return Point{x + radius * std::sin(i * angle), y + radius * std::cos(i * angle)};
         });
-        return agl::traits::traits_polygon::access_create<PolygonOut>::get(std::move(points));
+        return agl::traits::polygon::access_create<PolygonOut>::get(std::move(points));
     }
 };
 

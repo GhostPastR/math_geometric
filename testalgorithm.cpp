@@ -4,6 +4,14 @@
 #include "structs/geometric_object.h"
 #include "unit/unit_object.h"
 
+#include <iostream>
+
+
+
+
+
+
+
 TestAlgorithm::TestAlgorithm(QObject *parent)
     : QObject{parent}
 {}
@@ -311,6 +319,66 @@ void TestAlgorithm::test_intersection()
             QVERIFY(!value.first.has_value() && !value.second.has_value());
         }
     }
+
+    {//polygon_to_line
+        {
+            auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,0),
+                                                                                                                 agl::point::decart::point2d<double>(0,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,0)});
+            auto line = agl::line::line_section(agl::point::decart::point2d<double>{-5,0},
+                                                agl::point::decart::point2d<double>{11,11});
+            auto temp = agl::algorithm::intersection<agl::point::decart::point2d<double>>(polygon, line);
+            QVERIFY(temp.size() == 2);
+            QVERIFY(temp[0] == agl::point::decart::point2d<double>(0, 3.4375));
+            QVERIFY(temp[1] == agl::point::decart::point2d<double>(9.545455, 10));
+        }
+        {
+            auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,0),
+                                                                                                                 agl::point::decart::point2d<double>(0,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,0)});
+            auto line = agl::line::line_section(agl::point::decart::point2d<double>{0,0},
+                                                agl::point::decart::point2d<double>{10,10});
+            auto temp = agl::algorithm::intersection<agl::point::decart::point2d<double>>(polygon, line);
+            QVERIFY(temp.size() == 2);
+            QVERIFY(temp[0] == agl::point::decart::point2d<double>(0, 0));
+            QVERIFY(temp[1] == agl::point::decart::point2d<double>(10, 10));
+        }
+        {
+            auto polygon = agl::figure::polygon<agl::point::decart::point2d<double>, agl::tag::polygon::convex>({agl::point::decart::point2d<double>(0,0),
+                                                                                                                 agl::point::decart::point2d<double>(0,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,10),
+                                                                                                                 agl::point::decart::point2d<double>(10,0)});
+            auto line = agl::line::line_section(agl::point::decart::point2d<double>{0,15},
+                                                agl::point::decart::point2d<double>{50,100});
+            auto temp = agl::algorithm::intersection<agl::point::decart::point2d<double>>(polygon, line);
+            QVERIFY(temp.empty());
+        }
+    }
+
+    {//point_to_polygon
+        {
+            // auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
+            // auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(5,15), point2d(10,10), point2d(10,0)});
+            // QVERIFY(polygon_algo::polygon_intersect_polygon(polygon1, polygon2));
+        }
+        {
+            // auto polygon1 = ConvexPolygon({point2d(0,10), point2d(0,20), point2d(10,20), point2d(10,20)});
+            // auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(5,15), point2d(10,10), point2d(10,0)});
+            // QVERIFY(polygon_algo::polygon_intersect_polygon(polygon1, polygon2));
+        }
+        {
+            // auto polygon1 = ConvexPolygon({point2d(0,14), point2d(0,30), point2d(10,30), point2d(10,14)});
+            // auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(5,15), point2d(10,10), point2d(10,0)});
+            // QVERIFY(polygon_algo::polygon_intersect_polygon(polygon1, polygon2));
+        }
+        {
+            // auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,5), point2d(5,5), point2d(5,0)});
+            // auto polygon2 = ConvexPolygon({point2d(10,0), point2d(10,10), point2d(20,20), point2d(20,10)});
+            // QVERIFY(!polygon_algo::polygon_intersect_polygon(polygon1, polygon2));
+        }
+    }
 }
 
 void TestAlgorithm::test_contain()
@@ -339,6 +407,53 @@ void TestAlgorithm::test_contain()
         QVERIFY(!agl::algorithm::contain(line, agl::point::decart::point2d<double>{-1.,-1.}));
         QVERIFY(!agl::algorithm::contain(line, agl::point::decart::point2d<double>{11.,11.}));
     }
+
+    //     {//point_appertain_polygon
+    //         auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(5,15), point2d(10,10), point2d(10,0)});
+    //         QVERIFY(polygon_algo::point_appertain_polygon(polygon, point2d(1,1)));
+    //         QVERIFY(!polygon_algo::point_appertain_polygon(polygon, point2d(-1,-1)));
+    //         QVERIFY(polygon_algo::point_appertain_polygon(polygon, point2d(0,5)));
+    //         QVERIFY(!polygon_algo::point_appertain_polygon(polygon, point2d(15,15)));
+    //         QVERIFY(polygon_algo::point_appertain_polygon(polygon, point2d(5,15)));
+    //     }
+
+    //     {//polygon_appertain_section
+    //         {
+    //             auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
+    //             auto line = LineSection(point2d(0,0), point2d(1,1));
+    //             QVERIFY(polygon_algo::polygon_appertain_section(polygon, view_line(line)));
+    //         }
+    //         {
+    //             auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
+    //             auto line = LineSection(point2d(-1,-1), point2d(1,1));
+    //             QVERIFY(!polygon_algo::polygon_appertain_section(polygon, view_line(line)));
+    //         }
+    //         {
+    //             auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
+    //             auto line = LineSection(point2d(-2,-2), point2d(-1,-1));
+    //             QVERIFY(!polygon_algo::polygon_appertain_section(polygon, view_line(line)));
+    //         }
+    //     }
+
+    //     {//polygon_appertain_polygon
+    //         {
+    //             auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
+    //             auto polygon2 = ConvexPolygon({point2d(1,1), point2d(1,9), point2d(9,9), point2d(9,1)});
+    //             QVERIFY(polygon_algo::polygon_appertain_polygon(polygon1, polygon2));
+    //         }
+
+    //         {
+    //             auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
+    //             auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,11), point2d(11,11), point2d(11,0)});
+    //             QVERIFY(!polygon_algo::polygon_appertain_polygon(polygon1, polygon2));
+    //         }
+
+    //         {
+    //             auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
+    //             auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,9), point2d(9,9), point2d(9,0)});
+    //             QVERIFY(!polygon_algo::polygon_appertain_polygon(polygon1, polygon2));
+    //         }
+    //     }
 }
 
 void TestAlgorithm::test_parallel()

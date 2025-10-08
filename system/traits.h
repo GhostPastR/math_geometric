@@ -36,11 +36,11 @@ struct geo_coordinate_system{
     using system = agl::system_coordinat::geo::sc_default;
 };
 
-namespace traits_point {
+namespace point {
 
 template<typename Object>
-struct type_property{
-    using type_point = undefined;
+struct access_types{
+    using point = undefined;
 };
 
 template<typename Object, std::size_t NumberPoint>
@@ -50,8 +50,9 @@ struct access_point{
     }
 };
 
-template<typename Object, typename ... Value>
+template<typename Object>
 struct access_create{
+    template<typename ... Value>
     inline constexpr static auto get(Value&&... value){
         static_assert(false, "Access is not implemented for this object.");
     }
@@ -59,13 +60,13 @@ struct access_create{
 
 }
 
-namespace traits_arc {
+namespace arc {
 
 template<typename Object>
-struct type_property{
-    using type_center = undefined;
-    using type_radius = undefined;
-    using type_angle = undefined;
+struct access_types{
+    using center = undefined;
+    using radius = undefined;
+    using angle = undefined;
 };
 
 template<typename Object>
@@ -91,12 +92,12 @@ struct access_angle{
 
 }
 
-namespace traits_circle {
+namespace circle {
 
 template<typename Object>
-struct type_property{
-    using type_center = undefined;
-    using type_radius = undefined;
+struct access_types{
+    using center = undefined;
+    using radius = undefined;
 };
 
 template<typename Object>
@@ -117,11 +118,11 @@ struct access_radius{
 
 
 
-namespace traits_straight_line {
+namespace straight_line {
 
 template<typename Object>
-struct type_property{
-    using type_parameter = undefined;
+struct access_types{
+    using parameter = undefined;
 };
 
 template<typename Object, std::size_t NumberPoint>
@@ -133,8 +134,8 @@ struct access_parameter{
 
 template<typename Object>
 struct access_create{
-    template<typename Type>
-    inline constexpr static auto get(Type &&a, Type &&b, Type &&c){
+    template<typename ... Type>
+    inline constexpr static auto get(Type&&... value){
         static_assert(false, "Access is not implemented for this object.");
     }
 };
@@ -142,16 +143,16 @@ struct access_create{
 
 }
 
-namespace traits_half_line {
+namespace half_line {
 
 template<typename Object>
-struct type_property{
-    using type_start = undefined;
-    using type_direction = undefined;
+struct access_types{
+    using start = undefined;
+    using direction = undefined;
 };
 
 template<typename Object>
-struct type_straight_line{
+struct access_straight_line{
     using type = undefined;
 };
 
@@ -172,15 +173,15 @@ struct access_direction{
 
 }
 
-namespace traits_line_section {
+namespace line_section {
 
 template<typename Object>
-struct type_property{
-    using type_point = undefined;
+struct access_types{
+    using point = undefined;
 };
 
 template<typename Object>
-struct type_straight_line{
+struct access_straight_line{
     using type = undefined;
 };
 
@@ -199,8 +200,9 @@ struct access_stop{
     }
 };
 
-template<typename Object, typename Point>
+template<typename Object>
 struct access_create{
+    template<typename Point>
     inline constexpr static auto get(const Point &point1, const Point &point2){
         static_assert(false, "Access is not implemented for this object.");
     }
@@ -209,21 +211,21 @@ struct access_create{
 }
 
 
-namespace traits_polygon {
+namespace polygon {
 
 template<typename Object>
-struct type_polygon{
+struct access_polygon{
     using regular = std::false_type;
     using type = undefined;
 };
 
 template<typename Object>
-struct type_property{
-    using type_point = undefined;
+struct access_types{
+    using point = undefined;
 };
 
 template<typename Object>
-struct type_line_section{
+struct access_line_section{
     using type = undefined;
 };
 
@@ -236,7 +238,7 @@ struct access_points{
 
 template<typename Object>
 struct access_create{
-    inline constexpr static auto get(std::vector<typename type_property<Object>::type_point> &&points){
+    inline constexpr static auto get(std::vector<typename access_types<Object>::point> &&points){
         static_assert(false, "Access is not implemented for this object.");
     }
 };

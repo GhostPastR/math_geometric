@@ -35,13 +35,13 @@ struct point_coupling<Line,
                       system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Line &line, const Point &point, bool is_perpendicular) -> std::optional<Point>{
-        using str_line = ::agl::traits::traits_line_section::type_straight_line<Line>::type;
+        using str_line = ::agl::traits::line_section::access_straight_line<Line>::type;
         auto p_line = ::agl::algorithm::perpendicular<str_line>(line, point);
         if(const auto int_point = ::agl::algorithm::intersection<Point>(line, p_line); int_point.has_value()){
             return int_point;
         }
-        const auto &start = ::agl::traits::traits_line_section::access_start<Line>::get(line);
-        const auto &stop = ::agl::traits::traits_line_section::access_stop<Line>::get(line);
+        const auto &start = ::agl::traits::line_section::access_start<Line>::get(line);
+        const auto &stop = ::agl::traits::line_section::access_stop<Line>::get(line);
         if(is_perpendicular){
             return std::nullopt;
         }

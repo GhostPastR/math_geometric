@@ -33,10 +33,10 @@ struct create_point<Point,
                     2,
                     direction_angle>{
     inline constexpr static auto get(const Point &point, const Turning &turning, const Range &range){
-        return NewPoint{traits::traits_point::access_point<Point, 0>::get(point)
+        return NewPoint{traits::point::access_point<Point, 0>::get(point)
                             + traits::value<Range>::get(range)
                                   * std::sin(traits::value<Turning>::get(turning)),
-                        traits::traits_point::access_point<Point, 1>::get(point)
+                        traits::point::access_point<Point, 1>::get(point)
                             + traits::value<Range>::get(range)
                                   * std::cos(traits::value<Turning>::get(turning))};
     }

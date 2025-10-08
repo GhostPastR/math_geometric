@@ -6,7 +6,6 @@
 
 #include "algorithm/approximation_algorithm.h"
 #include "algorithm/geo_algorithm.h"
-#include "algorithm/polygon_algorithm.h"
 
 
 
@@ -33,54 +32,9 @@ void Unit_Test::test_point_algorithm()
 
 void Unit_Test::test_polygon_algorithm()
 {
-//     {//point_appertain_polygon
-//         auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(5,15), point2d(10,10), point2d(10,0)});
-//         QVERIFY(polygon_algo::point_appertain_polygon(polygon, point2d(1,1)));
-//         QVERIFY(!polygon_algo::point_appertain_polygon(polygon, point2d(-1,-1)));
-//         QVERIFY(polygon_algo::point_appertain_polygon(polygon, point2d(0,5)));
-//         QVERIFY(!polygon_algo::point_appertain_polygon(polygon, point2d(15,15)));
-//         QVERIFY(polygon_algo::point_appertain_polygon(polygon, point2d(5,15)));
-//     }
-//     {//point_appertain_polygon
-//         {
-//             auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
-//             auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(5,15), point2d(10,10), point2d(10,0)});
-//             QVERIFY(polygon_algo::polygon_intersect_polygon(polygon1, polygon2));
-//         }
-//         {
-//             auto polygon1 = ConvexPolygon({point2d(0,10), point2d(0,20), point2d(10,20), point2d(10,20)});
-//             auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(5,15), point2d(10,10), point2d(10,0)});
-//             QVERIFY(polygon_algo::polygon_intersect_polygon(polygon1, polygon2));
-//         }
-//         {
-//             auto polygon1 = ConvexPolygon({point2d(0,14), point2d(0,30), point2d(10,30), point2d(10,14)});
-//             auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(5,15), point2d(10,10), point2d(10,0)});
-//             QVERIFY(polygon_algo::polygon_intersect_polygon(polygon1, polygon2));
-//         }
-//         {
-//             auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,5), point2d(5,5), point2d(5,0)});
-//             auto polygon2 = ConvexPolygon({point2d(10,0), point2d(10,10), point2d(20,20), point2d(20,10)});
-//             QVERIFY(!polygon_algo::polygon_intersect_polygon(polygon1, polygon2));
-//         }
-//     }
 
-//     {//polygon_appertain_section
-//         {
-//             auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
-//             auto line = LineSection(point2d(0,0), point2d(1,1));
-//             QVERIFY(polygon_algo::polygon_appertain_section(polygon, view_line(line)));
-//         }
-//         {
-//             auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
-//             auto line = LineSection(point2d(-1,-1), point2d(1,1));
-//             QVERIFY(!polygon_algo::polygon_appertain_section(polygon, view_line(line)));
-//         }
-//         {
-//             auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
-//             auto line = LineSection(point2d(-2,-2), point2d(-1,-1));
-//             QVERIFY(!polygon_algo::polygon_appertain_section(polygon, view_line(line)));
-//         }
-//     }
+
+
 
 //     {//scale_regular_polygon
 //         {
@@ -102,42 +56,6 @@ void Unit_Test::test_polygon_algorithm()
 //             QVERIFY(points[2] == point2d(4.248064, -5.846959));
 //             QVERIFY(points[3] == point2d(-4.248064, -5.846959));
 //             QVERIFY(points[4] == point2d(-6.873512, 2.233339));
-//         }
-//     }
-
-//     {//polygon_apertain_line
-//         {
-//             auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
-//             auto line = Line(point2d(-5,0), point2d(11,11));
-//             auto temp = polygon_algo::polygon_apertain_line(polygon, view_line(line));
-//             QVERIFY(temp[0] == point2d(0, 3.4375));
-//             QVERIFY(temp[1] == point2d(9.545455, 10));
-//         }
-//         {
-//             auto polygon = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
-//             auto line = Line(point2d(0,15), point2d(50,100));
-//             auto temp = polygon_algo::polygon_apertain_line(polygon, view_line(line));
-//             QVERIFY(temp.empty());
-//         }
-//     }
-
-//     {//polygon_appertain_polygon
-//         {
-//             auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
-//             auto polygon2 = ConvexPolygon({point2d(1,1), point2d(1,9), point2d(9,9), point2d(9,1)});
-//             QVERIFY(polygon_algo::polygon_appertain_polygon(polygon1, polygon2));
-//         }
-
-//         {
-//             auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
-//             auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,11), point2d(11,11), point2d(11,0)});
-//             QVERIFY(!polygon_algo::polygon_appertain_polygon(polygon1, polygon2));
-//         }
-
-//         {
-//             auto polygon1 = ConvexPolygon({point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)});
-//             auto polygon2 = ConvexPolygon({point2d(0,0), point2d(0,9), point2d(9,9), point2d(9,0)});
-//             QVERIFY(!polygon_algo::polygon_appertain_polygon(polygon1, polygon2));
 //         }
 //     }
 

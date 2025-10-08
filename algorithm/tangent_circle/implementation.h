@@ -37,12 +37,12 @@ struct tangent_circle<Circle,
                       2>{
     inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::external tag)
         -> std::pair<std::optional<LineSectionOut>, std::optional<LineSectionOut>>{
-        using Type = agl::traits::traits_circle::type_property<Circle>::type_radius;
-        using Point = agl::traits::traits_line_section::type_property<LineSectionOut>::type_point;
-        const auto &center1 = traits::traits_circle::access_center<Circle>::get(circle);
-        const auto &radius1 = traits::traits_circle::access_radius<Circle>::get(circle);
-        const auto &center2 = traits::traits_circle::access_center<Object>::get(object);
-        const auto &radius2 = traits::traits_circle::access_radius<Object>::get(object);
+        using Type = agl::traits::circle::access_types<Circle>::radius;
+        using Point = agl::traits::line_section::access_types<LineSectionOut>::point;
+        const auto &center1 = traits::circle::access_center<Circle>::get(circle);
+        const auto &radius1 = traits::circle::access_radius<Circle>::get(circle);
+        const auto &center2 = traits::circle::access_center<Object>::get(object);
+        const auto &radius2 = traits::circle::access_radius<Object>::get(object);
 
         const auto _len = agl::algorithm::distance(center1, center2);
         if(agl::algorithm::compare(_len, 0.) || (fabs(radius1 - radius2) > _len)){
@@ -77,12 +77,12 @@ struct tangent_circle<Circle,
                       2>{
     inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::internal tag)
     -> std::pair<std::optional<LineSectionOut>, std::optional<LineSectionOut>>{
-        using Type = agl::traits::traits_circle::type_property<Circle>::type_radius;
-        using Point = agl::traits::traits_line_section::type_property<LineSectionOut>::type_point;
-        const auto &center1 = traits::traits_circle::access_center<Circle>::get(circle);
-        const auto &radius1 = traits::traits_circle::access_radius<Circle>::get(circle);
-        const auto &center2 = traits::traits_circle::access_center<Object>::get(object);
-        const auto &radius2 = traits::traits_circle::access_radius<Object>::get(object);
+        using Type = agl::traits::circle::access_types<Circle>::radius;
+        using Point = agl::traits::line_section::access_types<LineSectionOut>::point;
+        const auto &center1 = traits::circle::access_center<Circle>::get(circle);
+        const auto &radius1 = traits::circle::access_radius<Circle>::get(circle);
+        const auto &center2 = traits::circle::access_center<Object>::get(object);
+        const auto &radius2 = traits::circle::access_radius<Object>::get(object);
 
         const auto _len = agl::algorithm::distance(center1, center2);
         if(agl::algorithm::compare(_len, 0.) || (fabs(radius1 + radius2) > _len)){
@@ -120,10 +120,10 @@ struct tangent_circle<Circle,
                       2>{
     inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::external tag)
     -> std::pair<std::optional<LineSectionOut>, std::optional<LineSectionOut>>{
-        using Type = agl::traits::traits_circle::type_property<Circle>::type_radius;
-        using Point = agl::traits::traits_line_section::type_property<LineSectionOut>::type_point;
-        const auto &center = traits::traits_circle::access_center<Circle>::get(circle);
-        const auto &radius = traits::traits_circle::access_radius<Circle>::get(circle);
+        using Type = agl::traits::circle::access_types<Circle>::radius;
+        using Point = agl::traits::line_section::access_types<LineSectionOut>::point;
+        const auto &center = traits::circle::access_center<Circle>::get(circle);
+        const auto &radius = traits::circle::access_radius<Circle>::get(circle);
         if(agl::algorithm::located_inside(circle, object)){
             return {};
         }

@@ -29,21 +29,21 @@ struct dimension<agl::figure::polygon<Point, Tag>>{
     }
 };
 
-namespace traits_polygon {
+namespace polygon {
 
 template<typename Point, typename Tag>
-struct type_polygon<agl::figure::polygon<Point, Tag>>{
+struct access_polygon<agl::figure::polygon<Point, Tag>>{
     using regular = std::false_type;
     using type = undefined;
 };
 
 template<typename Point, typename Tag>
-struct type_property<agl::figure::polygon<Point, Tag>>{
-    using type_point = Point;
+struct access_types<agl::figure::polygon<Point, Tag>>{
+    using point = Point;
 };
 
 template<typename Point, typename Tag>
-struct type_line_section<agl::figure::polygon<Point, Tag>>{
+struct access_line_section<agl::figure::polygon<Point, Tag>>{
     using type = agl::line::line_section<Point>;
 };
 

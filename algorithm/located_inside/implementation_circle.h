@@ -26,13 +26,13 @@ struct located_inside<Object1,
                       agl::system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Object1 &a, const Object2 &b){
-        using Point = agl::traits::traits_circle::type_property<Object1>::type_center;
-        const auto &center = agl::traits::traits_circle::access_center<Object1>::get(a);
-        const auto &radius = agl::traits::traits_circle::access_radius<Object1>::get(a);
-        const auto &c_x = agl::traits::traits_point::access_point<Point, 0>::get(center);
-        const auto &c_y = agl::traits::traits_point::access_point<Point, 1>::get(center);
-        const auto &x = agl::traits::traits_point::access_point<Object2, 0>::get(b);
-        const auto &y = agl::traits::traits_point::access_point<Object2, 1>::get(b);
+        using Point = agl::traits::circle::access_types<Object1>::center;
+        const auto &center = agl::traits::circle::access_center<Object1>::get(a);
+        const auto &radius = agl::traits::circle::access_radius<Object1>::get(a);
+        const auto &c_x = agl::traits::point::access_point<Point, 0>::get(center);
+        const auto &c_y = agl::traits::point::access_point<Point, 1>::get(center);
+        const auto &x = agl::traits::point::access_point<Object2, 0>::get(b);
+        const auto &y = agl::traits::point::access_point<Object2, 1>::get(b);
         return algorithm::less_than_equal(std::pow(x - c_x, 2) + std::pow(y - c_y, 2), std::pow(radius, 2));
     }
 };

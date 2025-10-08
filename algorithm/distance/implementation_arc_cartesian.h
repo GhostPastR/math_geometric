@@ -17,13 +17,13 @@ struct distance{
 template<typename Figure>
 struct distance<Figure, agl::tag::elements_circle::arc, system_coordinat::cartesian, 2>{
     inline constexpr static auto get(const Figure &figure){
-        using Point = traits::traits_arc::type_property<Figure>::type_center;
-        using Angle = traits::traits_arc::type_property<Figure>::type_angle;
+        using Point = traits::arc::access_types<Figure>::center;
+        using Angle = traits::arc::access_types<Figure>::angle;
         using Type = agl::traits::type<Angle>::type_value;
 
-        const auto &start = traits::traits_arc::access_angle<Figure, 0>::get(figure);
-        const auto &stop = traits::traits_arc::access_angle<Figure, 1>::get(figure);
-        const auto &radius = traits::traits_arc::access_radius<Figure>::get(figure);
+        const auto &start = traits::arc::access_angle<Figure, 0>::get(figure);
+        const auto &stop = traits::arc::access_angle<Figure, 1>::get(figure);
+        const auto &radius = traits::arc::access_radius<Figure>::get(figure);
 
         if(algorithm::compare(start, stop)){
             return 0.;

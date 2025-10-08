@@ -18,16 +18,16 @@ struct get_lines{
 template<typename Figure, typename OutObject>
 struct get_lines<Figure, OutObject, agl::group::polygons, agl::tag::line::line_section, system_coordinat::cartesian, 2>{
     inline constexpr static auto get(const Figure &figure){
-        using point = agl::traits::traits_polygon::type_property<Figure>::type_point;
+        using point = agl::traits::polygon::access_types<Figure>::point;
         std::vector<OutObject> lines;
-        const auto &points = agl::traits::traits_polygon::access_points<Figure>::get(figure);
+        const auto &points = agl::traits::polygon::access_points<Figure>::get(figure);
         lines.reserve(points.size() + 1);
         std::transform(points.cbegin(), std::prev(points.cend()),
                        std::next(points.cbegin()), std::back_inserter(lines),
                        [](const auto &point1, const auto &point2){
-            return agl::traits::traits_line_section::access_create<OutObject, point>::get(point1, point2);
+            return agl::traits::line_section::access_create<OutObject>::get(point1, point2);
         });
-        lines.push_back(agl::traits::traits_line_section::access_create<OutObject, point>::get(points.back(), points.front()));
+        lines.push_back(agl::traits::line_section::access_create<OutObject>::get(points.back(), points.front()));
         return lines;
     }
 };

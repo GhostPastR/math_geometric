@@ -30,11 +30,11 @@ struct dimension<std::array<Point,2>>{
     }
 };
 
-namespace traits_line_section {
+namespace line_section {
 
 template<typename Point>
-struct type_property<std::array<Point,2>>{
-    using type_point = Point;
+struct access_types<std::array<Point,2>>{
+    using point = Point;
 };
 
 template<typename Point>
@@ -51,16 +51,17 @@ struct access_stop<std::array<Point,2>>{
     }
 };
 
-template<typename PointLine, typename Point>
-struct access_create<std::array<PointLine,2>, Point>{
+template<typename PointLine>
+struct access_create<std::array<PointLine,2>>{
+    template<typename Point>
     inline constexpr static auto get(const Point &point1, const Point &point2){
-        using type = agl::traits::traits_point::type_property<Point>::type_point;
-        auto x1 = agl::traits::traits_point::access_point<Point, 0>::get(point1);
-        auto y1 = agl::traits::traits_point::access_point<Point, 1>::get(point1);
-        auto x2 = agl::traits::traits_point::access_point<Point, 0>::get(point2);
-        auto y2 = agl::traits::traits_point::access_point<Point, 1>::get(point2);
-        return std::array<PointLine,2>{agl::traits::traits_point::access_create<PointLine, type, type>::get(std::move(x1), std::move(y1)),
-                                       agl::traits::traits_point::access_create<PointLine, type, type>::get(std::move(x2), std::move(y2))};
+        using type = agl::traits::point::access_types<Point>::point;
+        auto x1 = agl::traits::point::access_point<Point, 0>::get(point1);
+        auto y1 = agl::traits::point::access_point<Point, 1>::get(point1);
+        auto x2 = agl::traits::point::access_point<Point, 0>::get(point2);
+        auto y2 = agl::traits::point::access_point<Point, 1>::get(point2);
+        return std::array<PointLine,2>{agl::traits::point::access_create<PointLine>::get(x1, y1),
+                                       agl::traits::point::access_create<PointLine>::get(x2, y2)};
     }
 };
 

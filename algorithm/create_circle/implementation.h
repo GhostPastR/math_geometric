@@ -37,7 +37,7 @@ struct create_circle<CircleOut,
     inline constexpr static auto get(const Angle &angle, const Point &point, const Radius &radius)
         -> std::pair<std::optional<CircleOut>, std::optional<CircleOut>>{
         using Type = agl::traits::type<Angle>::type_value;
-        using Center = agl::traits::traits_circle::type_property<CircleOut>::type_center;
+        using Center = agl::traits::circle::access_types<CircleOut>::center;
         const auto &_angle = agl::traits::value<Angle>::get(angle);
         const auto &_radius = agl::traits::value<Radius>::get(radius);
         if(_radius > 0){

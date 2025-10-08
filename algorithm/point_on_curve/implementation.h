@@ -32,10 +32,10 @@ struct point_on_curve<Figure,
                       system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Figure &figure, const TypeDistance &distance){
-        using PointStart = traits::traits_half_line::type_property<Figure>::type_start;
-        using Direction = traits::traits_half_line::type_property<Figure>::type_direction;
-        const auto &start = traits::traits_half_line::access_start<Figure>::get(figure);
-        const auto &angle = traits::traits_half_line::access_direction<Figure>::get(figure);
+        using PointStart = traits::half_line::access_types<Figure>::start;
+        using Direction = traits::half_line::access_types<Figure>::direction;
+        const auto &start = traits::half_line::access_start<Figure>::get(figure);
+        const auto &angle = traits::half_line::access_direction<Figure>::get(figure);
         return agl::algorithm::create_point<PointStart>(start, angle, traits::value<TypeDistance>::get(distance));
     }
 };
@@ -50,14 +50,14 @@ struct point_on_curve<Figure,
                       system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Figure &figure, const TypeDistance &distance) -> std::optional<Point>{
-        using Property = traits::traits_line_section::type_property<Figure>;
+        using Property = traits::line_section::access_types<Figure>;
         const auto &t_distance = traits::value<TypeDistance>::get(distance);
         if(t_distance > agl::algorithm::distance(figure)){
             return std::nullopt;
         }
-        const auto &start = traits::traits_line_section::access_start<Figure>::get(figure);
-        const auto &stop = traits::traits_line_section::access_stop<Figure>::get(figure);
-        using Angle = traits::traits_point::type_property<typename Property::type_point>::type_point;
+        const auto &start = traits::line_section::access_start<Figure>::get(figure);
+        const auto &stop = traits::line_section::access_stop<Figure>::get(figure);
+        using Angle = traits::point::access_types<typename Property::point>::point;
         return agl::algorithm::create_point(start, agl::algorithm::direction<Angle>(start, stop), t_distance);
     }
 };
@@ -77,9 +77,9 @@ struct point_on_curve<Figure,
             return std::nullopt;
         }
 
-        const auto center = traits::traits_arc::access_center<Figure>::get(figure);
-        const auto &angle = traits::traits_arc::access_angle<Figure, 0>::get(figure);
-        const auto &radius = traits::traits_arc::access_radius<Figure>::get(figure);
+        const auto center = traits::arc::access_center<Figure>::get(figure);
+        const auto &angle = traits::arc::access_angle<Figure, 0>::get(figure);
+        const auto &radius = traits::arc::access_radius<Figure>::get(figure);
         const auto point = agl::algorithm::create_point(center, angle, radius);
         return agl::algorithm::rotate(point, t_distance / radius, center);
     }

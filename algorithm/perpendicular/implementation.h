@@ -30,14 +30,14 @@ struct perpendicular<Figure,
                      agl::system_coordinat::cartesian,
                      2>{
     inline constexpr static auto get(const Figure &figure, const Point &point){
-        using namespace traits::traits_point;
+        using namespace traits::point;
         const auto [a,b,c] = agl::algorithm::equation_of_line(figure);
-        const auto x = agl::traits::traits_point::access_point<Point, 0>::get(point);
-        const auto y = agl::traits::traits_point::access_point<Point, 1>::get(point);
+        const auto x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto y = agl::traits::point::access_point<Point, 1>::get(point);
 
         using array = std::array<std::remove_const_t<decltype(a)>,3>;
         const auto [na,nb,nc] = agl::algorithm::normalized(array{b, -a, algorithm::determine(a, b, x, y)});
-        return agl::traits::traits_straight_line::access_create<LineOut>::get(na, nb, nc);
+        return agl::traits::straight_line::access_create<LineOut>::get(na, nb, nc);
     }
 };
 

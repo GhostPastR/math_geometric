@@ -51,8 +51,8 @@ struct point_coupling<Figure,
                       agl::system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Figure &figure, const Point &point, bool is_perpendicular) -> std::optional<Point>{
-        using str_line = agl::traits::traits_polygon::type_line_section<Figure>::type;
-        using point_polygon = agl::traits::traits_polygon::type_property<Figure>::type_point;
+        using str_line = agl::traits::polygon::access_line_section<Figure>::type;
+        using point_polygon = agl::traits::polygon::access_types<Figure>::point;
         const auto lines = agl::algorithm::get_lines<str_line>(figure);
         std::vector<std::optional<point_polygon>> c_points;
         c_points.reserve(lines.size() + 1);
@@ -68,7 +68,7 @@ struct point_coupling<Figure,
             return !item.has_value();
         });
         if(!is_perpendicular){
-            const auto &points = agl::traits::traits_polygon::access_points<Figure>::get(figure);
+            const auto &points = agl::traits::polygon::access_points<Figure>::get(figure);
             std::ranges::copy(points, std::back_inserter(c_points));
         }
         if(!c_points.empty()){

@@ -1,9 +1,6 @@
 #ifndef TAG_H
 #define TAG_H
 
-#include <cstddef>
-#include <type_traits>
-
 namespace agl{
 
 struct undefined final{};

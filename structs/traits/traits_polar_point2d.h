@@ -27,17 +27,17 @@ namespace agl::traits {
 // };
 
 template<typename TypePsi, typename TypeFi>
-struct tag<point::polar::polar2d<TypePsi, TypeFi>>{
+struct tag<agl::point::polar::polar2d<TypePsi, TypeFi>>{
     using type_tag = agl::tag::point::point;
 };
 
 template<typename TypePsi, typename TypeFi>
-struct coordinate_system<point::polar::polar2d<TypePsi, TypeFi>>{
+struct coordinate_system<agl::point::polar::polar2d<TypePsi, TypeFi>>{
     using system = system_coordinat::polar;
 };
 
 template<typename TypePsi, typename TypeFi>
-struct dimension<point::polar::polar2d<TypePsi, TypeFi>>{
+struct dimension<agl::point::polar::polar2d<TypePsi, TypeFi>>{
     inline static constexpr std::size_t value(){
         return 2;
     }

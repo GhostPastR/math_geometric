@@ -5,14 +5,7 @@
 
 namespace agl::algorithm {
 
-template<typename Border,
-         typename Point>
-inline constexpr auto belongs_to_area_of_line(const Border &left, const Border &right, const Point &point){
-    return geometry::belongs_to_area_of_line<Border, Point>(left, right, point);
-}
-
-
-//
+//Функция определяет попадает ли объект в область линии
 template<typename Line,
          typename Object>
 inline constexpr bool belongs_to_area_of_line(const Line &line,

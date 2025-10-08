@@ -2,6 +2,7 @@
 #define AGL_ALGORITHM_CENTER_IMPLEMENTATION_H
 
 #include "system/assert.h"
+#include "system/system_concept.h"
 #include "system/traits.h"
 #include <cmath>
 #include <numeric>
@@ -10,7 +11,7 @@ namespace agl::algorithm::dispatch {
 
 template<typename Figure,
          typename PointOut,
-         typename Group,
+         // typename Group,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct center{
@@ -19,24 +20,26 @@ struct center{
     }
 };
 
-template<typename Figure,
+template<c_polygon Figure,
          typename PointOut>
+    requires c_create_point_2d<PointOut, typename agl::traits::point::access_types<PointOut>::point>
 struct center<Figure,
               PointOut,
-              agl::group::polygons,
+              // agl::group::polygons,
               agl::system_coordinat::cartesian,
               2>{
     inline constexpr static auto get(const Figure &figure){
-        using Point = agl::traits::traits_polygon::type_property<Figure>::type_point;
-        using Type = agl::traits::traits_point::type_property<Point>::type_point;
-        const auto &points = agl::traits::traits_polygon::access_points<Figure>::get(figure);
+        using Point = agl::traits::polygon::access_types<Figure>::point;
+        using Type = agl::traits::point::access_types<Point>::point;
+        const auto &points = agl::traits::polygon::access_points<Figure>::get(figure);
         const auto sum = std::accumulate(points.begin(), points.end(), std::pair<Type, Type>(),
                                    [](std::pair<Type, Type> sum, auto item){
-            using x = agl::traits::traits_point::access_point<Point, 0>;
-            using y = agl::traits::traits_point::access_point<Point, 1>;
+            using x = agl::traits::point::access_point<Point, 0>;
+            using y = agl::traits::point::access_point<Point, 1>;
             return std::pair<Type, Type>(sum.first + x::get(item), sum.second + y::get(item));
         });
-        return Point{sum.first / points.size(), sum.second / points.size()};
+        return agl::traits::point::access_create<PointOut>::get(sum.first / points.size(),
+                                                                sum.second / points.size());
     }
 };
 
@@ -50,13 +53,13 @@ template<typename Figure,
          typename PointOut>
 inline constexpr auto center(const Figure &figure){
     using type_cs = traits::coordinate_system<Figure>::system;
-    using group = traits::group<Figure>::type_group;
+    // using group = traits::group<Figure>::type_group;
     constexpr auto dimension = traits::dimension<Figure>::value();
     static_assert(agl::assert::is_correct<type_cs>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
     return dispatch::center<Figure,
                             PointOut,
-                            group,
+                            // group,
                             type_cs,
                             dimension>::get(figure);
 }
