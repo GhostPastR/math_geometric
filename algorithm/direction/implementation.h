@@ -4,20 +4,32 @@
 #include <cmath>
 #include "algorithm/tag_algoritm.h"
 #include "system/assert.h"
+#include "system/system_concept.h"
 #include "system/traits.h"
 #include "algorithm/math_algorithm.h"
 
 namespace agl::algorithm::dispatch {
 
-template<typename Object1, typename Object2, typename ObjectOut, typename CoordinateSystem, std::size_t Dimension, typename TypeObjectOut>
+template<typename Object1,
+         typename Object2,
+         typename ObjectOut,
+         typename CoordinateSystem,
+         std::size_t Dimension,
+         typename TypeObjectOut>
 struct direction{
     inline constexpr static auto get(const Object1 &a, const Object2 &b){
         static_assert(false, "No 'direction' calculations have been implemented for these objects.");
     }
 };
 
-template<typename Point, typename ObjectOut>
-struct direction<Point, Point, ObjectOut, system_coordinat::cartesian, 2, direction_angle>{
+template<c_point_2d Point,
+         typename ObjectOut>
+struct direction<Point,
+                 Point,
+                 ObjectOut,
+                 system_coordinat::cartesian,
+                 2,
+                 direction_angle>{
     inline constexpr static auto get(const Point &a, const Point &b){
         ObjectOut temp(std::atan2(traits::point::access_point<Point, 0>::get(b) - traits::point::access_point<Point, 0>::get(a),
                               traits::point::access_point<Point, 1>::get(b) - traits::point::access_point<Point, 1>::get(a)));
@@ -29,15 +41,27 @@ struct direction<Point, Point, ObjectOut, system_coordinat::cartesian, 2, direct
     }
 };
 
-template<typename Point, typename ObjectOut>
-struct direction<Point, Point, ObjectOut, system_coordinat::cartesian, 2, direction_vector>{
+template<typename Point,
+         typename ObjectOut>
+struct direction<Point,
+                 Point,
+                 ObjectOut,
+                 system_coordinat::cartesian,
+                 2,
+                 direction_vector>{
     inline constexpr static auto get(const Point &a, const Point &b){
         static_assert(false, "Not implemented.");
     }
 };
 
-template<typename Point, typename ObjectOut>
-struct direction<Point, Point, ObjectOut, system_coordinat::cartesian, 3, direction_vector>{
+template<typename Point,
+         typename ObjectOut>
+struct direction<Point,
+                 Point,
+                 ObjectOut,
+                 system_coordinat::cartesian,
+                 3,
+                 direction_vector>{
     inline constexpr static auto get(const Point &a, const Point &b){
         static_assert(false, "Not implemented.");
     }
@@ -49,7 +73,9 @@ struct direction<Point, Point, ObjectOut, system_coordinat::cartesian, 3, direct
 
 namespace agl::algorithm::geometry {
 
-template<typename Object1, typename Object2, typename ObjectOut>
+template<typename Object1,
+         typename Object2,
+         typename ObjectOut>
 inline constexpr auto direction(const Object1 &a, const Object2 &b){
     using type_cs1 = traits::coordinate_system<Object1>::system;
     using type_cs2 = traits::coordinate_system<Object2>::system;

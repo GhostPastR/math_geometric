@@ -12,11 +12,6 @@ struct tag<agl::line::straight_line<Type,CoordinateSystem>>{
 };
 
 template<typename Type, typename CoordinateSystem>
-struct group<agl::line::straight_line<Type,CoordinateSystem>>{
-    using type_group = agl::group::lines;
-};
-
-template<typename Type, typename CoordinateSystem>
 struct coordinate_system<agl::line::straight_line<Type,CoordinateSystem>>{
     using system = CoordinateSystem;
 };

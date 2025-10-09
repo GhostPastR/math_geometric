@@ -174,7 +174,6 @@ void TestAlgorithm::test_midplane()
         auto value = agl::algorithm::midplane(arc);
         QVERIFY(value == agl::point::decart::point2d<double>(4.535534, -2.535534));
     }
-
 }
 
 void TestAlgorithm::test_intersection()
@@ -584,11 +583,11 @@ void TestAlgorithm::test_located_inside()
     {
         {
             agl::circle::circle<agl::point::decart::point2d<double>, double> circle{{1.,1.}, 10.};
-            QVERIFY(agl::algorithm::located_inside(circle, agl::point::decart::point2d<double>{0., 0.}));
+            QVERIFY(agl::algorithm::contain(circle, agl::point::decart::point2d<double>{0., 0.}));
         }
         {
             agl::circle::circle<agl::point::decart::point2d<double>, double> circle{{1.,1.}, 10.};
-            QVERIFY(!agl::algorithm::located_inside(circle, agl::point::decart::point2d<double>{100., 100.}));
+            QVERIFY(!agl::algorithm::contain(circle, agl::point::decart::point2d<double>{100., 100.}));
         }
     }
 }
@@ -962,11 +961,4 @@ void TestAlgorithm::point_coupling()
         }
 
     }
-
-
-
-
-
-
-
 }

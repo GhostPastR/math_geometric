@@ -13,11 +13,6 @@ struct tag<agl::line::line_section<Point>>{
 };
 
 template<typename Point>
-struct group<agl::line::line_section<Point>>{
-    using type_group = agl::group::lines;
-};
-
-template<typename Point>
 struct coordinate_system<agl::line::line_section<Point>>{
     using system = coordinate_system<Point>::system;;
 };

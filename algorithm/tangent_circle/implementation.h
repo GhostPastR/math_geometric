@@ -8,7 +8,7 @@
 #include "algorithm/distance/interface.h"
 #include "algorithm/direction/interface.h"
 #include "algorithm/create_point/interface.h"
-#include "algorithm/located_inside/interface.h"
+#include "algorithm/contain/interface.h"
 
 namespace agl::algorithm::dispatch {
 
@@ -124,7 +124,7 @@ struct tangent_circle<Circle,
         using Point = agl::traits::line_section::access_types<LineSectionOut>::point;
         const auto &center = traits::circle::access_center<Circle>::get(circle);
         const auto &radius = traits::circle::access_radius<Circle>::get(circle);
-        if(agl::algorithm::located_inside(circle, object)){
+        if(agl::algorithm::contain(circle, object)){
             return {};
         }
         auto angle = agl::algorithm::direction<Type>(center, object);

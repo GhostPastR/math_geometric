@@ -70,8 +70,6 @@ qt_add_executable(math_geometric
     system/assert.h
     testalgorithm.h testalgorithm.cpp
     algorithm/distance/implementation_d2.h
-    algorithm/located_inside/implementation.h algorithm/located_inside/interface.h
-    algorithm/located_inside/implementation_circle.h
     structs/geometric/polygon.h
     algorithm/is_correct_polygon/implementation.h algorithm/is_correct_polygon/interface.h
     algorithm/center/implementation.h algorithm/center/interface.h

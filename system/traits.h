@@ -15,11 +15,6 @@ struct tag{
 };
 
 template<typename Object>
-struct group{
-    using type_group = undefined;
-};
-
-template<typename Object>
 struct coordinate_system{
     using system = undefined;
 };
@@ -113,6 +108,15 @@ struct access_radius{
         static_assert(false, "Access is not implemented for this object.");
     }
 };
+
+template<typename Object>
+struct access_create{
+    template<typename Point, typename Radius>
+    inline constexpr static auto get(Point point, Radius radius){
+        static_assert(false, "Access is not implemented for this object.");
+    }
+};
+
 
 }
 
@@ -212,12 +216,6 @@ struct access_create{
 
 
 namespace polygon {
-
-template<typename Object>
-struct access_polygon{
-    using regular = std::false_type;
-    using type = undefined;
-};
 
 template<typename Object>
 struct access_types{

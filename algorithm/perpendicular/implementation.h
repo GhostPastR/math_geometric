@@ -1,6 +1,7 @@
 #ifndef AGL_ALGORITHM_PERPENDICULAR_IMPLEMENTATION_H
 #define AGL_ALGORITHM_PERPENDICULAR_IMPLEMENTATION_H
 
+#include "system/system_concept.h"
 #include "system/traits.h"
 #include "algorithm/equation_of_line/interface.h"
 #include <cmath>
@@ -10,7 +11,6 @@ namespace agl::algorithm::dispatch {
 template<typename Figure,
          typename Point,
          typename LineOut,
-         typename Group,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct perpendicular{
@@ -20,18 +20,17 @@ struct perpendicular{
 };
 
 //Переделать!!!
-template<typename Figure,
-         typename Point,
-         typename LineOut>
-struct perpendicular<Figure,
+template<c_group_line Line,
+         c_point_2d Point,
+         c_straight_line LineOut>
+struct perpendicular<Line,
                      Point,
                      LineOut,
-                     agl::group::lines,
                      agl::system_coordinat::cartesian,
                      2>{
-    inline constexpr static auto get(const Figure &figure, const Point &point){
+    inline constexpr static auto get(const Line &line, const Point &point){
         using namespace traits::point;
-        const auto [a,b,c] = agl::algorithm::equation_of_line(figure);
+        const auto [a,b,c] = agl::algorithm::equation_of_line(line);
         const auto x = agl::traits::point::access_point<Point, 0>::get(point);
         const auto y = agl::traits::point::access_point<Point, 1>::get(point);
 
@@ -52,7 +51,6 @@ template<typename Figure,
 inline constexpr auto perpendicular(const Figure &figure, const Point &point){
     using type_cs1 = traits::coordinate_system<Figure>::system;
     using type_cs2 = traits::coordinate_system<Point>::system;
-    using group = traits::group<Figure>::type_group;
     constexpr auto dimension1 = traits::dimension<Figure>::value();
     constexpr auto dimension2 = traits::dimension<Point>::value();
 
@@ -62,7 +60,6 @@ inline constexpr auto perpendicular(const Figure &figure, const Point &point){
     return dispatch::perpendicular<Figure,
                                    Point,
                                    LineOut,
-                                   group,
                                    type_cs1,
                                    dimension1>::get(figure, point);
 }

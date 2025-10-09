@@ -4,6 +4,7 @@
 #include "algorithm/matrix_algorithm.h"
 #include "algorithm/tag_algoritm.h"
 #include "system/assert.h"
+#include "system/system_concept.h"
 #include "system/traits.h"
 #include <cmath>
 
@@ -12,7 +13,6 @@ namespace agl::algorithm::dispatch {
 template<typename Object,
          typename ObjectDirection,
          typename Point,
-         typename Group,
          typename CoordinateSystem,
          std::size_t Dimension,
          typename TypeObjectDirection>
@@ -23,55 +23,52 @@ struct rotate{
 };
 
 //метод преобразует текущие координаты относительно заданной точки и угла поворота
-template<typename Object,
+template<c_point_2d PointIn,
          typename ObjectDirection,
-         typename Point>
-struct rotate<Object,
+         c_point_2d Point>
+struct rotate<PointIn,
               ObjectDirection,
               Point,
-              agl::group::points,
               system_coordinat::cartesian,
               2,
               direction_angle>{
-    inline constexpr static auto get(const Object &object, const ObjectDirection &direction, const Point &point){
-        using Type = traits::point::access_types<Object>::point;
-        const auto x = traits::point::access_point<Point, 0>::get(object);
-        const auto y = traits::point::access_point<Point, 1>::get(object);
+    inline constexpr static auto get(const PointIn &point_in, const ObjectDirection &direction, const Point &point){
+        using Type = traits::point::access_types<PointIn>::point;
+        const auto x = traits::point::access_point<Point, 0>::get(point_in);
+        const auto y = traits::point::access_point<Point, 1>::get(point_in);
         const auto rx = traits::point::access_point<Point, 0>::get(point);
         const auto ry = traits::point::access_point<Point, 1>::get(point);
 
         const auto sinAngle = -std::sin(traits::value<ObjectDirection>::get(direction));
         const auto cosAngle = std::cos(traits::value<ObjectDirection>::get(direction));
         auto vector = matrix_algo::mul<Type, 2>({cosAngle, -sinAngle, sinAngle, cosAngle}, {x - rx, y - ry});
-        return Object{vector[0] + rx, vector[1] + ry};
+        return agl::traits::point::access_create<PointIn>::get(vector[0] + rx, vector[1] + ry);
     }
 };
 
-template<typename Object,
+template<c_polygon Polygon,
          typename ObjectDirection,
          typename Point>
-struct rotate<Object,
+struct rotate<Polygon,
               ObjectDirection,
               Point,
-              agl::group::polygons,
               system_coordinat::cartesian,
               2,
               direction_angle>{
-    inline constexpr static auto get(const Object &object, const ObjectDirection &direction, const Point &point){
-        using PointPolygon = agl::traits::polygon::access_types<Object>::point;
-        const auto &points = agl::traits::polygon::access_points<Object>::get(object);
+    inline constexpr static auto get(const Polygon &polygon, const ObjectDirection &direction, const Point &point){
+        using PointPolygon = agl::traits::polygon::access_types<Polygon>::point;
+        const auto &points = agl::traits::polygon::access_points<Polygon>::get(polygon);
         std::vector<PointPolygon> new_points;
         new_points.reserve(points.size());
         std::ranges::transform(points, std::back_inserter(new_points), [point, direction](const auto &item){
             return rotate<PointPolygon,
                           ObjectDirection,
                           Point,
-                          agl::group::points,
                           system_coordinat::cartesian,
                           2,
                           direction_angle>::get(item, direction, point);
         });
-        return agl::traits::polygon::access_create<Object>::get(std::move(new_points));
+        return agl::traits::polygon::access_create<Polygon>::get(std::move(new_points));
     }
 };
 
@@ -98,7 +95,6 @@ template<typename Object,
 inline constexpr auto rotate(const Object &object, const ObjectDirection &direction, const Point &point){
     using type_coordinate_system = traits::coordinate_system<Object>::system;
     using direction_object = direction_object<ObjectDirection>::type_direction_object;
-    using group = traits::group<Object>::type_group;
     constexpr auto dimension = traits::dimension<Object>::value();
 
     static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
@@ -108,7 +104,6 @@ inline constexpr auto rotate(const Object &object, const ObjectDirection &direct
     return dispatch::rotate<Object,
                             ObjectDirection,
                             Point,
-                            group,
                             type_coordinate_system,
                             dimension,
                             direction_object>::get(object, direction, point);

@@ -12,12 +12,6 @@ struct tag<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
 };
 
 template<typename PointCenter, typename TypeRadius, typename Angle>
-struct group<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
-    using type_group = agl::group::elements_circles;
-};
-
-
-template<typename PointCenter, typename TypeRadius, typename Angle>
 struct coordinate_system<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
     using system = coordinate_system<PointCenter>::system;
 };

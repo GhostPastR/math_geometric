@@ -3,6 +3,7 @@
 
 #include "algorithm/tag_algoritm.h"
 #include "system/assert.h"
+#include "system/system_concept.h"
 #include "system/traits.h"
 #include <cmath>
 
@@ -21,10 +22,10 @@ struct create_point{
     }
 };
 
-template<typename Point,
+template<c_point_2d Point,
          typename Turning,
          typename Range,
-         typename NewPoint>
+         c_create_point_2d NewPoint>
 struct create_point<Point,
                     Turning,
                     Range,
@@ -33,12 +34,11 @@ struct create_point<Point,
                     2,
                     direction_angle>{
     inline constexpr static auto get(const Point &point, const Turning &turning, const Range &range){
-        return NewPoint{traits::point::access_point<Point, 0>::get(point)
-                            + traits::value<Range>::get(range)
-                                  * std::sin(traits::value<Turning>::get(turning)),
-                        traits::point::access_point<Point, 1>::get(point)
-                            + traits::value<Range>::get(range)
-                                  * std::cos(traits::value<Turning>::get(turning))};
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
+        const auto &r = agl::traits::value<Range>::get(range);
+        const auto &t = agl::traits::value<Turning>::get(turning);
+        return agl::traits::point::access_create<NewPoint>::get(x + r * std::sin(t), y + r * std::cos(t));
     }
 };
 

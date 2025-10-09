@@ -37,7 +37,6 @@ auto normalized(const std::array<Type, N> &array){
 namespace agl::algorithm::dispatch::d2::default_data {
 
 template<typename Object,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct equation_of_line{
@@ -46,9 +45,8 @@ struct equation_of_line{
     }
 };
 
-template<typename Object>
+template<c_point_2d Object>
 struct equation_of_line<Object,
-                        agl::tag::point::point,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Object &a, const Object &b){
@@ -71,9 +69,8 @@ struct equation_of_line<Object,
 
 namespace agl::algorithm::dispatch::d2::out_data {
 
-template<typename Object,
+template<c_point_2d Object,
          typename OutLine,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct equation_of_line{
@@ -82,16 +79,14 @@ struct equation_of_line{
     }
 };
 
-template<typename Object,
+template<c_point_2d Object,
          typename OutLine>
 struct equation_of_line<Object,
                         OutLine,
-                        agl::tag::point::point,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Object &p1, const Object &p2){
         const auto [a,b,c] = default_data::equation_of_line<Object,
-                                                        agl::tag::point::point,
                                                         system_coordinat::cartesian,
                                                         2>::get(p1, p2);
         return agl::traits::straight_line::access_create<OutLine>::get(a,b,c);
@@ -107,7 +102,6 @@ struct equation_of_line<Object,
 namespace agl::algorithm::dispatch::d1::default_data {
 
 template<typename Figure,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct equation_of_line{
@@ -116,9 +110,8 @@ struct equation_of_line{
     }
 };
 
-template<typename Figure>
+template<c_straight_line_2d Figure>
 struct equation_of_line<Figure,
-                        agl::tag::line::straight_line,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
@@ -131,9 +124,8 @@ struct equation_of_line<Figure,
     }
 };
 
-template<typename Figure>
+template<c_half_line_2d Figure>
 struct equation_of_line<Figure,
-                        agl::tag::line::half_line,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
@@ -145,15 +137,13 @@ struct equation_of_line<Figure,
         using Type = agl::traits::point::access_types<Point>::point;
         const auto point = agl::algorithm::create_point(start, direction, 1.);
         return agl::algorithm::dispatch::d2::default_data::equation_of_line<Point,
-                                                                            agl::tag::point::point,
                                                                             system_coordinat::cartesian,
                                                                             2>::get(start, point);
     }
 };
 
-template<typename Figure>
+template<c_line_section Figure>
 struct equation_of_line<Figure,
-                        agl::tag::line::line_section,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
@@ -172,7 +162,6 @@ namespace agl::algorithm::dispatch::d1::out_data {
 
 template<typename Figure,
          typename OutLine,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct equation_of_line{
@@ -181,11 +170,10 @@ struct equation_of_line{
     }
 };
 
-template<typename Figure,
+template<c_straight_line_2d Figure,
          typename OutLine>
 struct equation_of_line<Figure,
                         OutLine,
-                        agl::tag::line::straight_line,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
@@ -196,32 +184,28 @@ struct equation_of_line<Figure,
     }
 };
 
-template<typename Figure,
+template<c_half_line_2d Figure,
          typename OutLine>
 struct equation_of_line<Figure,
                         OutLine,
-                        agl::tag::line::half_line,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
         const auto [a,b,c] = default_data::equation_of_line<Figure,
-                                                              agl::tag::line::half_line,
                                                               system_coordinat::cartesian,
                                                               2>::get(figure);
         return agl::traits::straight_line::access_create<OutLine>::get(a,b,c);
     }
 };
 
-template<typename Figure,
+template<c_line_section Figure,
          typename OutLine>
 struct equation_of_line<Figure,
                         OutLine,
-                        agl::tag::line::line_section,
                         system_coordinat::cartesian,
                         2>{
     inline constexpr static auto get(const Figure &figure){
         const auto [a,b,c] = default_data::equation_of_line<Figure,
-                                                              agl::tag::line::line_section,
                                                               system_coordinat::cartesian,
                                                               2>::get(figure);
         return agl::traits::straight_line::access_create<OutLine>::get(0,0,0);
@@ -235,66 +219,54 @@ namespace agl::algorithm::geometry {
 
 template<typename Figure>
 inline constexpr auto equation_of_line(const Figure &figure){
-    using tag_object = traits::tag<Figure>::type_tag;
     using type_coordinate_system = traits::coordinate_system<Figure>::system;
     constexpr auto dimension = traits::dimension<Figure>::value();
 
-    static_assert(agl::assert::is_correct<tag_object>(), "Error!");
     static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
     return dispatch::d1::default_data::equation_of_line<Figure,
-                                                        tag_object,
                                                         type_coordinate_system,
                                                         dimension>::get(figure);
 }
 
 template<typename Object>
 inline constexpr auto equation_of_line(const Object &a, const Object &b){
-    using tag_object = traits::tag<Object>::type_tag;
     using type_coordinate_system = traits::coordinate_system<Object>::system;
     constexpr auto dimension = traits::dimension<Object>::value();
 
-    static_assert(agl::assert::is_correct<tag_object>(), "Error!");
     static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
     return dispatch::d2::default_data::equation_of_line<Object,
-                                                        tag_object,
                                                         type_coordinate_system,
                                                         dimension>::get(a, b);
 }
 
 template<typename Figure, typename OutLine>
 inline constexpr auto equation_of_line(const Figure &figure){
-    using tag_object = traits::tag<Figure>::type_tag;
     using type_coordinate_system = traits::coordinate_system<Figure>::system;
     constexpr auto dimension = traits::dimension<Figure>::value();
 
-    static_assert(agl::assert::is_correct<tag_object>(), "Error!");
     static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
     return dispatch::d1::out_data::equation_of_line<Figure,
                                                     OutLine,
-                                                    tag_object,
                                                     type_coordinate_system,
                                                     dimension>::get(figure);
 }
 
 template<typename Object, typename OutLine>
 inline constexpr auto equation_of_line(const Object &a, const Object &b){
-    using tag_object = traits::tag<Object>::type_tag;
     using type_coordinate_system = traits::coordinate_system<Object>::system;
     constexpr auto dimension = traits::dimension<Object>::value();
 
-    static_assert(agl::assert::is_correct<tag_object>(), "Error!");
     static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
     return dispatch::d2::out_data::equation_of_line<Object,
                                                     OutLine,
-                                                    tag_object,
                                                     type_coordinate_system,
                                                     dimension>::get(a, b);
 }

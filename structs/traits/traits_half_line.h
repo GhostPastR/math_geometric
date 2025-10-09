@@ -13,11 +13,6 @@ struct tag<agl::line::half_line<Point, Angle>>{
 };
 
 template<typename Point, typename Angle>
-struct group<agl::line::half_line<Point, Angle>>{
-    using type_group = agl::group::lines;
-};
-
-template<typename Point, typename Angle>
 struct coordinate_system<agl::line::half_line<Point, Angle>>{
     using system = coordinate_system<Point>::system;;
 };

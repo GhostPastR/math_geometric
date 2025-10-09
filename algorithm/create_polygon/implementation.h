@@ -25,8 +25,8 @@ struct create_polygon{
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::rectangle,
@@ -47,8 +47,8 @@ struct create_polygon<PolygonOut,
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::rectangle,
@@ -75,8 +75,8 @@ struct create_polygon<PolygonOut,
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::regular,
@@ -97,8 +97,8 @@ struct create_polygon<PolygonOut,
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::regular,
@@ -119,8 +119,8 @@ struct create_polygon<PolygonOut,
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
@@ -149,8 +149,8 @@ struct create_polygon<PolygonOut,
 };
 
 //warning
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance,
          typename Angle>
 struct create_polygon<PolygonOut,
@@ -176,8 +176,8 @@ struct create_polygon<PolygonOut,
 };
 
 //warning
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance,
          typename Angle>
 struct create_polygon<PolygonOut,
@@ -204,8 +204,8 @@ struct create_polygon<PolygonOut,
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
@@ -226,8 +226,8 @@ struct create_polygon<PolygonOut,
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance,
          typename Angle>
 struct create_polygon<PolygonOut,
@@ -252,8 +252,8 @@ struct create_polygon<PolygonOut,
 
 
 //throw
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
@@ -276,8 +276,8 @@ struct create_polygon<PolygonOut,
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance,
          typename Angle>
 struct create_polygon<PolygonOut,
@@ -301,8 +301,8 @@ struct create_polygon<PolygonOut,
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
@@ -323,8 +323,8 @@ struct create_polygon<PolygonOut,
     }
 };
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::regular,
@@ -346,8 +346,8 @@ struct create_polygon<PolygonOut,
 };
 
 
-template<typename PolygonOut,
-         typename Point,
+template<c_create_polygon PolygonOut,
+         c_point_2d Point,
          typename Distance>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::regular,

@@ -12,31 +12,27 @@ namespace agl::algorithm::cartesian::d2::dispatch {
 
 template<typename Figure1,
          typename Figure2,
-         typename PointOut,
-         typename Group1,
-         typename Group2>
+         typename PointOut>
 struct intersection{
     inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2){
         static_assert(false, "No '' calculations have been implemented for these objects.");
     }
 };
 
-template<typename Figure1,
-         typename Figure2,
-         typename PointOut>
-struct intersection<Figure1,
-                    Figure2,
-                    PointOut,
-                    agl::group::lines,
-                    agl::group::lines>{
-    inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2) -> std::optional<PointOut>{
-        const auto [a1,b1,c1] = agl::algorithm::equation_of_line(figure1);
-        const auto [a2,b2,c2] = agl::algorithm::equation_of_line(figure2);
+template<c_group_line Line1,
+         c_group_line Line2,
+         c_point_2d PointOut>
+struct intersection<Line1,
+                    Line2,
+                    PointOut>{
+    inline constexpr static auto get(const Line1 &line1, const Line2 &line2) -> std::optional<PointOut>{
+        const auto [a1,b1,c1] = agl::algorithm::equation_of_line(line1);
+        const auto [a2,b2,c2] = agl::algorithm::equation_of_line(line2);
         if(const auto c = algorithm::determine(a1, a2, b1, b2); !algorithm::compare(c, decltype(c){})){
-            auto point = PointOut{algorithm::determine(b1, b2, c1, c2) / c,
-                                  algorithm::determine(c1, c2, a1, a2) / c};
-            if(agl::algorithm::belongs_to_area_of_line(figure1, point)
-                && agl::algorithm::belongs_to_area_of_line(figure2, point)){
+            auto point = agl::traits::point::access_create<PointOut>::get(algorithm::determine(b1, b2, c1, c2) / c,
+                                                                          algorithm::determine(c1, c2, a1, a2) / c);
+            if(agl::algorithm::belongs_to_area_of_line(line1, point)
+                && agl::algorithm::belongs_to_area_of_line(line2, point)){
                 return point;
             }
         }
@@ -44,24 +40,22 @@ struct intersection<Figure1,
     }
 };
 
-template<typename Figure1,
-         typename Figure2,
-         typename PointOut>
-struct intersection<Figure1,
-                    Figure2,
-                    PointOut,
-                    agl::group::elements_circles,
-                    agl::group::lines>{
-    inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2)
+template<c_group_circle ElCircle,
+         c_group_line Line,
+         c_point_2d PointOut>
+struct intersection<ElCircle,
+                    Line,
+                    PointOut>{
+    inline constexpr static auto get(const ElCircle &el_circle, const Line &line)
         -> std::pair<std::optional<PointOut>, std::optional<PointOut>>{
-        using Point = agl::traits::circle::access_types<Figure1>::center;
+        using Point = agl::traits::circle::access_types<ElCircle>::center;
         using Type = agl::traits::point::access_types<Point>::point;
-        const auto &center = traits::circle::access_center<Figure1>::get(figure1);
-        const auto &radius = traits::circle::access_radius<Figure1>::get(figure1);
+        const auto &center = traits::circle::access_center<ElCircle>::get(el_circle);
+        const auto &radius = traits::circle::access_radius<ElCircle>::get(el_circle);
         const auto &x = traits::point::access_point<Point, 0>::get(center);
         const auto &y = traits::point::access_point<Point, 1>::get(center);
 
-        const auto [a,b,c] = agl::algorithm::equation_of_line(figure2);
+        const auto [a,b,c] = agl::algorithm::equation_of_line(line);
         const auto value = c + b * y;
         const auto roots = algorithm::get_roots_equation(algorithm::quadratic<Type>(
             a * a + b * b,
@@ -75,11 +69,11 @@ struct intersection<Figure1,
                 points.second = PointOut(roots.second.value(), (-a * roots.second.value() - c) / b);
             }
         }
-        const bool is_point1 = points.first.has_value() && agl::algorithm::contain(figure2, points.first.value());
+        const bool is_point1 = points.first.has_value() && agl::algorithm::contain(line, points.first.value());
         if(!is_point1){
             points.first = std::nullopt;
         }
-        const bool is_point2 = points.second.has_value() && agl::algorithm::contain(figure2, points.second.value());
+        const bool is_point2 = points.second.has_value() && agl::algorithm::contain(line, points.second.value());
         if(!is_point2){
             points.second = std::nullopt;
         }
@@ -91,25 +85,23 @@ struct intersection<Figure1,
     }
 };
 
-template<typename Figure1,
-         typename Figure2,
-         typename PointOut>
-struct intersection<Figure1,
-                    Figure2,
-                    PointOut,
-                    agl::group::elements_circles,
-                    agl::group::elements_circles>{
-    inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2)
+template<c_group_circle ElCircle1,
+         c_group_circle ElCircle2,
+         c_point_2d PointOut>
+struct intersection<ElCircle1,
+                    ElCircle2,
+                    PointOut>{
+    inline constexpr static auto get(const ElCircle1 &el_circle1, const ElCircle2 &el_circle2)
         -> std::pair<std::optional<PointOut>, std::optional<PointOut>>{
-        using Point1 = agl::traits::circle::access_types<Figure1>::center;
-        const auto &center1 = traits::circle::access_center<Figure1>::get(figure1);
-        const auto &radius1 = traits::circle::access_radius<Figure1>::get(figure1);
+        using Point1 = agl::traits::circle::access_types<ElCircle1>::center;
+        const auto &center1 = traits::circle::access_center<ElCircle1>::get(el_circle1);
+        const auto &radius1 = traits::circle::access_radius<ElCircle1>::get(el_circle1);
         const auto &x1 = traits::point::access_point<Point1, 0>::get(center1);
         const auto &y1 = traits::point::access_point<Point1, 1>::get(center1);
 
-        using Point2 = agl::traits::circle::access_types<Figure2>::center;
-        const auto &center2 = traits::circle::access_center<Figure2>::get(figure2);
-        const auto &radius2 = traits::circle::access_radius<Figure2>::get(figure2);
+        using Point2 = agl::traits::circle::access_types<ElCircle2>::center;
+        const auto &center2 = traits::circle::access_center<ElCircle2>::get(el_circle2);
+        const auto &radius2 = traits::circle::access_radius<ElCircle2>::get(el_circle2);
         const auto &x2 = traits::point::access_point<Point2, 0>::get(center2);
         const auto &y2 = traits::point::access_point<Point2, 1>::get(center2);
 
@@ -137,24 +129,20 @@ struct intersection<Figure1,
     }
 };
 
-template<typename Figure1,
-         typename Figure2,
-         typename PointOut>
-struct intersection<Figure1,
-                    Figure2,
-                    PointOut,
-                    agl::group::polygons,
-                    agl::group::lines>{
-    inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2) -> std::vector<PointOut>{
-        using Point = agl::traits::polygon::access_types<Figure1>::point;
-        using s_line = agl::traits::polygon::access_line_section<Figure1>::type;
-        const auto lines = agl::algorithm::get_lines<s_line>(figure1);
-        auto temp = lines | std::ranges::views::transform([figure2](const auto &item){
+template<c_polygon Polygon,
+         c_group_line Line,
+         c_point_2d PointOut>
+struct intersection<Polygon,
+                    Line,
+                    PointOut>{
+    inline constexpr static auto get(const Polygon &polygon, const Line &line) -> std::vector<PointOut>{
+        using Point = agl::traits::polygon::access_types<Polygon>::point;
+        using s_line = agl::traits::polygon::access_line_section<Polygon>::type;
+        const auto lines = agl::algorithm::get_lines<s_line>(polygon);
+        auto temp = lines | std::ranges::views::transform([line](const auto &item){
                         return agl::algorithm::cartesian::d2::dispatch::intersection<s_line,
-                                                                                     Figure2,
-                                                                                     PointOut,
-                                                                                     agl::group::lines,
-                                                                                     agl::group::lines>::get(item, figure2);
+                                                                                     Line,
+                                                                                     PointOut>::get(item, line);
                     })
                     | std::ranges::views::filter([](const auto &point){ return point.has_value(); })
                     | std::ranges::views::transform([](const auto &p){ return p.value(); });
@@ -172,30 +160,28 @@ struct intersection<Figure1,
     }
 };
 
-template<typename Figure1,
-         typename Figure2,
-         typename PointOut>
-struct intersection<Figure1,
-                    Figure2,
-                    PointOut,
-                    agl::group::polygons,
-                    agl::group::polygons>{
-    inline constexpr static auto get(const Figure1 &figure1, const Figure2 &figure2) -> std::vector<PointOut>{
-        // //Функция определяет пересикает ли полигон другой полигон
-        // template<c_polugon Polygon>
-        // constexpr bool polygon_intersect_polygon(const Polygon &polygon1, const Polygon &polygon2){
-        //     auto lines1 = get_lines(polygon1);
-        //     auto lines2 = get_lines(polygon2);
-        //     return std::ranges::any_of(lines1, [&lines2](const auto &line1){
-        //         return std::ranges::any_of(lines2, [&line1](const auto &line2){
-        //             return line_algo::intersection_line(line1, line2).has_value();
-        //         });
-        //     });
-        // }
+// template<c_group_polygon Polygon1,
+//          c_group_polygon Polygon2,
+//          typename PointOut>
+// struct intersection<Polygon1,
+//                     Polygon2,
+//                     PointOut>{
+//     inline constexpr static auto get(const Polygon1 &polygon1, const Polygon2 &polygon2) -> std::vector<PointOut>{
+//         // //Функция определяет пересикает ли полигон другой полигон
+//         // template<c_polugon Polygon>
+//         // constexpr bool polygon_intersect_polygon(const Polygon &polygon1, const Polygon &polygon2){
+//         //     auto lines1 = get_lines(polygon1);
+//         //     auto lines2 = get_lines(polygon2);
+//         //     return std::ranges::any_of(lines1, [&lines2](const auto &line1){
+//         //         return std::ranges::any_of(lines2, [&line1](const auto &line2){
+//         //             return line_algo::intersection_line(line1, line2).has_value();
+//         //         });
+//         //     });
+//         // }
 
-        return PointOut{};
-    }
-};
+//         return PointOut{};
+//     }
+// };
 
 }
 
@@ -204,15 +190,11 @@ namespace agl::algorithm::geometry::cartesian {
 
 template<typename Figure1,
          typename Figure2,
-         typename PointOut,
-         typename Group1,
-         typename Group2>
+         typename PointOut>
 inline constexpr auto intersection(const Figure1 &figure1, const Figure2 &figure2){
     return agl::algorithm::cartesian::d2::dispatch::intersection<Figure1,
                                                                  Figure2,
-                                                                 PointOut,
-                                                                 Group1,
-                                                                 Group2>::get(figure1, figure2);
+                                                                 PointOut>::get(figure1, figure2);
 }
 
 }

@@ -11,7 +11,6 @@ namespace agl::algorithm::dispatch {
 
 template<typename Figure,
          typename PointOut,
-         // typename Group,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct center{
@@ -21,11 +20,9 @@ struct center{
 };
 
 template<c_polygon Figure,
-         typename PointOut>
-    requires c_create_point_2d<PointOut, typename agl::traits::point::access_types<PointOut>::point>
+         c_point_2d PointOut>
 struct center<Figure,
               PointOut,
-              // agl::group::polygons,
               agl::system_coordinat::cartesian,
               2>{
     inline constexpr static auto get(const Figure &figure){
@@ -53,13 +50,11 @@ template<typename Figure,
          typename PointOut>
 inline constexpr auto center(const Figure &figure){
     using type_cs = traits::coordinate_system<Figure>::system;
-    // using group = traits::group<Figure>::type_group;
     constexpr auto dimension = traits::dimension<Figure>::value();
     static_assert(agl::assert::is_correct<type_cs>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
     return dispatch::center<Figure,
                             PointOut,
-                            // group,
                             type_cs,
                             dimension>::get(figure);
 }

@@ -16,15 +16,24 @@ namespace agl::algorithm::dispatch::d2::point_to_object {
 
 namespace dispatch {
 
-template<typename Object1, typename Object2, typename Tag, typename CoordinateSystem, std::size_t Dimension>
+template<typename Object1,
+         typename Object2,
+         typename Tag,
+         typename CoordinateSystem,
+         std::size_t Dimension>
 struct distance{
     inline constexpr static auto get(const Object1 &point, const Object2 &object){
         static_assert(false, "No 'distance' calculations have been implemented for these points.");
     }
 };
 
-template<typename Object1, typename Object2>
-struct distance<Object1, Object2, agl::tag::line::straight_line, agl::system_coordinat::cartesian, 2>{
+template<typename Object1,
+         typename Object2>
+struct distance<Object1,
+                Object2,
+                agl::tag::line::straight_line,
+                agl::system_coordinat::cartesian,
+                2>{
     inline constexpr static auto get(const Object1 &point, const Object2 &object){
         const auto a = agl::traits::straight_line::access_parameter<Object2, 0>::get(object);
         const auto b = agl::traits::straight_line::access_parameter<Object2, 1>::get(object);
@@ -35,8 +44,13 @@ struct distance<Object1, Object2, agl::tag::line::straight_line, agl::system_coo
     }
 };
 
-template<typename Object1, typename Object2>
-struct distance<Object1, Object2, agl::tag::line::half_line, agl::system_coordinat::cartesian, 2>{
+template<typename Object1,
+         typename Object2>
+struct distance<Object1,
+                Object2,
+                agl::tag::line::half_line,
+                agl::system_coordinat::cartesian,
+                2>{
     inline constexpr static auto get(const Object1 &point, const Object2 &object){
         using str_line = agl::traits::half_line::access_straight_line<Object2>::type;
         const auto line = agl::algorithm::equation_of_line<str_line>(object);
@@ -54,8 +68,13 @@ struct distance<Object1, Object2, agl::tag::line::half_line, agl::system_coordin
     }
 };
 
-template<typename Object1, typename Object2>
-struct distance<Object1, Object2, agl::tag::line::line_section, agl::system_coordinat::cartesian, 2>{
+template<typename Object1,
+         typename Object2>
+struct distance<Object1,
+                Object2,
+                agl::tag::line::line_section,
+                agl::system_coordinat::cartesian,
+                2>{
     inline constexpr static auto get(const Object1 &point, const Object2 &object){
         using str_line = agl::traits::line_section::access_straight_line<Object2>::type;
         const auto line = agl::algorithm::equation_of_line<str_line>(object);
@@ -77,7 +96,11 @@ struct distance<Object1, Object2, agl::tag::line::line_section, agl::system_coor
 
 }
 
-template<typename Object1, typename Object2, typename Tag, typename CoordinateSystem, std::size_t Dimension>
+template<typename Object1,
+         typename Object2,
+         typename Tag,
+         typename CoordinateSystem,
+         std::size_t Dimension>
 inline constexpr auto distance(const Object1 &point, const Object2 &object){
     return agl::algorithm::dispatch::d2::point_to_object::dispatch::distance<
         Object1, Object2, Tag, CoordinateSystem, Dimension>::get(point, object);

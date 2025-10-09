@@ -8,7 +8,9 @@ namespace agl::algorithm::dispatch::d2::distance_point_algo {
 
 namespace dispatch {
 
-template<typename Point, typename CoordinateSystem, std::size_t Dimension>
+template<typename Point,
+         typename CoordinateSystem,
+         std::size_t Dimension>
 struct distance{
     inline constexpr static auto get(const Point &a, const Point &b){
         static_assert(false, "No 'distance' calculations have been implemented for these points.");
@@ -16,7 +18,9 @@ struct distance{
 };
 
 template<typename Point>
-struct distance<Point, system_coordinat::cartesian, 2>{
+struct distance<Point,
+                system_coordinat::cartesian,
+                2>{
     inline constexpr static auto get(const Point &a, const Point &b){
         return std::pow(traits::point::access_point<Point, 0>::get(b) - traits::point::access_point<Point, 0>::get(a), 2)
         + std::pow(traits::point::access_point<Point, 1>::get(b) - traits::point::access_point<Point, 1>::get(a), 2);
@@ -24,7 +28,9 @@ struct distance<Point, system_coordinat::cartesian, 2>{
 };
 
 template<typename Point>
-struct distance<Point, system_coordinat::cartesian, 3>{
+struct distance<Point,
+                system_coordinat::cartesian,
+                3>{
     inline constexpr static auto get(const Point &a, const Point &b){
         using acc_point = traits::point::access_point<Point, 2>;
         return distance<Point, system_coordinat::cartesian, 2>::get(a, b) + std::pow(acc_point::get(b) - acc_point::get(a), 2);
@@ -32,7 +38,9 @@ struct distance<Point, system_coordinat::cartesian, 3>{
 };
 
 template<typename Point>
-struct distance<Point, system_coordinat::polar, 2>{
+struct distance<Point,
+                system_coordinat::polar,
+                2>{
     inline constexpr static auto get(const Point &a, const Point &b){
         const auto r1 = traits::point::access_point<Point, 0>::get(a);
         const auto q1 = traits::point::access_point<Point, 1>::get(a);
@@ -43,7 +51,9 @@ struct distance<Point, system_coordinat::polar, 2>{
 };
 
 template<typename Point>
-struct distance<Point, system_coordinat::polar, 3>{
+struct distance<Point,
+                system_coordinat::polar,
+                3>{
     inline constexpr static auto get(const Point &a, const Point &b){
         using acc_point = traits::point::access_point<Point, 2>;
         return distance<Point, system_coordinat::polar, 2>::get(a, b)
@@ -52,7 +62,9 @@ struct distance<Point, system_coordinat::polar, 3>{
 };
 
 template<typename Point>
-struct distance<Point, system_coordinat::spherical, 3>{
+struct distance<Point,
+                system_coordinat::spherical,
+                3>{
     inline constexpr static auto get(const Point &a, const Point &b){
         return distance<Point, system_coordinat::polar, 2>::get(a, b)
         - 2 * traits::point::access_point<Point, 0>::get(a) * traits::point::access_point<Point, 0>::get(b)
@@ -65,7 +77,9 @@ struct distance<Point, system_coordinat::spherical, 3>{
 
 
 
-template<typename Point, typename CoordinateSystem, std::size_t Dimension>
+template<typename Point,
+         typename CoordinateSystem,
+         std::size_t Dimension>
 inline constexpr auto distance(const Point &a, const Point &b){
     return std::sqrt(distance_point_algo::dispatch::distance<Point, CoordinateSystem, Dimension>::get(a, b));
 }

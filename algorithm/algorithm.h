@@ -12,7 +12,6 @@
 #include <algorithm/contain/interface.h>
 #include <algorithm/perpendicular/interface.h>
 #include <algorithm/parallel/interface.h>
-#include <algorithm/located_inside/interface.h>
 #include <algorithm/is_correct_polygon/interface.h>
 #include <algorithm/create_polygon/interface.h>
 #include <algorithm/tangent_circle/interface.h>

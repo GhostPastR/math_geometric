@@ -13,11 +13,6 @@ struct tag<agl::figure::polygon<Point, Tag>>{
 };
 
 template<typename Point, typename Tag>
-struct group<agl::figure::polygon<Point, Tag>>{
-    using type_group = agl::group::polygons;
-};
-
-template<typename Point, typename Tag>
 struct coordinate_system<agl::figure::polygon<Point, Tag>>{
     using system = agl::traits::coordinate_system<Point>::system;
 };
@@ -30,12 +25,6 @@ struct dimension<agl::figure::polygon<Point, Tag>>{
 };
 
 namespace polygon {
-
-template<typename Point, typename Tag>
-struct access_polygon<agl::figure::polygon<Point, Tag>>{
-    using regular = std::false_type;
-    using type = undefined;
-};
 
 template<typename Point, typename Tag>
 struct access_types<agl::figure::polygon<Point, Tag>>{

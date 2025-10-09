@@ -12,11 +12,6 @@ struct tag<agl::point::decart::point2d<Type>>{
 };
 
 template<typename Type>
-struct group<agl::point::decart::point2d<Type>>{
-    using type_group = agl::group::points;
-};
-
-template<typename Type>
 struct coordinate_system<agl::point::decart::point2d<Type>>{
     using system = system_coordinat::cartesian;
 };

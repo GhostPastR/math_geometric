@@ -2,15 +2,15 @@
 #define AGL_ALGORITHM_PARALLEL_IMPLEMENTATION_H
 
 #include "algorithm/equation_of_line/interface.h"
+#include "system/system_concept.h"
 #include "system/traits.h"
 #include <cmath>
 
 namespace agl::algorithm::dispatch {
 
-template<typename Figure,
+template<c_group_line Figure,
          typename Type,
          typename OutLine,
-         typename Group,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct parallel{
@@ -25,7 +25,6 @@ template<typename Figure,
 struct parallel<Figure,
                 Type,
                 OutLine,
-                agl::group::lines,
                 agl::system_coordinat::cartesian,
                 2>{
     inline constexpr static auto get(const Figure &figure, const Type &distance){
@@ -46,7 +45,6 @@ template<typename Figure,
          typename OutLine>
 inline constexpr auto parallel(const Figure &figure, const Type &distance){
     using type_coordinate_system = traits::coordinate_system<Figure>::system;
-    using group = traits::group<Figure>::type_group;
     constexpr auto dimension = traits::dimension<Figure>::value();
 
     static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
@@ -55,7 +53,6 @@ inline constexpr auto parallel(const Figure &figure, const Type &distance){
     return dispatch::parallel<Figure,
                               Type,
                               OutLine,
-                              group,
                               type_coordinate_system,
                               dimension>::get(figure, distance);
 }

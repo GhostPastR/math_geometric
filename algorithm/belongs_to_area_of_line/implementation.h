@@ -11,8 +11,6 @@ namespace agl::algorithm::dispatch {
 
 template<typename Line,
          typename Point,
-         typename TagLine,
-         typename TagObject,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct belongs_to_area_of_line{
@@ -28,8 +26,6 @@ template<c_straight_line Line,
          std::size_t Dimension>
 struct belongs_to_area_of_line<Line,
                                Point,
-                               agl::tag::line::straight_line,
-                               agl::tag::point::point,
                                CoordinateSystem,
                                Dimension>{
     inline constexpr static bool get(const Line &line,
@@ -42,8 +38,6 @@ template<c_half_line_2d Line,
          c_point_2d Point>
 struct belongs_to_area_of_line<Line,
                                Point,
-                               agl::tag::line::half_line,
-                               agl::tag::point::point,
                                system_coordinat::cartesian,
                                2>{
     inline constexpr static bool get(const Line &line,
@@ -79,8 +73,6 @@ template<c_line_section Line,
          c_point_2d Point>
 struct belongs_to_area_of_line<Line,
                                Point,
-                               agl::tag::line::line_section,
-                               agl::tag::point::point,
                                system_coordinat::cartesian,
                                2>{
     inline constexpr static bool get(const Line &line,
@@ -110,22 +102,16 @@ template<typename Line,
          typename Object>
 inline constexpr bool belongs_to_area_of_line(const Line &line,
                                               const Object &object){
-    using tag_line = traits::tag<Line>::type_tag;
-    using tag_object = traits::tag<Object>::type_tag;
     using type_cs1 = traits::coordinate_system<Line>::system;
     using type_cs2 = traits::coordinate_system<Object>::system;
     constexpr auto dimension1 = traits::dimension<Line>::value();
     constexpr auto dimension2 = traits::dimension<Object>::value();
 
-    static_assert(agl::assert::is_correct<tag_line>(), "Error!");
-    static_assert(agl::assert::is_correct<tag_object>(), "Error!");
     static_assert(agl::assert::is_correct_compare<type_cs1, type_cs2>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
 
     return dispatch::belongs_to_area_of_line<Line,
                                              Object,
-                                             tag_line,
-                                             tag_object,
                                              type_cs1,
                                              dimension1>::get(line, object);
 }

@@ -14,11 +14,6 @@ struct tag<std::array<Point,2>>{
 };
 
 template<typename Point>
-struct group<std::array<Point,2>>{
-    using type_group = agl::group::lines;
-};
-
-template<typename Point>
 struct coordinate_system<std::array<Point,2>>{
     using system = coordinate_system<Point>::system;;
 };

@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <optional>
+#include "system/system_concept.h"
 #include "system/traits.h"
 #include "system/assert.h"
 #include "algorithm/math_algorithm.h"
@@ -23,7 +24,7 @@ struct create_circle{
     }
 };
 
-template<typename CircleOut,
+template<c_create_circle CircleOut,
          typename Angle,
          typename Point,
          typename Radius>
@@ -38,12 +39,13 @@ struct create_circle<CircleOut,
         -> std::pair<std::optional<CircleOut>, std::optional<CircleOut>>{
         using Type = agl::traits::type<Angle>::type_value;
         using Center = agl::traits::circle::access_types<CircleOut>::center;
+        using Create = agl::traits::circle::access_create<CircleOut>;
         const auto &_angle = agl::traits::value<Angle>::get(angle);
         const auto &_radius = agl::traits::value<Radius>::get(radius);
         if(_radius > 0){
             return std::pair<CircleOut, CircleOut>{
-                {agl::algorithm::create_point<Center>(point, angle - algorithm::pi_on_2<Type>, _radius), _radius},
-                {agl::algorithm::create_point<Center>(point, angle + algorithm::pi_on_2<Type>, _radius), _radius}
+                Create::get(agl::algorithm::create_point<Center>(point, angle - algorithm::pi_on_2<Type>, _radius), _radius),
+                Create::get(agl::algorithm::create_point<Center>(point, angle + algorithm::pi_on_2<Type>, _radius), _radius)
             };
         }
         return {};

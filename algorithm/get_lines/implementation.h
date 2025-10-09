@@ -3,20 +3,30 @@
 
 #include "algorithm/tag_algoritm.h"
 #include "system/assert.h"
+#include "system/system_concept.h"
 #include <algorithm>
 #include <vector>
 
 namespace agl::algorithm::dispatch {
 
-template<typename Figure, typename OutObject, typename TagFigure, typename TagLine, typename CoordinateSystem, std::size_t Dimension>
+template<typename Figure,
+         typename OutObject,
+         typename TagLine,
+         typename CoordinateSystem,
+         std::size_t Dimension>
 struct get_lines{
     inline constexpr static auto get(const Figure &figure){
         static_assert(false, "No '' calculations have been implemented for these objects.");
     }
 };
 
-template<typename Figure, typename OutObject>
-struct get_lines<Figure, OutObject, agl::group::polygons, agl::tag::line::line_section, system_coordinat::cartesian, 2>{
+template<c_group_polygon Figure,
+         typename OutObject>
+struct get_lines<Figure,
+                 OutObject,
+                 agl::tag::line::line_section,
+                 system_coordinat::cartesian,
+                 2>{
     inline constexpr static auto get(const Figure &figure){
         using point = agl::traits::polygon::access_types<Figure>::point;
         std::vector<OutObject> lines;
@@ -39,7 +49,6 @@ namespace agl::algorithm::geometry {
 
 template<typename Figure, typename OutObject>
 inline constexpr auto get_lines(const Figure &figure){
-    using group = traits::group<Figure>::type_group;
     using type_coordinate_system1 = traits::coordinate_system<Figure>::system;
     constexpr auto dimension1 = traits::dimension<Figure>::value();
 
@@ -47,12 +56,15 @@ inline constexpr auto get_lines(const Figure &figure){
     using type_coordinate_system2 = traits::coordinate_system<OutObject>::system;
     constexpr auto dimension2 = traits::dimension<OutObject>::value();
 
-    static_assert(agl::assert::is_correct<group>(), "Error!");
     static_assert(agl::assert::is_correct<tag>(), "Error!");
     static_assert(agl::assert::is_correct_compare<type_coordinate_system1, type_coordinate_system2>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
 
-    return dispatch::get_lines<Figure, OutObject, group, tag, type_coordinate_system1, dimension1>::get(figure);
+    return dispatch::get_lines<Figure,
+                               OutObject,
+                               tag,
+                               type_coordinate_system1,
+                               dimension1>::get(figure);
 }
 
 }
