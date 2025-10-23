@@ -89,7 +89,7 @@ struct equation_of_line<Object,
         const auto [a,b,c] = default_data::equation_of_line<Object,
                                                         system_coordinat::cartesian,
                                                         2>::get(p1, p2);
-        return agl::traits::straight_line::access_create<OutLine>::get(a,b,c);
+        return agl::traits::access_create<OutLine>::get(a,b,c);
     }
 };
 
@@ -180,7 +180,7 @@ struct equation_of_line<Figure,
         const auto &a = traits::straight_line::access_parameter<Figure, 0>::get(figure);
         const auto &b = traits::straight_line::access_parameter<Figure, 1>::get(figure);
         const auto &c = traits::straight_line::access_parameter<Figure, 2>::get(figure);
-        return agl::traits::straight_line::access_create<OutLine>::get(a,b,c);
+        return agl::traits::access_create<OutLine>::get(a,b,c);
     }
 };
 
@@ -194,7 +194,7 @@ struct equation_of_line<Figure,
         const auto [a,b,c] = default_data::equation_of_line<Figure,
                                                               system_coordinat::cartesian,
                                                               2>::get(figure);
-        return agl::traits::straight_line::access_create<OutLine>::get(a,b,c);
+        return agl::traits::access_create<OutLine>::get(a,b,c);
     }
 };
 
@@ -208,7 +208,7 @@ struct equation_of_line<Figure,
         const auto [a,b,c] = default_data::equation_of_line<Figure,
                                                               system_coordinat::cartesian,
                                                               2>::get(figure);
-        return agl::traits::straight_line::access_create<OutLine>::get(0,0,0);
+        return agl::traits::access_create<OutLine>::get(0,0,0);
     }
 };
 

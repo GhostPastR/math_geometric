@@ -81,24 +81,6 @@ template<> struct std::formatter<agl::unit::angle> {
     }
 };
 
-
-
-
-namespace agl::traits{
-
-template<>
-struct type<agl::unit::angle>{
-    using type_value = double;
-};
-
-template<> struct value<agl::unit::angle>{
-    inline constexpr static auto get(const agl::unit::angle &temp){
-        return temp.value();
-    }
-};
-
-}
-
 template<> struct agl::algorithm::direction_object<agl::unit::angle>{
     using type_direction_object = direction_angle;
 };

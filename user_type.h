@@ -1,34 +1,35 @@
 #ifndef USER_TYPE_H
 #define USER_TYPE_H
 
-#include "structs/geometric/decart_point2d.h"
-#include "structs/struct_geo_imp.h"
-
-#include "unit/distance.h"
-
+#include <unit/unit_object.h>
+#include <structs/geometric_object.h>
 
 namespace agl{
 
+using point2_d = agl::point::decart::point2d<double>;
+using point3_d = agl::point::decart::point3d<double>;
+
+using polar2_d = agl::point::polar::polar2d<double, agl::unit::angle>;
+using polar3_d = agl::point::polar::polar3d<double, agl::unit::angle, double>;
+
+using straight_line2_d = agl::line::straight_line<double>;
+using half_line2_d = agl::line::half_line<point2_d, agl::unit::angle>;
+using line_section2_d = agl::line::line_section<point2_d>;
+
+using circle2_d = agl::circle::circle<agl::point2_d, double>;
+using arc2_d = agl::circle::arc<agl::point2_d, double, agl::unit::angle>;
+
+using non_convex_polygon = agl::figure::polygon<agl::point2_d, agl::tag::polygon::non_convex>;
+using polygon = agl::figure::polygon<agl::point2_d, agl::tag::polygon::convex>;
+using polygon_intersecting = agl::figure::polygon<agl::point2_d, agl::tag::polygon::self_intersecting>;
+using regular = agl::figure::polygon<agl::point2_d, agl::tag::polygon::regular>;
+using triangle = agl::figure::polygon<agl::point2_d, agl::tag::polygon::triangle>;
+using triangle_regular = agl::figure::polygon<agl::point2_d, agl::tag::polygon::rectangular_triangle>;
+using rectangle = agl::figure::polygon<agl::point2_d, agl::tag::polygon::rectangle>;
+
+
 // using Lenght = double;
 // using Angle = angle_impl<double>;
-// using point2d = point2<double>;
-// using point3d = point3<double>;
-
-// using polar2d = polar2<double>;
-
-// using line2d = straight_line_impl<double>;
-// using half_Line2d = half_line_impl<double>;
-// using line_section2d = line_section_impl<double>;
-
-// using Circle = circle_impl<double, point2d>;
-// using Arc = arc_impl<double, point2d, Angle>;
-
-
-// using ConvexPolygon = convex_polygone_impl<point2d>;
-// using Rectangle = rectangle_impl<double, point2d>;
-// using Square = square_impl<double, point2d>;
-// using Triangle = triangle_impl<double, point2d>;
-// using RegularPolygon = regular_polygon_impl<double, point2d>;
 
 // using PointGeo = point_geo2<double>;
 // using PointGeo3d = point_geo3<double>;

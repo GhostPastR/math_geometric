@@ -27,41 +27,6 @@ template<> struct direction_object<long double>{
 
 
 
-namespace tag::intersection {
-
-struct line_to_line final{};
-struct line_to_circle final{};
-struct circle_to_circle final{};
-
-template<typename Figure1, typename Figure2>
-struct tag{
-    using object_to_object = undefined;
-};
-
-template<>
-struct tag<group::lines, group::lines>{
-    using object_to_object = line_to_line;
-};
-
-template<>
-struct tag<group::elements_circles, group::elements_circles>{
-    using object_to_object = line_to_circle;
-};
-
-template<>
-struct tag<group::lines, group::elements_circles>{
-    using object_to_object = line_to_circle;
-};
-
-template<>
-struct tag<group::elements_circles, group::lines>{
-    using object_to_object = line_to_circle;
-};
-
-}
-
-
-
 namespace strategy {
 
 struct create_rectangle_point_sides final{};

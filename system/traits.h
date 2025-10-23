@@ -2,17 +2,11 @@
 #define TRAITS_H
 
 #include <concepts>
-#include <vector>
 #include "tag.h"
 
 namespace agl{
 
 namespace traits {
-
-template<typename Object>
-struct tag{
-    using type_tag = undefined;
-};
 
 template<typename Object>
 struct coordinate_system{
@@ -31,6 +25,14 @@ struct geo_coordinate_system{
     using system = agl::system_coordinat::geo::sc_default;
 };
 
+template<typename Object>
+struct access_create{
+    template<typename ... Value>
+    inline constexpr static auto get(Value&&... value){
+        static_assert(false, "Access is not implemented for this object.");
+    }
+};
+
 namespace point {
 
 template<typename Object>
@@ -38,17 +40,12 @@ struct access_types{
     using point = undefined;
 };
 
+template<typename T>
+class Temp;
+
 template<typename Object, std::size_t NumberPoint>
 struct access_point{
     inline constexpr static auto get(const Object &object){
-        static_assert(false, "Access is not implemented for this object.");
-    }
-};
-
-template<typename Object>
-struct access_create{
-    template<typename ... Value>
-    inline constexpr static auto get(Value&&... value){
         static_assert(false, "Access is not implemented for this object.");
     }
 };
@@ -109,15 +106,6 @@ struct access_radius{
     }
 };
 
-template<typename Object>
-struct access_create{
-    template<typename Point, typename Radius>
-    inline constexpr static auto get(Point point, Radius radius){
-        static_assert(false, "Access is not implemented for this object.");
-    }
-};
-
-
 }
 
 
@@ -135,15 +123,6 @@ struct access_parameter{
         static_assert(false, "Access is not implemented for this object.");
     }
 };
-
-template<typename Object>
-struct access_create{
-    template<typename ... Type>
-    inline constexpr static auto get(Type&&... value){
-        static_assert(false, "Access is not implemented for this object.");
-    }
-};
-
 
 }
 
@@ -204,18 +183,15 @@ struct access_stop{
     }
 };
 
-template<typename Object>
-struct access_create{
-    template<typename Point>
-    inline constexpr static auto get(const Point &point1, const Point &point2){
-        static_assert(false, "Access is not implemented for this object.");
-    }
-};
-
 }
 
 
 namespace polygon {
+
+template<typename Object>
+struct access_tag{
+    using type_tag = undefined;
+};
 
 template<typename Object>
 struct access_types{
@@ -230,13 +206,6 @@ struct access_line_section{
 template<typename Object>
 struct access_points{
     inline constexpr static auto get(const Object &object){
-        static_assert(false, "Access is not implemented for this object.");
-    }
-};
-
-template<typename Object>
-struct access_create{
-    inline constexpr static auto get(std::vector<typename access_types<Object>::point> &&points){
         static_assert(false, "Access is not implemented for this object.");
     }
 };
@@ -296,6 +265,37 @@ template<> struct value<long double>{
         return temp;
     }
 };
+
+
+template<> struct access_create<int>{
+    template<typename Value>
+    inline constexpr static int get(Value&& value){
+        return value;
+    }
+};
+
+template<> struct access_create<float>{
+    template<typename Value>
+    inline constexpr static float get(Value&& value){
+        return value;
+    }
+};
+
+template<> struct access_create<double>{
+    template<typename Value>
+    inline constexpr static double get(Value&& value){
+        return value;
+    }
+};
+
+template<> struct access_create<long double>{
+    template<typename Value>
+    inline constexpr static long double get(Value&& value){
+        return value;
+    }
+};
+
+
 
 }
 

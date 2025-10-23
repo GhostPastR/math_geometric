@@ -10,7 +10,6 @@ namespace agl::algorithm::dispatch {
 
 template<typename Figure,
          typename Point,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct point_coupling{
@@ -20,19 +19,16 @@ struct point_coupling{
 };
 
 template<c_group_line Line,
-         typename Point,
-         typename Tag,
+         c_point_2d Point,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct point_coupling<Line,
                       Point,
-                      Tag,
                       CoordinateSystem,
                       Dimension>{
     inline constexpr static auto get(const Line &line, const Point &point, bool is_perpendicular) -> std::optional<Point>{
         return agl::algorithm::dispatch::group_line::point_coupling<Line,
                                                                     Point,
-                                                                    Tag,
                                                                     CoordinateSystem,
                                                                     Dimension>(line, point, is_perpendicular);
     }
@@ -41,10 +37,9 @@ struct point_coupling<Line,
 
 
 template<c_group_polygon Polygon,
-         typename Point>
+         c_point_2d Point>
 struct point_coupling<Polygon,
                       Point,
-                      agl::tag::point::point,
                       agl::system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Polygon &polygon, const Point &point, bool is_perpendicular) -> std::optional<Point>{
@@ -56,7 +51,6 @@ struct point_coupling<Polygon,
         std::ranges::transform(lines, std::back_inserter(c_points), [point](const auto &line){
             return point_coupling<str_line,
                                   Point,
-                                  agl::tag::point::point,
                                   agl::system_coordinat::cartesian,
                                   2>::get(line, point, true);
         });
@@ -84,19 +78,16 @@ namespace agl::algorithm::geometry {
 template<typename Figure,
          typename Point>
 inline constexpr auto point_coupling(const Figure &figure, const Point &point, bool is_perpendicular){
-    using tag = traits::tag<Point>::type_tag;
     using type_coordinate_system1 = traits::coordinate_system<Figure>::system;
     using type_coordinate_system2 = traits::coordinate_system<Point>::system;
     constexpr auto dimension1 = traits::dimension<Figure>::value();
     constexpr auto dimension2 = traits::dimension<Point>::value();
 
-    static_assert(agl::assert::is_correct<tag>(), "Error!");
     static_assert(agl::assert::is_correct_compare<type_coordinate_system1, type_coordinate_system2>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
 
     return dispatch::point_coupling<Figure,
                                     Point,
-                                    tag,
                                     type_coordinate_system1,
                                     dimension1>::get(figure, point, is_perpendicular);
 }

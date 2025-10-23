@@ -6,10 +6,10 @@
 
 namespace agl::traits {
 
-template<typename PointCenter, typename TypeRadius, typename Angle>
-struct tag<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
-    using type_tag = agl::tag::elements_circle::arc;
-};
+// template<typename PointCenter, typename TypeRadius, typename Angle>
+// struct tag<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
+//     using type_tag = agl::tag::elements_circle::arc;
+// };
 
 template<typename PointCenter, typename TypeRadius, typename Angle>
 struct coordinate_system<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{

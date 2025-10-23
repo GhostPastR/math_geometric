@@ -16,8 +16,6 @@ namespace agl::algorithm::dispatch::group_line::dispatch {
 
 template<typename Line,
          typename Point,
-         typename TagLine,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct point_coupling{
@@ -26,12 +24,10 @@ struct point_coupling{
     }
 };
 
-template<typename Line,
-         typename Point>
+template<c_line_section Line,
+         c_point_2d Point>
 struct point_coupling<Line,
                       Point,
-                      ::agl::tag::line::line_section,
-                      ::agl::tag::point::point,
                       system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Line &line, const Point &point, bool is_perpendicular) -> std::optional<Point>{
@@ -59,16 +55,11 @@ struct point_coupling<Line,
 
 template<typename Line,
          typename Point,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 inline constexpr auto point_coupling(const Line &line, const Point &point, bool is_perpendicular){
-    using tag_line = traits::tag<Line>::type_tag;
-    static_assert(assert::is_correct<tag_line>(), "Error!");
     return agl::algorithm::dispatch::group_line::dispatch::point_coupling<Line,
                                                                           Point,
-                                                                          tag_line,
-                                                                          Tag,
                                                                           CoordinateSystem,
                                                                           Dimension>::get(line, point, is_perpendicular);
 }

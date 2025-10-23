@@ -26,7 +26,7 @@ struct create_circle{
 
 template<c_create_circle CircleOut,
          typename Angle,
-         typename Point,
+         c_point_2d Point,
          typename Radius>
 struct create_circle<CircleOut,
                      agl::algorithm::strategy::create_circle_angle_point,
@@ -39,7 +39,7 @@ struct create_circle<CircleOut,
         -> std::pair<std::optional<CircleOut>, std::optional<CircleOut>>{
         using Type = agl::traits::type<Angle>::type_value;
         using Center = agl::traits::circle::access_types<CircleOut>::center;
-        using Create = agl::traits::circle::access_create<CircleOut>;
+        using Create = agl::traits::access_create<CircleOut>;
         const auto &_angle = agl::traits::value<Angle>::get(angle);
         const auto &_radius = agl::traits::value<Radius>::get(radius);
         if(_radius > 0){
@@ -64,7 +64,7 @@ namespace agl::algorithm::geometry {
 template<typename CircleOut,
          typename Strategy,
          typename ...Args>
-inline constexpr auto create_circle(Args&& ...args){
+inline constexpr auto create_circle(Args ...args){
     using type_cs = traits::coordinate_system<CircleOut>::system;
     constexpr auto dimension = traits::dimension<CircleOut>::value();
     static_assert(agl::assert::is_correct<type_cs>(), "Error!");

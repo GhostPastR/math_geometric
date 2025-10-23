@@ -20,7 +20,7 @@ struct center{
 };
 
 template<c_polygon Figure,
-         c_point_2d PointOut>
+         c_create_point_2d PointOut>
 struct center<Figure,
               PointOut,
               agl::system_coordinat::cartesian,
@@ -35,7 +35,7 @@ struct center<Figure,
             using y = agl::traits::point::access_point<Point, 1>;
             return std::pair<Type, Type>(sum.first + x::get(item), sum.second + y::get(item));
         });
-        return agl::traits::point::access_create<PointOut>::get(sum.first / points.size(),
+        return agl::traits::access_create<PointOut>::get(sum.first / points.size(),
                                                                 sum.second / points.size());
     }
 };

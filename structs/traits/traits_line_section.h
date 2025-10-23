@@ -8,11 +8,6 @@
 namespace agl::traits {
 
 template<typename Point>
-struct tag<agl::line::line_section<Point>>{
-    using type_tag = agl::tag::line::line_section;
-};
-
-template<typename Point>
 struct coordinate_system<agl::line::line_section<Point>>{
     using system = coordinate_system<Point>::system;;
 };
@@ -21,6 +16,23 @@ template<typename Point>
 struct dimension<agl::line::line_section<Point>>{
     inline static constexpr std::size_t value(){
         return 2;
+    }
+};
+
+template<typename Point>
+struct access_create<agl::line::line_section<Point>>{
+    inline constexpr static auto get(const Point &point1, const Point &point2){
+        return agl::line::line_section<Point>{point1, point2};
+    }
+
+    template<typename TPoint>
+    inline constexpr static auto get(TPoint &&point1, TPoint &&point2){
+        using rm_point = std::remove_cvref_t<TPoint>;
+        auto p1 = agl::traits::access_create<Point>::get(agl::traits::point::access_point<rm_point, 0>::get(std::forward<TPoint>(point1)),
+                                                         agl::traits::point::access_point<rm_point, 1>::get(std::forward<TPoint>(point1)));
+        auto p2 = agl::traits::access_create<Point>::get(agl::traits::point::access_point<rm_point, 0>::get(std::forward<TPoint>(point2)),
+                                                         agl::traits::point::access_point<rm_point, 1>::get(std::forward<TPoint>(point2)));
+        return agl::line::line_section<Point>(std::move(p1), std::move(p2));
     }
 };
 
@@ -52,14 +64,6 @@ struct access_stop<agl::line::line_section<Point>>{
         return object.stop();
     }
 };
-
-template<typename Point>
-struct access_create<agl::line::line_section<Point>>{
-    inline constexpr static auto get(const Point &point1, const Point &point2){
-        return agl::line::line_section<Point>{point1, point2};
-    }
-};
-
 
 }
 

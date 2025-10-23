@@ -2,6 +2,7 @@
 #define SYSTEM_CONCEPT_H
 
 #include "traits.h"
+#include <vector>
 
 namespace agl {
 
@@ -13,10 +14,15 @@ concept c_not_undefined = !std::is_same_v<Object, agl::undefined>;
 
 template<typename Object>
 concept c_geometric = requires(Object object){
-    requires c_not_undefined<typename traits::tag<Object>::type_tag>;
     requires c_not_undefined<typename agl::traits::coordinate_system<Object>::system>;
     requires agl::traits::dimension<Object>::value() > 0;
 };
+
+template<typename Object, typename ... Args>
+concept c_create = requires(Args  ...args){
+    {agl::traits::access_create<Object>::get(args...)} -> std::same_as<Object>;
+};
+
 
 template<typename Object>
 concept c_point_2d = requires(Object object){
@@ -24,16 +30,14 @@ concept c_point_2d = requires(Object object){
     requires c_not_undefined<typename agl::traits::point::access_types<Object>::point>;
     {agl::traits::point::access_point<Object, 0>::get(object)} -> c_value;
     {agl::traits::point::access_point<Object, 1>::get(object)} -> c_value;
-    // {agl::traits::point::access_create<Object>::get(typename agl::traits::point::access_types<Object>::point{},
-    //                                                  typename agl::traits::point::access_types<Object>::point{})} -> std::same_as<Object>;
 };
 
 template<typename Object>
-concept c_create_point_2d = requires(Object object){
+concept c_point_3d = requires(Object object){
     requires c_point_2d<Object>;
-    {agl::traits::point::access_create<Object>::get(typename agl::traits::point::access_types<Object>::point{},
-                                                     typename agl::traits::point::access_types<Object>::point{})} -> std::same_as<Object>;
+    {agl::traits::point::access_point<Object, 2>::get(object)} -> c_value;
 };
+
 
 template<typename Object>
 concept c_circle = requires(Object object){
@@ -42,13 +46,6 @@ concept c_circle = requires(Object object){
     requires c_not_undefined<typename agl::traits::circle::access_types<Object>::radius>;
     {agl::traits::circle::access_center<Object>::get(object)} -> c_point_2d;
     {agl::traits::circle::access_radius<Object>::get(object)} -> c_value;
-};
-
-template<typename Object>
-concept c_create_circle = requires(Object object){
-    requires c_circle<Object>;
-    {agl::traits::circle::access_create<Object>::get(typename agl::traits::circle::access_types<Object>::center{},
-                                                     typename agl::traits::circle::access_types<Object>::radius{})} -> std::same_as<Object>;
 };
 
 template<typename Object>
@@ -98,8 +95,6 @@ concept c_line_section = requires(Object object){
     requires c_not_undefined<typename agl::traits::line_section::access_straight_line<Object>::type>;
     {agl::traits::line_section::access_start<Object>::get(object)} -> c_point_2d;
     {agl::traits::line_section::access_stop<Object>::get(object)} -> c_point_2d;
-    {agl::traits::line_section::access_create<Object>::get(typename agl::traits::line_section::access_types<Object>::point{},
-                                                            typename agl::traits::line_section::access_types<Object>::point{})} -> std::same_as<Object>;
 };
 
 template<typename Object, typename T>
@@ -108,18 +103,48 @@ concept c_container = std::is_same_v<Object, std::vector<T>> && c_point_2d<T>;
 template<typename Object>
 concept c_polygon = requires(Object object){
     requires c_geometric<Object>;
+    requires c_not_undefined<typename agl::traits::polygon::access_tag<Object>::type_tag>;
     requires c_not_undefined<typename agl::traits::polygon::access_types<Object>::point>;
     requires c_not_undefined<typename agl::traits::polygon::access_line_section<Object>::type>;
-    {agl::traits::polygon::access_create<Object>::get(std::vector<typename agl::traits::polygon::access_types<Object>::point>{})} -> std::same_as<Object>;
     {agl::traits::polygon::access_points<Object>::get(object)}
           -> c_container<typename agl::traits::polygon::access_types<Object>::point>;
 };
 
 template<typename Object>
+concept c_create_point_2d = requires(Object object){
+    requires c_point_2d<Object>;
+    requires c_create<Object, typename agl::traits::point::access_types<Object>::point,
+                      typename agl::traits::point::access_types<Object>::point>;
+};
+
+template<typename Object>
+concept c_create_circle = requires(Object object){
+    requires c_circle<Object>;
+    requires c_create<Object, typename agl::traits::circle::access_types<Object>::center,
+                      typename agl::traits::circle::access_types<Object>::radius>;
+};
+
+template<typename Object>
+concept c_create_straight_line_2d = requires(Object object){
+    requires c_straight_line_2d<Object>;
+    requires c_create<Object, typename agl::traits::straight_line::access_types<Object>::parameter,
+                      typename agl::traits::straight_line::access_types<Object>::parameter,
+                      typename agl::traits::straight_line::access_types<Object>::parameter>;
+};
+
+template<typename Object>
+concept c_create_line_section = requires(Object object){
+    requires c_line_section<Object>;
+    requires c_create<Object, typename agl::traits::line_section::access_types<Object>::point,
+                      typename agl::traits::line_section::access_types<Object>::point>;
+};
+
+template<typename Object>
 concept c_create_polygon = requires(Object object){
     requires c_polygon<Object>;
-    {agl::traits::polygon::access_create<Object>::get(std::vector<typename agl::traits::polygon::access_types<Object>::point>{})} -> std::same_as<Object>;
+    requires c_create<Object, std::vector<typename agl::traits::polygon::access_types<Object>::point>>;
 };
+
 
 template<typename Object>
 concept c_group_point = requires(Object object){

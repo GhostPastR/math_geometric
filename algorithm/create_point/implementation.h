@@ -38,7 +38,7 @@ struct create_point<Point,
         const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
         const auto &r = agl::traits::value<Range>::get(range);
         const auto &t = agl::traits::value<Turning>::get(turning);
-        return agl::traits::point::access_create<NewPoint>::get(x + r * std::sin(t), y + r * std::cos(t));
+        return agl::traits::access_create<NewPoint>::get(x + r * std::sin(t), y + r * std::cos(t));
     }
 };
 

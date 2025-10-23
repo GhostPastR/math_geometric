@@ -17,7 +17,7 @@ struct midplane{
     }
 };
 
-template<typename Object>
+template<c_point_2d Object>
 struct midplane<Object,
                 system_coordinat::cartesian,
                 2>{
@@ -47,7 +47,6 @@ struct midplane<Object,
 namespace agl::algorithm::dispatch::d1 {
 
 template<typename Figure,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct midplane{
@@ -56,9 +55,8 @@ struct midplane{
     }
 };
 
-template<typename Figure>
+template<c_arc Figure>
 struct midplane<Figure,
-                agl::tag::elements_circle::arc,
                 system_coordinat::cartesian,
                 2>{
     inline constexpr static auto get(const Figure &figure){
@@ -92,7 +90,6 @@ inline constexpr auto midplane(const Object &a, const Object &b){
     static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
-
     static_assert(!std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");
     static_assert((dimension > decltype(dimension){}), "Error!");
 
@@ -101,15 +98,13 @@ inline constexpr auto midplane(const Object &a, const Object &b){
 
 template<typename Figure>
 inline constexpr auto midplane(const Figure &figure){
-    using tag_object = traits::tag<Figure>::type_tag;
     using type_coordinate_system = traits::coordinate_system<Figure>::system;
     constexpr auto dimension = traits::dimension<Figure>::value();
 
-    static_assert(agl::assert::is_correct<tag_object>(), "Error!");
     static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
-    return dispatch::d1::midplane<Figure, tag_object, type_coordinate_system, dimension>::get(figure);
+    return dispatch::d1::midplane<Figure, type_coordinate_system, dimension>::get(figure);
 }
 
 }

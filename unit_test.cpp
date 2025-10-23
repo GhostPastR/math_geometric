@@ -32,10 +32,6 @@ void Unit_Test::test_point_algorithm()
 
 void Unit_Test::test_polygon_algorithm()
 {
-
-
-
-
 //     {//scale_regular_polygon
 //         {
 //             auto polygon = RegularPolygon(point2d(0,0), 5, 4);

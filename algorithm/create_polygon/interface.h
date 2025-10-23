@@ -6,9 +6,13 @@
 namespace agl::algorithm {
 
 //
-template<typename PolygonOut, typename Strategy, typename ...Args>
+template<typename PolygonOut,
+         typename Strategy,
+         typename ...Args>
 inline constexpr auto create_polygon(Args&& ...args){
-    return geometry::create_polygon<PolygonOut, Strategy, Args...>(std::forward<Args>(args)...);
+    return geometry::create_polygon<PolygonOut,
+                                    Strategy,
+                                    Args...>(std::forward<Args>(args)...);
 }
 
 }

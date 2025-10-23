@@ -8,11 +8,6 @@
 namespace agl::traits{
 
 template<typename Point, typename Tag>
-struct tag<agl::figure::polygon<Point, Tag>>{
-    using type_tag = Tag;
-};
-
-template<typename Point, typename Tag>
 struct coordinate_system<agl::figure::polygon<Point, Tag>>{
     using system = agl::traits::coordinate_system<Point>::system;
 };
@@ -24,7 +19,30 @@ struct dimension<agl::figure::polygon<Point, Tag>>{
     }
 };
 
+template<typename Point, typename Tag>
+struct access_create<agl::figure::polygon<Point, Tag>>{
+    inline constexpr static auto get(const std::vector<Point> &points){
+        return agl::figure::polygon<Point, Tag>(std::move(points));
+    }
+
+    template<typename TPoint>
+    inline constexpr static auto get(const std::vector<TPoint> &points){
+        std::vector<Point> temp;
+        temp.reserve(points.size());
+        std::ranges::transform(points, temp.begin(), [](auto &&item){
+            return agl::traits::access_create<Point>::get(agl::traits::point::access_point<TPoint, 0>::get(item),
+                                                          agl::traits::point::access_point<TPoint, 1>::get(item));
+        });
+        return agl::figure::polygon<Point, Tag>(std::move(temp));
+    }
+};
+
 namespace polygon {
+
+template<typename Point, typename Tag>
+struct access_tag<agl::figure::polygon<Point, Tag>>{
+    using type_tag = Tag;
+};
 
 template<typename Point, typename Tag>
 struct access_types<agl::figure::polygon<Point, Tag>>{
@@ -40,13 +58,6 @@ template<typename Point, typename Tag>
 struct access_points<agl::figure::polygon<Point, Tag>>{
     inline constexpr static auto get(const agl::figure::polygon<Point, Tag> &object){
         return object.points();
-    }
-};
-
-template<typename Point, typename Tag>
-struct access_create<agl::figure::polygon<Point, Tag>>{
-    inline constexpr static auto get(std::vector<Point> &&points){
-        return agl::figure::polygon<Point, Tag>(std::forward<std::vector<Point>>(points));
     }
 };
 

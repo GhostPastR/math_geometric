@@ -117,24 +117,6 @@ template<> struct std::formatter<agl::unit::distance> {
     }
 };
 
-
-
-namespace agl::traits{
-
-template<>
-struct type<agl::unit::distance>{
-    using type_value = double;
-};
-
-template<> struct value<agl::unit::distance>{
-    inline constexpr static auto get(const agl::unit::distance &temp){
-        return temp.value();
-    }
-};
-
-}
-
-
 /* Для добавления новой единицы измерения:
  * using <name> = measure_unit<_length, <value>>; value - на сколько нужно умножить чтобы получились метры
  * В list_prefix новый тип

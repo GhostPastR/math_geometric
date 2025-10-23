@@ -1,7 +1,6 @@
 #ifndef AGL_STRUCT_POLYGON_H
 #define AGL_STRUCT_POLYGON_H
 
-#include <array>
 #include <format>
 #include <ranges>
 #include "algorithm/is_correct_polygon/interface.h"

@@ -13,7 +13,6 @@ namespace agl::algorithm::dispatch {
 template<typename Figure,
          typename TypeDistance,
          typename Point,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct point_on_curve{
@@ -22,13 +21,12 @@ struct point_on_curve{
     }
 };
 
-template<typename Figure,
+template<c_half_line_2d Figure,
          typename TypeDistance,
          typename Point>
 struct point_on_curve<Figure,
                       TypeDistance,
                       Point,
-                      agl::tag::line::half_line,
                       system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Figure &figure, const TypeDistance &distance){
@@ -40,13 +38,12 @@ struct point_on_curve<Figure,
     }
 };
 
-template<typename Figure,
+template<c_line_section Figure,
          typename TypeDistance,
          typename Point>
 struct point_on_curve<Figure,
                       TypeDistance,
                       Point,
-                      agl::tag::line::line_section,
                       system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Figure &figure, const TypeDistance &distance) -> std::optional<Point>{
@@ -62,13 +59,12 @@ struct point_on_curve<Figure,
     }
 };
 
-template<typename Figure,
+template<c_arc Figure,
          typename TypeDistance,
          typename Point>
 struct point_on_curve<Figure,
                       TypeDistance,
                       Point,
-                      agl::tag::elements_circle::arc,
                       system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Figure &figure, const TypeDistance &distance) -> std::optional<Point>{
@@ -97,18 +93,15 @@ template<typename Figure,
          typename TypeDistance,
          typename Point>
 inline constexpr auto point_on_curve(const Figure &figure, const TypeDistance &distance){
-    using tag_object = traits::tag<Figure>::type_tag;
     using type_coordinate_system = traits::coordinate_system<Point>::system;
     constexpr auto dimension = traits::dimension<Point>::value();
 
-    static_assert(agl::assert::is_correct<tag_object>(), "Error!");
     static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
     return dispatch::point_on_curve<Figure,
                                     TypeDistance,
                                     Point,
-                                    tag_object,
                                     type_coordinate_system,
                                     dimension>::get(figure, distance);
 }

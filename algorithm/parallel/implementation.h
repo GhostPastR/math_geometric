@@ -19,9 +19,9 @@ struct parallel{
     }
 };
 
-template<typename Figure,
+template<c_group_line Figure,
          typename Type,
-         typename OutLine>
+         c_create_straight_line_2d OutLine>
 struct parallel<Figure,
                 Type,
                 OutLine,
@@ -30,6 +30,10 @@ struct parallel<Figure,
     inline constexpr static auto get(const Figure &figure, const Type &distance){
         const auto &d = agl::traits::value<Type>::get(distance);
         const auto [a,b,c] = agl::algorithm::equation_of_line(figure);
+
+        // agl::traits::access_create<OutLine>::get()
+
+
         return OutLine{a, b, c - d * (-std::sqrt(agl::algorithm::determine(a, -b, b, a)))};
     }
 };

@@ -26,10 +26,10 @@ namespace agl::traits {
 //     }
 // };
 
-template<typename TypePsi, typename TypeFi>
-struct tag<agl::point::polar::polar2d<TypePsi, TypeFi>>{
-    using type_tag = agl::tag::point::point;
-};
+// template<typename TypePsi, typename TypeFi>
+// struct tag<agl::point::polar::polar2d<TypePsi, TypeFi>>{
+//     using type_tag = agl::tag::point::point;
+// };
 
 template<typename TypePsi, typename TypeFi>
 struct coordinate_system<agl::point::polar::polar2d<TypePsi, TypeFi>>{

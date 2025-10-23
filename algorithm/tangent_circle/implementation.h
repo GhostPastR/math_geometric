@@ -16,7 +16,6 @@ template<typename Circle,
          typename Object,
          typename LineSectionOut,
          typename TagTangent,
-         typename TagObject,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct tangent_circle{
@@ -25,14 +24,13 @@ struct tangent_circle{
     }
 };
 
-template<typename Circle,
+template<c_circle Circle,
          typename Object,
          typename LineSectionOut>
 struct tangent_circle<Circle,
                       Object,
                       LineSectionOut,
                       agl::algorithm::type_tangent::external,
-                      agl::tag::elements_circle::circle,
                       agl::system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::external tag)
@@ -65,14 +63,13 @@ struct tangent_circle<Circle,
     }
 };
 
-template<typename Circle,
+template<c_circle Circle,
          typename Object,
          typename LineSectionOut>
 struct tangent_circle<Circle,
                       Object,
                       LineSectionOut,
                       agl::algorithm::type_tangent::internal,
-                      agl::tag::elements_circle::circle,
                       agl::system_coordinat::cartesian,
                       2>{
     inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::internal tag)
@@ -108,32 +105,31 @@ struct tangent_circle<Circle,
 };
 
 
-template<typename Circle,
-         typename Object,
-         typename LineSectionOut>
+template<c_circle Circle,
+         c_point_2d Point,
+         c_create_line_section LineSectionOut>
 struct tangent_circle<Circle,
-                      Object,
+                      Point,
                       LineSectionOut,
                       agl::algorithm::type_tangent::external,
-                      agl::tag::point::point,
                       agl::system_coordinat::cartesian,
                       2>{
-    inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::external tag)
+    inline constexpr static auto get(const Circle &circle, const Point &point, agl::algorithm::type_tangent::external tag)
     -> std::pair<std::optional<LineSectionOut>, std::optional<LineSectionOut>>{
         using Type = agl::traits::circle::access_types<Circle>::radius;
-        using Point = agl::traits::line_section::access_types<LineSectionOut>::point;
+        using PointLine = agl::traits::line_section::access_types<LineSectionOut>::point;
         const auto &center = traits::circle::access_center<Circle>::get(circle);
         const auto &radius = traits::circle::access_radius<Circle>::get(circle);
-        if(agl::algorithm::contain(circle, object)){
+        if(agl::algorithm::contain(circle, point)){
             return {};
         }
-        auto angle = agl::algorithm::direction<Type>(center, object);
-        auto lenght = agl::algorithm::distance(center, object);
+        auto angle = agl::algorithm::direction<Type>(center, point);
+        auto lenght = agl::algorithm::distance(center, point);
         auto dangle = std::acos(radius / lenght);
 
         return std::pair<LineSectionOut, LineSectionOut>{
-            {agl::algorithm::create_point<Point>(center, angle + dangle, radius), object},
-            {agl::algorithm::create_point<Point>(center, angle - dangle, radius), object},
+            {agl::algorithm::create_point<PointLine>(center, angle + dangle, radius), point},
+            {agl::algorithm::create_point<PointLine>(center, angle - dangle, radius), point},
         };
     }
 };
@@ -143,25 +139,22 @@ struct tangent_circle<Circle,
 
 namespace agl::algorithm::geometry {
 
-template<typename Circle,
+template<c_circle Circle,
          typename Object,
          typename LineSectionOut,
          typename TagTangent>
 inline constexpr auto tangent_circle(const Circle &circle, const Object &object, TagTangent tag){
     using type_cs1 = traits::coordinate_system<Circle>::system;
     using type_cs2 = traits::coordinate_system<Object>::system;
-    using TagCircle = agl::traits::tag<Circle>::type_tag;
-    using Tag = agl::traits::tag<Object>::type_tag;
     constexpr auto dimension1 = traits::dimension<Circle>::value();
     constexpr auto dimension2 = traits::dimension<Object>::value();
-    static_assert(std::is_same_v<TagCircle, agl::tag::elements_circle::circle>, "Error!");
+
     static_assert(agl::assert::is_correct_compare<type_cs1, type_cs2>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
     return dispatch::tangent_circle<Circle,
                                     Object,
                                     LineSectionOut,
                                     TagTangent,
-                                    Tag,
                                     type_cs1,
                                     dimension1>::get(circle, object, tag);
 }

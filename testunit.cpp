@@ -1,6 +1,7 @@
 #include "testunit.h"
 #include <QtTest/QTest>
 #include "algorithm/math_algorithm.h"
+#include <iostream>
 #include <unit/unit_object.h>
 
 
@@ -102,7 +103,7 @@ void TestUnit::test()
             QVERIFY(algorithm::compare(t.value<unit::second>(), 1000));
             QVERIFY(algorithm::compare(t.value<unit::minute>(), 16.666667));
             QVERIFY(algorithm::compare(t.value<unit::hour>(), 0.277778));
-            QVERIFY(algorithm::compare(t.value<unit::day>(), 0.011574));
+            QVERIFY(algorithm::compare(t.value<unit::day>(), 0.01157407));
         }
         {
             unit::time t;
@@ -224,7 +225,7 @@ void TestUnit::test()
             s.set_value<unit::meter_minute>(100);
             QVERIFY(algorithm::compare(s.value<unit::meter_secund>(), 1.666667));
             s.set_value<unit::meter_hour>(100);
-            QVERIFY(algorithm::compare(s.value<unit::meter_secund>(), 0.027778));
+            QVERIFY(algorithm::compare(s.value<unit::meter_secund>(), 0.0277778));
             s.set_value<unit::kilometer_secund>(100);
             QVERIFY(algorithm::compare(s.value<unit::meter_secund>(), 100000));
             s.set_value<unit::kilometer_minute>(100);
@@ -236,7 +237,7 @@ void TestUnit::test()
             s.set_value<unit::foot_minute>(100);
             QVERIFY(algorithm::compare(s.value<unit::meter_secund>(), 0.508));
             s.set_value<unit::foot_hour>(100);
-            QVERIFY(algorithm::compare(s.value<unit::meter_secund>(), 0.008467));
+            QVERIFY(algorithm::compare(s.value<unit::meter_secund>(), 0.00846667));
             s.set_value<unit::mile_secund>(100);
             QVERIFY(algorithm::compare(s.value<unit::meter_secund>(), 160934.4));
             s.set_value<unit::mile_minute>(100);
@@ -250,13 +251,13 @@ void TestUnit::test()
         {
             QVERIFY(algorithm::compare((100_m_s).value<unit::meter_secund>(), 100));
             QVERIFY(algorithm::compare((100_m_m).value<unit::meter_secund>(), 1.666667));
-            QVERIFY(algorithm::compare((100_m_h).value<unit::meter_secund>(), 0.027778));
+            QVERIFY(algorithm::compare((100_m_h).value<unit::meter_secund>(), 0.0277778));
             QVERIFY(algorithm::compare((100_km_s).value<unit::meter_secund>(), 100000));
             QVERIFY(algorithm::compare((100_km_m).value<unit::meter_secund>(), 1666.666667));
             QVERIFY(algorithm::compare((100_km_h).value<unit::meter_secund>(), 27.777778));
             QVERIFY(algorithm::compare((100_ft_s).value<unit::meter_secund>(), 30.48));
             QVERIFY(algorithm::compare((100_ft_m).value<unit::meter_secund>(), 0.508));
-            QVERIFY(algorithm::compare((100_ft_h).value<unit::meter_secund>(), 0.008467));
+            QVERIFY(algorithm::compare((100_ft_h).value<unit::meter_secund>(), 0.00846667));
             QVERIFY(algorithm::compare((100_mile_s).value<unit::meter_secund>(), 160934.4));
             QVERIFY(algorithm::compare((100_mile_m).value<unit::meter_secund>(), 2682.24));
             QVERIFY(algorithm::compare((100_mile_h).value<unit::meter_secund>(), 44.704));

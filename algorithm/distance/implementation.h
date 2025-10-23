@@ -53,8 +53,6 @@ namespace agl::algorithm::dispatch::d2 {
 
 template<typename Object1,
          typename Object2,
-         typename Tag1,
-         typename Tag2,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct distance{
@@ -68,8 +66,6 @@ template<c_point_2d Point,
          std::size_t Dimension>
 struct distance<Point,
                 Point,
-                agl::tag::point::point,
-                agl::tag::point::point,
                 CoordinateSystem,
                 Dimension>{
     inline constexpr static auto get(const Point &a, const Point &b){
@@ -79,12 +75,10 @@ struct distance<Point,
     }
 };
 
-template<typename Point,
+template<c_point_2d Point,
          std::size_t Dimension>
 struct distance<Point,
                 Point,
-                agl::tag::point::point,
-                agl::tag::point::point,
                 system_coordinat::geographical,
                 Dimension>{
     inline constexpr static auto get(const Point &a, const Point &b){
@@ -95,41 +89,33 @@ struct distance<Point,
     }
 };
 
-template<typename Object1,
+template<c_point_2d Object1,
          typename Object2,
-         typename Tag,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct distance<Object1,
                 Object2,
-                agl::tag::point::point,
-                Tag,
                 CoordinateSystem,
                 Dimension>{
     inline constexpr static auto get(const Object1 &a, const Object2 &b){
         return agl::algorithm::dispatch::d2::point_to_object::distance<Object1,
                                                                        Object2,
-                                                                       Tag,
                                                                        CoordinateSystem,
                                                                        Dimension>(a, b);
     }
 };
 
 template<typename Object1,
-         typename Object2,
-         typename Tag,
+         c_point_2d Object2,
          typename CoordinateSystem,
          std::size_t Dimension>
 struct distance<Object1,
                 Object2,
-                Tag,
-                agl::tag::point::point,
                 CoordinateSystem,
                 Dimension>{
     inline constexpr static auto get(const Object1 &a, const Object2 &b){
         return agl::algorithm::dispatch::d2::point_to_object::distance<Object2,
                                                                        Object1,
-                                                                       Tag,
                                                                        CoordinateSystem,
                                                                        Dimension>(b, a);
     }
@@ -143,21 +129,15 @@ namespace agl::algorithm::geometry {
 template<typename Object1,
          typename Object2>
 inline constexpr auto distance(const Object1 &a, const Object2 &b){
-    using tag1 = traits::tag<Object1>::type_tag;
-    using tag2 = traits::tag<Object2>::type_tag;
     using type_coordinate_system1 = traits::coordinate_system<Object1>::system;
     using type_coordinate_system2 = traits::coordinate_system<Object2>::system;
     constexpr auto dimension1 = traits::dimension<Object1>::value();
     constexpr auto dimension2 = traits::dimension<Object2>::value();
 
-    static_assert(agl::assert::is_correct<tag1>(), "Error!");
-    static_assert(agl::assert::is_correct<tag2>(), "Error!");
     static_assert(agl::assert::is_correct_compare<type_coordinate_system1, type_coordinate_system2>(), "Error!");
     static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
     return dispatch::d2::distance<Object1,
                                   Object2,
-                                  tag1,
-                                  tag2,
                                   type_coordinate_system1,
                                   dimension1>::get(a,b);
 }

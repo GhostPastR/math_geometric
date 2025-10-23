@@ -8,11 +8,6 @@
 namespace agl::traits {
 
 template<typename Point, typename Angle>
-struct tag<agl::line::half_line<Point, Angle>>{
-    using type_tag = agl::tag::line::half_line;
-};
-
-template<typename Point, typename Angle>
 struct coordinate_system<agl::line::half_line<Point, Angle>>{
     using system = coordinate_system<Point>::system;;
 };

@@ -19,37 +19,37 @@ struct contain{
     }
 };
 
-template<c_group_line Object1,
-         c_point_2d Object2>
-struct contain<Object1,
-               Object2,
+template<c_group_line Line,
+         c_point_2d Point>
+struct contain<Line,
+               Point,
                agl::system_coordinat::cartesian,
                2>{
-    inline constexpr static bool get(const Object1 &object1, const Object2 &object2){
-        const auto [a,b,c] = agl::algorithm::equation_of_line(object1);
-        const auto &x = agl::traits::point::access_point<Object2, 0>::get(object2);
-        const auto &y = agl::traits::point::access_point<Object2, 1>::get(object2);
+    inline constexpr static bool get(const Line &line, const Point &point){
+        const auto [a,b,c] = agl::algorithm::equation_of_line(line);
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
         if(algorithm::compare(algorithm::determine(a, -b, y, x) + c, 0.)){
-            return agl::algorithm::belongs_to_area_of_line(object1, object2);
+            return agl::algorithm::belongs_to_area_of_line(line, point);
         }
         return false;
     }
 };
 
-template<c_circle Object1,
-         c_point_2d Object2>
-struct contain<Object1,
-               Object2,
+template<c_circle Circle,
+         c_point_2d Point>
+struct contain<Circle,
+               Point,
                agl::system_coordinat::cartesian,
                2>{
-    inline constexpr static bool get(const Object1 &object1, const Object2 &object2){
-        using Point = agl::traits::circle::access_types<Object1>::center;
-        const auto &center = agl::traits::circle::access_center<Object1>::get(object1);
-        const auto &radius = agl::traits::circle::access_radius<Object1>::get(object1);
-        const auto &c_x = agl::traits::point::access_point<Point, 0>::get(center);
-        const auto &c_y = agl::traits::point::access_point<Point, 1>::get(center);
-        const auto &x = agl::traits::point::access_point<Object2, 0>::get(object2);
-        const auto &y = agl::traits::point::access_point<Object2, 1>::get(object2);
+    inline constexpr static bool get(const Circle &circle, const Point &point){
+        using Center = agl::traits::circle::access_types<Circle>::center;
+        const auto &center = agl::traits::circle::access_center<Circle>::get(circle);
+        const auto &radius = agl::traits::circle::access_radius<Circle>::get(circle);
+        const auto &c_x = agl::traits::point::access_point<Center, 0>::get(center);
+        const auto &c_y = agl::traits::point::access_point<Center, 1>::get(center);
+        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
+        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
         return algorithm::less_than_equal(std::pow(x - c_x, 2) + std::pow(y - c_y, 2), std::pow(radius, 2));
     }
 };

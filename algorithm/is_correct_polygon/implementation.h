@@ -29,7 +29,7 @@ struct is_correct_polygon{
 // };
 
 
-template<typename Polygon>
+template<c_polygon Polygon>
 struct is_correct_polygon<Polygon,
                           agl::tag::polygon::convex,
                           agl::system_coordinat::cartesian,
@@ -57,7 +57,7 @@ struct is_correct_polygon<Polygon,
     }
 };
 
-template<typename Polygon>
+template<c_polygon Polygon>
 struct is_correct_polygon<Polygon,
                           agl::tag::polygon::rectangle,
                           agl::system_coordinat::cartesian,
@@ -80,7 +80,7 @@ struct is_correct_polygon<Polygon,
     }
 };
 
-template<typename Polygon,
+template<c_polygon Polygon,
          typename Tag> requires (!std::is_same_v<Tag, agl::tag::polygon::regular>)
 struct is_correct_polygon<Polygon,
                           Tag,
@@ -95,7 +95,7 @@ struct is_correct_polygon<Polygon,
     }
 };
 
-template<typename Polygon>
+template<c_polygon Polygon>
 struct is_correct_polygon<Polygon,
                           agl::tag::polygon::regular,
                           agl::system_coordinat::cartesian,
@@ -127,7 +127,7 @@ namespace agl::algorithm::geometry {
 
 template<typename Polygon>
 inline constexpr auto is_correct_polygon(const Polygon &polygon){
-    using tag = traits::tag<Polygon>::type_tag;
+    using tag = traits::polygon::access_tag<Polygon>::type_tag;
     using type_cs = traits::coordinate_system<Polygon>::system;
     constexpr auto dimension = traits::dimension<Polygon>::value();
     static_assert(agl::assert::is_correct<tag>(), "Error!");

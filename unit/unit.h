@@ -187,13 +187,28 @@ constexpr bool find_type(const Tuple &tuple){
 
 }
 
-
 template<typename UnitValue, agl::unit::c_type_value TypeValue>
     requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
 struct agl::traits::type<agl::unit::Value<UnitValue, TypeValue>>{
     using type_value = TypeValue;
 };
 
+template<typename UnitValue, agl::unit::c_type_value TypeValue>
+    requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
+struct agl::traits::value<agl::unit::Value<UnitValue, TypeValue>>{
+    inline constexpr static auto get(const agl::unit::Value<UnitValue, TypeValue> &temp){
+        return temp.value();
+    }
+};
+
+template<typename UnitValue, agl::unit::c_type_value TypeValue>
+    requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
+struct agl::traits::access_create<agl::unit::Value<UnitValue, TypeValue>>{
+    template<typename Value>
+    inline constexpr static auto get(Value&& value){
+        return agl::unit::Value<UnitValue, TypeValue>(std::forward<Value>(value));
+    }
+};
 
 template<typename UnitValue, agl::unit::c_type_value TypeValue>
     requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
@@ -214,6 +229,9 @@ constexpr std::ostream& operator<<(std::ostream& os, const agl::unit::Value<Unit
     os << std::format("{}", value);
     return os;
 }
+
+
+
 
 
 #define OPERATOR_QM(VALUE, PREFIX, UNIT_PREFIX) \
