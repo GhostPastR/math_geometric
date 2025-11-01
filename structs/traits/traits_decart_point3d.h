@@ -19,19 +19,17 @@ struct dimension<agl::point::decart::point3d<Type>>{
 };
 
 template<typename Type>
-struct access_create<agl::point::decart::point3d<Type>>{
+struct make<agl::point::decart::point3d<Type>>{
     template<typename Value>
-    inline constexpr static auto get(Value &&value1, Value &&value2, Value &&value3){
+    inline constexpr static auto apply(const Value &value1, const Value &value2, const Value &value3){
         using r_value = std::remove_cvref_t<Value>;
-        return agl::point::decart::point3d<Type>(agl::traits::value<r_value>::get(std::forward<Value>(value1)),
-                                                 agl::traits::value<r_value>::get(std::forward<Value>(value2)),
-                                                 agl::traits::value<r_value>::get(std::forward<Value>(value3)));
+        return agl::point::decart::point3d<Type>(agl::traits::value<r_value>::get(value1),
+                                                 agl::traits::value<r_value>::get(value2),
+                                                 agl::traits::value<r_value>::get(value3));
     }
 
-    inline constexpr static auto get(Type &&value1, Type &&value2, Type &&value3){
-        return agl::point::decart::point3d<Type>(std::forward<Type>(value1),
-                                                 std::forward<Type>(value2),
-                                                 std::forward<Type>(value3));
+    inline constexpr static auto apply(const Type &value1, const Type &value2, const Type &value3){
+        return agl::point::decart::point3d<Type>(value1, value2, value3);
     }
 };
 

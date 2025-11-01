@@ -10,9 +10,7 @@
 namespace agl::algorithm::dispatch {
 
 template<typename Object1,
-         typename Object2,
-         typename CoordinateSystem,
-         std::size_t Dimension>
+         typename Object2>
 struct contain{
     inline constexpr static auto get(const Object1 &object1, const Object2 &object2){
         static_assert(false, "No '' calculations have been implemented for these objects.");
@@ -21,10 +19,9 @@ struct contain{
 
 template<c_group_line Line,
          c_point_2d Point>
+    requires c_cartesian<Line> && c_cartesian<Point> && c_demension_2<Line> && c_demension_2<Point>
 struct contain<Line,
-               Point,
-               agl::system_coordinat::cartesian,
-               2>{
+               Point>{
     inline constexpr static bool get(const Line &line, const Point &point){
         const auto [a,b,c] = agl::algorithm::equation_of_line(line);
         const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
@@ -38,10 +35,9 @@ struct contain<Line,
 
 template<c_circle Circle,
          c_point_2d Point>
+    requires c_cartesian<Circle> && c_cartesian<Point> && c_demension_2<Circle> && c_demension_2<Point>
 struct contain<Circle,
-               Point,
-               agl::system_coordinat::cartesian,
-               2>{
+               Point>{
     inline constexpr static bool get(const Circle &circle, const Point &point){
         using Center = agl::traits::circle::access_types<Circle>::center;
         const auto &center = agl::traits::circle::access_center<Circle>::get(circle);
@@ -54,30 +50,11 @@ struct contain<Circle,
     }
 };
 
-
 }
 
 
-namespace agl::algorithm::geometry {
 
-template<typename Object1,
-         typename Object2>
-inline constexpr bool contain(const Object1 &object1, const Object2 &object2){
-    using type_cs1 = traits::coordinate_system<Object1>::system;
-    using type_cs2 = traits::coordinate_system<Object2>::system;
-    constexpr auto dimension1 = traits::dimension<Object1>::value();
-    constexpr auto dimension2 = traits::dimension<Object2>::value();
 
-    static_assert(agl::assert::is_correct_compare<type_cs1, type_cs2>(), "Error!");
-    static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
-
-    return dispatch::contain<Object1,
-                             Object2,
-                             type_cs1,
-                             dimension1>::get(object1, object2);
-}
-
-}
 
 
 // //Функция определяет попадает ли точка в полигон

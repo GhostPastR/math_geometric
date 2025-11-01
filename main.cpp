@@ -31,4 +31,5 @@ int main(int argc, char *argv[])
     QTest::qExec(new Unit_Test, argc, argv);
     QTest::qExec(new Unit_Test_SA, argc, argv);
     return a.exec();
+    return 0;
 }

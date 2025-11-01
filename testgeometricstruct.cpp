@@ -143,7 +143,7 @@ void TestGeometricStruct::test_point()
 
 
     {
-        agl::point::decart::point2d<agl::unit::distance> point1;
+        agl::point::decart::point2<agl::unit::distance> point1;
         QVERIFY(agl::algorithm::compare(point1.x(), 0_m));
         QVERIFY(agl::algorithm::compare(point1.y(), 0_m));
 
@@ -152,7 +152,7 @@ void TestGeometricStruct::test_point()
         QVERIFY(agl::algorithm::compare(point1.x(), 100_m));
         QVERIFY(agl::algorithm::compare(point1.y(), 100_m));
 
-        agl::point::decart::point2d<agl::unit::distance> point2;
+        agl::point::decart::point2<agl::unit::distance> point2;
         point2.set_x(100_m);
         point2.set_y(100_m);
         QVERIFY(point1 == point2);

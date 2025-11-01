@@ -82,6 +82,8 @@ qt_add_executable(math_geometric
     algorithm/scaling/implementation.h algorithm/scaling/interface.h
     structs/traits/traits_arc.h structs/traits/traits_circle.h structs/traits/traits_decart_point2d.h structs/traits/traits_decart_point3d.h structs/traits/traits_geo_point2d.h structs/traits/traits_geo_point3d.h structs/traits/traits_half_line.h structs/traits/traits_line_section.h structs/traits/traits_polar_point2d.h structs/traits/traits_polar_point3d.h structs/traits/traits_polygon.h structs/traits/traits_straight_line.h
     algorithm/point_coupling/implementation_line.h
+    structs/geometric/model_point.h
+
 
 )
 

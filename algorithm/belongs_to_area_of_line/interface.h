@@ -10,8 +10,7 @@ template<typename Line,
          typename Object>
 inline constexpr bool belongs_to_area_of_line(const Line &line,
                                               const Object &object){
-    return geometry::belongs_to_area_of_line<Line,
-                                             Object>(line, object);
+    return dispatch::belongs_to_area_of_line<Line, Object>::get(line, object);
 }
 
 

@@ -34,7 +34,7 @@ struct point_on_curve<Figure,
         using Direction = traits::half_line::access_types<Figure>::direction;
         const auto &start = traits::half_line::access_start<Figure>::get(figure);
         const auto &angle = traits::half_line::access_direction<Figure>::get(figure);
-        return agl::algorithm::create_point<PointStart>(start, angle, traits::value<TypeDistance>::get(distance));
+        return agl::algorithm::create_point<PointStart>(start, traits::value<TypeDistance>::get(distance), angle);
     }
 };
 
@@ -48,6 +48,7 @@ struct point_on_curve<Figure,
                       2>{
     inline constexpr static auto get(const Figure &figure, const TypeDistance &distance) -> std::optional<Point>{
         using Property = traits::line_section::access_types<Figure>;
+        using PointLine = traits::line_section::access_types<Figure>::point;
         const auto &t_distance = traits::value<TypeDistance>::get(distance);
         if(t_distance > agl::algorithm::distance(figure)){
             return std::nullopt;
@@ -55,7 +56,7 @@ struct point_on_curve<Figure,
         const auto &start = traits::line_section::access_start<Figure>::get(figure);
         const auto &stop = traits::line_section::access_stop<Figure>::get(figure);
         using Angle = traits::point::access_types<typename Property::point>::point;
-        return agl::algorithm::create_point(start, agl::algorithm::direction<Angle>(start, stop), t_distance);
+        return agl::algorithm::create_point<PointLine>(start, t_distance, agl::algorithm::direction<Angle>(start, stop));
     }
 };
 
@@ -72,11 +73,11 @@ struct point_on_curve<Figure,
         if(t_distance > agl::algorithm::distance(figure)){
             return std::nullopt;
         }
-
+        using Center = traits::arc::access_types<Figure>::center;
         const auto center = traits::arc::access_center<Figure>::get(figure);
         const auto &angle = traits::arc::access_angle<Figure, 0>::get(figure);
         const auto &radius = traits::arc::access_radius<Figure>::get(figure);
-        const auto point = agl::algorithm::create_point(center, angle, radius);
+        const auto point = agl::algorithm::create_point<Center>(center, radius, angle);
         return agl::algorithm::rotate(point, t_distance / radius, center);
     }
 };

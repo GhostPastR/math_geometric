@@ -28,7 +28,7 @@ struct midplane<Object,
     }
 };
 
-template<typename Object>
+template<c_point_3d Object>
 struct midplane<Object,
                 system_coordinat::cartesian,
                 3>{
@@ -72,7 +72,7 @@ struct midplane<Figure,
         if(start > stop){
             a += algorithm::pi_in_2<Type>;
         }
-        return agl::algorithm::create_point(center, a / 2., radius);
+        return agl::algorithm::create_point<Point>(center, radius, a / 2.);
     }
 };
 

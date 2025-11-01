@@ -1,6 +1,7 @@
 #ifndef SYSTEM_CONCEPT_H
 #define SYSTEM_CONCEPT_H
 
+#include "tag.h"
 #include "traits.h"
 #include <vector>
 
@@ -13,6 +14,9 @@ template<typename Object>
 concept c_not_undefined = !std::is_same_v<Object, agl::undefined>;
 
 template<typename Object>
+concept c_cartesian = std::is_same_v<typename agl::traits::coordinate_system<Object>::system, agl::system_coordinat::cartesian>;
+
+template<typename Object>
 concept c_geometric = requires(Object object){
     requires c_not_undefined<typename agl::traits::coordinate_system<Object>::system>;
     requires agl::traits::dimension<Object>::value() > 0;
@@ -20,7 +24,17 @@ concept c_geometric = requires(Object object){
 
 template<typename Object, typename ... Args>
 concept c_create = requires(Args  ...args){
-    {agl::traits::access_create<Object>::get(args...)} -> std::same_as<Object>;
+    {agl::traits::make<Object>::apply(args...)} -> std::same_as<Object>;
+};
+
+template<typename Object>
+concept c_demension_2 = requires(Object object){
+    requires agl::traits::dimension<Object>::value() == 2;
+};
+
+template<typename Object>
+concept c_demension_3 = requires(Object object){
+    requires agl::traits::dimension<Object>::value() == 3;
 };
 
 
@@ -114,6 +128,14 @@ template<typename Object>
 concept c_create_point_2d = requires(Object object){
     requires c_point_2d<Object>;
     requires c_create<Object, typename agl::traits::point::access_types<Object>::point,
+                      typename agl::traits::point::access_types<Object>::point>;
+};
+
+template<typename Object>
+concept c_create_point_3d = requires(Object object){
+    requires c_point_3d<Object>;
+    requires c_create<Object, typename agl::traits::point::access_types<Object>::point,
+                      typename agl::traits::point::access_types<Object>::point,
                       typename agl::traits::point::access_types<Object>::point>;
 };
 

@@ -9,32 +9,31 @@
 namespace agl::point::decart {
 
 template<typename Type>
-class point3d : public point2d<Type>{
+class point3d : public model_point<Type, agl::system_coordinat::cartesian, 3>{
 public:
-    constexpr point3d() : point2d<Type>(){}
-    constexpr point3d(auto x, auto y, auto z) : point2d<Type>(x,y){
-        set_z(z);
+    constexpr point3d() : model_point<Type, agl::system_coordinat::cartesian, 3>(){}
+    constexpr point3d(Type x, Type y, Type z) : model_point<Type, agl::system_coordinat::cartesian, 3>({x,y,z}){}
+    constexpr auto x() const{
+        return this->template value<0>();
+    }
+    constexpr void set_x(Type x){
+        this->template set_value<0>(x);
+    }
+    constexpr auto y() const{
+        return this->template value<1>();
+    }
+    constexpr void set_y(Type y){
+        this->template set_value<1>(y);
     }
     constexpr auto z() const{
-        return z_;
+        return this->template value<2>();
     }
-    constexpr void set_z(auto z){
-        z_ = z;
-    }
-
-    constexpr bool is_valid() const{
-        return point2d<Type>::is_valid() && algorithm::is_valid(z_);
+    constexpr void set_z(Type z){
+        this->template set_value<2>(z);
     }
 
     constexpr friend bool operator==(const point3d &point1, const point3d &point2){
         return point1.compare(point2);
-    }
-
-protected:
-    Type z_{};
-
-    constexpr bool compare(const point3d &point) const{
-        return point2d<Type>::compare(point) && algorithm::compare(z_, point.z_);
     }
 };
 

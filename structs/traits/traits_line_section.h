@@ -20,18 +20,17 @@ struct dimension<agl::line::line_section<Point>>{
 };
 
 template<typename Point>
-struct access_create<agl::line::line_section<Point>>{
-    inline constexpr static auto get(const Point &point1, const Point &point2){
+struct make<agl::line::line_section<Point>>{
+    inline constexpr static auto apply(const Point &point1, const Point &point2){
         return agl::line::line_section<Point>{point1, point2};
     }
 
     template<typename TPoint>
-    inline constexpr static auto get(TPoint &&point1, TPoint &&point2){
-        using rm_point = std::remove_cvref_t<TPoint>;
-        auto p1 = agl::traits::access_create<Point>::get(agl::traits::point::access_point<rm_point, 0>::get(std::forward<TPoint>(point1)),
-                                                         agl::traits::point::access_point<rm_point, 1>::get(std::forward<TPoint>(point1)));
-        auto p2 = agl::traits::access_create<Point>::get(agl::traits::point::access_point<rm_point, 0>::get(std::forward<TPoint>(point2)),
-                                                         agl::traits::point::access_point<rm_point, 1>::get(std::forward<TPoint>(point2)));
+    inline constexpr static auto apply(const TPoint &point1, const TPoint &point2){
+        auto p1 = agl::traits::make<Point>::apply(agl::traits::point::access_point<TPoint, 0>::get(point1),
+                                                  agl::traits::point::access_point<TPoint, 1>::get(point1));
+        auto p2 = agl::traits::make<Point>::apply(agl::traits::point::access_point<TPoint, 0>::get(point2),
+                                                  agl::traits::point::access_point<TPoint, 1>::get(point2));
         return agl::line::line_section<Point>(std::move(p1), std::move(p2));
     }
 };

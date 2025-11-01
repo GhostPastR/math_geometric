@@ -29,7 +29,7 @@ struct intersection<Line1,
         const auto [a1,b1,c1] = agl::algorithm::equation_of_line(line1);
         const auto [a2,b2,c2] = agl::algorithm::equation_of_line(line2);
         if(const auto c = algorithm::determine(a1, a2, b1, b2); !algorithm::compare(c, decltype(c){})){
-            auto point = agl::traits::access_create<PointOut>::get(algorithm::determine(b1, b2, c1, c2) / c,
+            auto point = agl::traits::make<PointOut>::apply(algorithm::determine(b1, b2, c1, c2) / c,
                                                                    algorithm::determine(c1, c2, a1, a2) / c);
             if(agl::algorithm::belongs_to_area_of_line(line1, point)
                 && agl::algorithm::belongs_to_area_of_line(line2, point)){

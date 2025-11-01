@@ -26,9 +26,9 @@ struct geo_coordinate_system{
 };
 
 template<typename Object>
-struct access_create{
+struct make{
     template<typename ... Value>
-    inline constexpr static auto get(Value&&... value){
+    inline constexpr static auto apply(Value&&... value){
         static_assert(false, "Access is not implemented for this object.");
     }
 };
@@ -267,30 +267,30 @@ template<> struct value<long double>{
 };
 
 
-template<> struct access_create<int>{
+template<> struct make<int>{
     template<typename Value>
-    inline constexpr static int get(Value&& value){
+    inline constexpr static int apply(const Value& value){
         return value;
     }
 };
 
-template<> struct access_create<float>{
+template<> struct make<float>{
     template<typename Value>
-    inline constexpr static float get(Value&& value){
+    inline constexpr static float apply(const Value& value){
         return value;
     }
 };
 
-template<> struct access_create<double>{
+template<> struct make<double>{
     template<typename Value>
-    inline constexpr static double get(Value&& value){
+    inline constexpr static double apply(const Value& value){
         return value;
     }
 };
 
-template<> struct access_create<long double>{
+template<> struct make<long double>{
     template<typename Value>
-    inline constexpr static long double get(Value&& value){
+    inline constexpr static long double apply(const Value& value){
         return value;
     }
 };

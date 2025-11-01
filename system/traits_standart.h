@@ -21,7 +21,7 @@ struct dimension<std::array<Point,2>>{
 };
 
 template<typename PointLine>
-struct access_create<std::array<PointLine,2>>{
+struct make<std::array<PointLine,2>>{
     template<typename Point>
     inline constexpr static auto get(const Point &point1, const Point &point2){
         using type = agl::traits::point::access_types<Point>::point;
@@ -29,8 +29,8 @@ struct access_create<std::array<PointLine,2>>{
         auto y1 = agl::traits::point::access_point<Point, 1>::get(point1);
         auto x2 = agl::traits::point::access_point<Point, 0>::get(point2);
         auto y2 = agl::traits::point::access_point<Point, 1>::get(point2);
-        return std::array<PointLine,2>{agl::traits::access_create<PointLine>::get(x1, y1),
-                                        agl::traits::access_create<PointLine>::get(x2, y2)};
+        return std::array<PointLine,2>{agl::traits::make<PointLine>::apply(x1, y1),
+                                        agl::traits::make<PointLine>::apply(x2, y2)};
     }
 };
 

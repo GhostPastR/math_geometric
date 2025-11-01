@@ -42,7 +42,7 @@ struct rotate<PointIn,
         const auto sinAngle = -std::sin(traits::value<ObjectDirection>::get(direction));
         const auto cosAngle = std::cos(traits::value<ObjectDirection>::get(direction));
         auto vector = matrix_algo::mul<Type, 2>({cosAngle, -sinAngle, sinAngle, cosAngle}, {x - rx, y - ry});
-        return agl::traits::access_create<PointIn>::get(vector[0] + rx, vector[1] + ry);
+        return agl::traits::make<PointIn>::apply(vector[0] + rx, vector[1] + ry);
     }
 };
 
@@ -68,7 +68,7 @@ struct rotate<Polygon,
                           2,
                           direction_angle>::get(item, direction, point);
         });
-        return agl::traits::access_create<Polygon>::get(std::move(new_points));
+        return agl::traits::make<Polygon>::get(std::move(new_points));
     }
 };
 

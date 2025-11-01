@@ -6,7 +6,7 @@
 
 namespace agl{
 
-using point2_d = agl::point::decart::point2d<double>;
+using point2_d = agl::point::decart::point2<double>;
 using point3_d = agl::point::decart::point3d<double>;
 
 using polar2_d = agl::point::polar::polar2d<double, agl::unit::angle>;

@@ -19,13 +19,13 @@ struct dimension<agl::line::straight_line<Type,CoordinateSystem>>{
 };
 
 template<typename Type, typename CoordinateSystem>
-struct access_create<agl::line::straight_line<Type,CoordinateSystem>>{
-    inline constexpr static auto get(const Type &a, const Type &b, const Type &c){
+struct make<agl::line::straight_line<Type,CoordinateSystem>>{
+    inline constexpr static auto apply(const Type &a, const Type &b, const Type &c){
         return agl::line::straight_line<Type,CoordinateSystem>(a, b, c);
     }
 
     template<typename Value>
-    inline constexpr static auto get(const Value &a, const Value &b, const Value &c){
+    inline constexpr static auto apply(const Value &a, const Value &b, const Value &c){
         return agl::line::straight_line<Type,CoordinateSystem>(agl::traits::value<Value>::get(a),
                                                                 agl::traits::value<Value>::get(b),
                                                                 agl::traits::value<Value>::get(c));

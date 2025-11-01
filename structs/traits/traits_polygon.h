@@ -20,18 +20,18 @@ struct dimension<agl::figure::polygon<Point, Tag>>{
 };
 
 template<typename Point, typename Tag>
-struct access_create<agl::figure::polygon<Point, Tag>>{
-    inline constexpr static auto get(const std::vector<Point> &points){
-        return agl::figure::polygon<Point, Tag>(std::move(points));
+struct make<agl::figure::polygon<Point, Tag>>{
+    inline constexpr static auto apply(const std::vector<Point> &points){
+        return agl::figure::polygon<Point, Tag>(points);
     }
 
     template<typename TPoint>
-    inline constexpr static auto get(const std::vector<TPoint> &points){
+    inline constexpr static auto apply(const std::vector<TPoint> &points){
         std::vector<Point> temp;
         temp.reserve(points.size());
         std::ranges::transform(points, temp.begin(), [](auto &&item){
-            return agl::traits::access_create<Point>::get(agl::traits::point::access_point<TPoint, 0>::get(item),
-                                                          agl::traits::point::access_point<TPoint, 1>::get(item));
+            return agl::traits::make<Point>::get(agl::traits::point::access_point<TPoint, 0>::get(item),
+                                                 agl::traits::point::access_point<TPoint, 1>::get(item));
         });
         return agl::figure::polygon<Point, Tag>(std::move(temp));
     }

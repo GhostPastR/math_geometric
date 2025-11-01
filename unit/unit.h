@@ -203,9 +203,9 @@ struct agl::traits::value<agl::unit::Value<UnitValue, TypeValue>>{
 
 template<typename UnitValue, agl::unit::c_type_value TypeValue>
     requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
-struct agl::traits::access_create<agl::unit::Value<UnitValue, TypeValue>>{
+struct agl::traits::make<agl::unit::Value<UnitValue, TypeValue>>{
     template<typename Value>
-    inline constexpr static auto get(Value&& value){
+    inline constexpr static auto apply(TypeValue&& value){
         return agl::unit::Value<UnitValue, TypeValue>(std::forward<Value>(value));
     }
 };

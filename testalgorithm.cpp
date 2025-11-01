@@ -68,8 +68,8 @@ void TestAlgorithm::test_direction()
             QVERIFY(value == 45_deg);
         }
         {
-            agl::point::decart::point2d<agl::unit::distance> point1{0_m,0_m};
-            agl::point::decart::point2d<agl::unit::distance> point2{5_m,5_m};
+            agl::point::decart::point2<agl::unit::distance> point1{0_m,0_m};
+            agl::point::decart::point2<agl::unit::distance> point2{5_m,5_m};
             auto value = agl::algorithm::direction<agl::unit::angle>(point1, point2);
             QVERIFY(value == 45_deg);
         }
@@ -81,28 +81,57 @@ void TestAlgorithm::test_create_point()
     {//create_point
         {
             agl::point2_d point{10,10};
-            auto value = agl::algorithm::create_point(point, 90_deg, 10.);
+            auto value = agl::algorithm::create_point<agl::point2_d>(point, 10., 90_deg);
             QVERIFY(agl::algorithm::compare(value.x(), 20.));
             QVERIFY(agl::algorithm::compare(value.y(), 10.));
         }
         {
             agl::point2_d point{10,10};
-            auto value = agl::algorithm::create_point(point, 0_deg, 10.);
+            auto value = agl::algorithm::create_point<agl::point2_d>(point, 10., 0_deg);
             QVERIFY(agl::algorithm::compare(value.x(), 10.));
             QVERIFY(agl::algorithm::compare(value.y(), 20.));
         }
         {
             agl::point2_d point{10,10};
-            auto value = agl::algorithm::create_point(point, 180_deg, 10.);
+            auto value = agl::algorithm::create_point<agl::point2_d>(point, 10., 180_deg);
             QVERIFY(agl::algorithm::compare(value.x(), 10.));
             QVERIFY(agl::algorithm::compare(value.y(), 0.));
         }
         {
             agl::point2_d point{10,10};
-            auto value = agl::algorithm::create_point(point, 270_deg, 10.);
+            auto value = agl::algorithm::create_point<agl::point2_d>(point, 10., 270_deg);
             QVERIFY(agl::algorithm::compare(value.x(), 0.));
             QVERIFY(agl::algorithm::compare(value.y(), 10.));
         }
+    }
+
+    {//create_point
+        {
+            agl::point3_d point{0, 0, 0};
+            auto value = agl::algorithm::create_point<agl::point3_d>(point, 10., 0_deg, 45_deg);
+            QVERIFY(agl::algorithm::compare(value.x(), 0.));
+            QVERIFY(agl::algorithm::compare(value.y(), 7.071068));
+            QVERIFY(agl::algorithm::compare(value.z(), 7.071068));
+        }
+        {
+            agl::point3_d point{0, 0, 0};
+            auto value = agl::algorithm::create_point<agl::point3_d>(point, 10., 45_deg, 45_deg);
+            QVERIFY(agl::algorithm::compare(value.x(), 5.));
+            QVERIFY(agl::algorithm::compare(value.y(), 5.));
+            QVERIFY(agl::algorithm::compare(value.z(), 7.071068));
+        }
+        // {
+        //     agl::point2_d point{10,10};
+        //     auto value = agl::algorithm::create_point(point, 180_deg, 10.);
+        //     QVERIFY(agl::algorithm::compare(value.x(), 10.));
+        //     QVERIFY(agl::algorithm::compare(value.y(), 0.));
+        // }
+        // {
+        //     agl::point2_d point{10,10};
+        //     auto value = agl::algorithm::create_point(point, 270_deg, 10.);
+        //     QVERIFY(agl::algorithm::compare(value.x(), 0.));
+        //     QVERIFY(agl::algorithm::compare(value.y(), 10.));
+        // }
     }
 }
 
@@ -538,7 +567,7 @@ void TestAlgorithm::test_point_on_curve()
     {
         auto half_line = agl::half_line2_d(agl::point2_d{1.,2.}, 45_deg);
         auto point = agl::algorithm::point_on_curve<agl::point2_d>(half_line, 10.);
-        QVERIFY(point == agl::point2_d(8.071068,9.071068));
+        QVERIFY(point == agl::point2_d(8.071068, 9.071068));
     }
 
     {
@@ -846,18 +875,18 @@ void TestAlgorithm::test_create_circle()
                                                                     agl::algorithm::strategy::create_circle_angle_point>(0_deg, point, 10.);
             QVERIFY((circle1->center() == agl::point2_d(-10, 5)) && (circle2->center() == agl::point2_d(10, 5)));
         }
-        // {
-        //     auto point = agl::point2_d(0, 0);
-        //     auto [circle1, circle2] = agl::algorithm::create_circle<agl::circle2_d,
-        //                                                             agl::algorithm::strategy::create_circle_angle_point>(0_deg, point, 10.);
-        //     QVERIFY((circle1->center() == agl::point2_d(-10, 0)) && (circle2->center() == agl::point2_d(10, 0)));
-        // }
-        // {
-        //     auto point = agl::point2_d(5, 5);
-        //     auto [circle1, circle2] = agl::algorithm::create_circle<agl::circle2_d,
-        //                                                             agl::algorithm::strategy::create_circle_angle_point>(45_deg, point, 10.);
-        //     QVERIFY((circle1->center() == agl::point2_d(-2.071068, 12.071068)) && (circle2->center() == agl::point2_d(12.071068, -2.071068)));
-        // }
+        {
+            auto point = agl::point2_d(0, 0);
+            auto [circle1, circle2] = agl::algorithm::create_circle<agl::circle2_d,
+                                                                    agl::algorithm::strategy::create_circle_angle_point>(0_deg, point, 10.);
+            QVERIFY((circle1->center() == agl::point2_d(-10, 0)) && (circle2->center() == agl::point2_d(10, 0)));
+        }
+        {
+            auto point = agl::point2_d(5, 5);
+            auto [circle1, circle2] = agl::algorithm::create_circle<agl::circle2_d,
+                                                                    agl::algorithm::strategy::create_circle_angle_point>(45_deg, point, 10.);
+            QVERIFY((circle1->center() == agl::point2_d(-2.071068, 12.071068)) && (circle2->center() == agl::point2_d(12.071068, -2.071068)));
+        }
     }
 }
 

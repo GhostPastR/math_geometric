@@ -44,7 +44,7 @@ struct create_polygon<PolygonOut,
         const auto width = agl::traits::value<Distance>::get(w);
         const auto height = agl::traits::value<Distance>::get(h);
         std::vector<PointPolyg> temp({{x, y}, {x + width, y}, {x + width, y + height}, {x, y + height}});
-        return agl::traits::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::make<PolygonOut>::apply(std::move(temp));
     }
 };
 
@@ -145,7 +145,7 @@ struct create_polygon<PolygonOut,
         }
         const auto p2 = PointPolyg{x + _a, y};
         std::vector<PointPolyg> temp({{x, y}, p2, agl::algorithm::rotate(PointPolyg{x + _a - b, y}, -acos(_acos), p2)});
-        return agl::traits::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::make<PolygonOut>::apply(std::move(temp));
     }
 };
 
@@ -172,7 +172,7 @@ struct create_polygon<PolygonOut,
         const auto &_ac = agl::traits::value<Angle>::get(ac);
         const auto p2 = PointPolyg{x + _a, y};
         std::vector<PointPolyg> temp({{x, y}, p2, agl::algorithm::rotate(p2, -_ac, point)});
-        return agl::traits::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::make<PolygonOut>::apply(std::move(temp));
     }
 };
 
@@ -201,7 +201,7 @@ struct create_polygon<PolygonOut,
         const auto p2 = PointPolyg{x + _a, y};
         const auto b = _a * std::sin(_ab) / std::sin(agl::algorithm::pi<Type> - _ac - _ab);
         std::vector<PointPolyg> temp({{x, y}, p2, agl::algorithm::rotate(PointPolyg{x - b, y}, _ac, p2)});
-        return agl::traits::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::make<PolygonOut>::apply(std::move(temp));
     }
 };
 
@@ -223,7 +223,7 @@ struct create_polygon<PolygonOut,
         const auto &_w = agl::traits::value<Distance>::get(w);
         const auto &_h = agl::traits::value<Distance>::get(h);
         std::vector<PointPolyg> temp({{x, y}, {x + _w, y}, {x, y + _h}});
-        return agl::traits::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::make<PolygonOut>::apply(std::move(temp));
     }
 };
 
@@ -247,7 +247,7 @@ struct create_polygon<PolygonOut,
         const auto &_angle = agl::traits::value<Angle>::get(angle);
         const auto height = _w * std::tan(_angle);
         std::vector<PointPolyg> temp({{x, y}, {x + _w, y}, {x, y + height}});
-        return agl::traits::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::make<PolygonOut>::apply(std::move(temp));
     }
 };
 
@@ -320,7 +320,7 @@ struct create_polygon<PolygonOut,
         const auto &_a = agl::traits::value<Distance>::get(a);
         const auto p2 = PointPolyg{x + _a, y};
         std::vector<PointPolyg> temp({{x, y}, p2, agl::algorithm::rotate(PointPolyg{x, y}, -agl::algorithm::pi<Type> / 6, p2)});
-        return agl::traits::access_create<PolygonOut>::get(std::move(temp));
+        return agl::traits::make<PolygonOut>::apply(std::move(temp));
     }
 };
 
@@ -373,7 +373,7 @@ struct create_polygon<PolygonOut,
             const auto &y = agl::traits::point::access_point<Point, 1>::get(center);
             return Point{x + radius * std::sin(i * angle), y + radius * std::cos(i * angle)};
         });
-        return agl::traits::access_create<PolygonOut>::get(std::move(points));
+        return agl::traits::make<PolygonOut>::apply(std::move(points));
     }
 };
 

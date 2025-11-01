@@ -36,7 +36,7 @@ struct perpendicular<Line,
 
         using array = std::array<std::remove_const_t<decltype(a)>,3>;
         const auto [na,nb,nc] = agl::algorithm::normalized(array{b, -a, algorithm::determine(a, b, x, y)});
-        return agl::traits::access_create<LineOut>::get(na, nb, nc);
+        return agl::traits::make<LineOut>::apply(na, nb, nc);
     }
 };
 

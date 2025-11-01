@@ -52,12 +52,12 @@ struct tangent_circle<Circle,
         const auto dc = (algorithm::pi<Type> - std::acos(fabs(_dradius) / _len));
         return std::pair<LineSectionOut, LineSectionOut>{
             {
-                agl::algorithm::create_point<Point>(center1, _angle + dc, radius1),
-                agl::algorithm::create_point<Point>(center2, _angle + dc, radius2)
+                agl::algorithm::create_point<Point>(center1, radius1, _angle + dc),
+                agl::algorithm::create_point<Point>(center2, radius2, _angle + dc)
             },
             {
-                agl::algorithm::create_point<Point>(center1, _angle - dc, radius1),
-                agl::algorithm::create_point<Point>(center2, _angle - dc, radius2)
+                agl::algorithm::create_point<Point>(center1, radius1, _angle - dc),
+                agl::algorithm::create_point<Point>(center2, radius2, _angle - dc)
             },
         };
     }
@@ -93,12 +93,12 @@ struct tangent_circle<Circle,
         const auto _angle2 = _course - dc;
         return std::pair<LineSectionOut, LineSectionOut>{
             {
-                agl::algorithm::create_point<Point>(center1, flag ? _angle1 : _angle1 + algorithm::pi<Type>, radius1),
-                agl::algorithm::create_point<Point>(center2, !flag ? _angle1 : _angle1 + algorithm::pi<Type>, radius2)
+                agl::algorithm::create_point<Point>(center1, radius1, flag ? _angle1 : _angle1 + algorithm::pi<Type>),
+                agl::algorithm::create_point<Point>(center2, radius2, !flag ? _angle1 : _angle1 + algorithm::pi<Type>)
             },
             {
-                agl::algorithm::create_point<Point>(center1, flag ? _angle2 : _angle2 + algorithm::pi<Type>, radius1),
-                agl::algorithm::create_point<Point>(center2, !flag ? _angle2 : _angle2 + algorithm::pi<Type>, radius2)
+                agl::algorithm::create_point<Point>(center1, radius1, flag ? _angle2 : _angle2 + algorithm::pi<Type>),
+                agl::algorithm::create_point<Point>(center2, radius2, !flag ? _angle2 : _angle2 + algorithm::pi<Type>)
             },
         };
     }
@@ -128,8 +128,8 @@ struct tangent_circle<Circle,
         auto dangle = std::acos(radius / lenght);
 
         return std::pair<LineSectionOut, LineSectionOut>{
-            {agl::algorithm::create_point<PointLine>(center, angle + dangle, radius), point},
-            {agl::algorithm::create_point<PointLine>(center, angle - dangle, radius), point},
+            {agl::algorithm::create_point<PointLine>(center, radius, angle + dangle), point},
+            {agl::algorithm::create_point<PointLine>(center, radius, angle - dangle), point},
         };
     }
 };

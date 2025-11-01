@@ -6,9 +6,15 @@
 namespace agl::algorithm {
 
 //метод расчитывает координаты новой точки
-template<typename Point, typename Turning, typename Range, typename NewPoint = Point>
-inline constexpr auto create_point(const Point &point, const Turning &turning, const Range &range){
-    return geometry::create_point<Point, Turning, Range, NewPoint>(point, turning, range);
+template<typename OutPoint,
+         typename Point,
+         typename Range,
+         typename ...Turning>
+inline constexpr auto create_point(const Point &point, const Range &range, const Turning &...turning){
+    return geometry::create_point<OutPoint,
+                                  Point,
+                                  Range,
+                                  Turning...>(point, range, turning...);
 }
 
 }

@@ -33,9 +33,9 @@ struct get_lines<Figure,
         std::transform(points.cbegin(), std::prev(points.cend()),
                        std::next(points.cbegin()), std::back_inserter(lines),
                        [](const auto &point1, const auto &point2){
-            return agl::traits::access_create<OutObject>::get(point1, point2);
+            return agl::traits::make<OutObject>::apply(point1, point2);
         });
-        lines.push_back(agl::traits::access_create<OutObject>::get(points.back(), points.front()));
+        lines.push_back(agl::traits::make<OutObject>::apply(points.back(), points.front()));
         return lines;
     }
 };

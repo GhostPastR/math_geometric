@@ -1,7 +1,6 @@
 #ifndef AGL_ALGORITHM_BELONGS_TO_AREA_OF_LINE_IMPLEMENTATION_H
 #define AGL_ALGORITHM_BELONGS_TO_AREA_OF_LINE_IMPLEMENTATION_H
 
-#include "system/assert.h"
 #include "system/traits.h"
 #include "system/system_concept.h"
 #include "algorithm/math_algorithm.h"
@@ -10,9 +9,7 @@
 namespace agl::algorithm::dispatch {
 
 template<typename Line,
-         typename Point,
-         typename CoordinateSystem,
-         std::size_t Dimension>
+         typename Point>
 struct belongs_to_area_of_line{
     inline constexpr static auto get(const Line &line,
                                      const Point &point){
@@ -21,13 +18,9 @@ struct belongs_to_area_of_line{
 };
 
 template<c_straight_line Line,
-         c_point_2d Point,
-         typename CoordinateSystem,
-         std::size_t Dimension>
-struct belongs_to_area_of_line<Line,
-                               Point,
-                               CoordinateSystem,
-                               Dimension>{
+         c_point_2d Point>
+    requires c_cartesian<Line> && c_cartesian<Point>
+struct belongs_to_area_of_line<Line, Point>{
     inline constexpr static bool get(const Line &line,
                                      const Point &point){
         return true;
@@ -36,10 +29,8 @@ struct belongs_to_area_of_line<Line,
 
 template<c_half_line_2d Line,
          c_point_2d Point>
-struct belongs_to_area_of_line<Line,
-                               Point,
-                               system_coordinat::cartesian,
-                               2>{
+    requires c_cartesian<Line> && c_cartesian<Point>
+struct belongs_to_area_of_line<Line, Point>{
     inline constexpr static bool get(const Line &line,
                                      const Point &point){
         using type = traits::half_line::access_types<Line>::direction;
@@ -71,10 +62,8 @@ struct belongs_to_area_of_line<Line,
 
 template<c_line_section Line,
          c_point_2d Point>
-struct belongs_to_area_of_line<Line,
-                               Point,
-                               system_coordinat::cartesian,
-                               2>{
+    requires c_cartesian<Line> && c_cartesian<Point>
+struct belongs_to_area_of_line<Line, Point>{
     inline constexpr static bool get(const Line &line,
                                      const Point &point){
         using point_line = traits::line_section::access_types<Line>::point;
@@ -94,29 +83,5 @@ struct belongs_to_area_of_line<Line,
 };
 
 }
-
-
-namespace agl::algorithm::geometry {
-
-template<typename Line,
-         typename Object>
-inline constexpr bool belongs_to_area_of_line(const Line &line,
-                                              const Object &object){
-    using type_cs1 = traits::coordinate_system<Line>::system;
-    using type_cs2 = traits::coordinate_system<Object>::system;
-    constexpr auto dimension1 = traits::dimension<Line>::value();
-    constexpr auto dimension2 = traits::dimension<Object>::value();
-
-    static_assert(agl::assert::is_correct_compare<type_cs1, type_cs2>(), "Error!");
-    static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
-
-    return dispatch::belongs_to_area_of_line<Line,
-                                             Object,
-                                             type_cs1,
-                                             dimension1>::get(line, object);
-}
-
-}
-
 
 #endif // AGL_ALGORITHM_BELONGS_TO_AREA_OF_LINE_IMPLEMENTATION_H

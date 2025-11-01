@@ -24,18 +24,18 @@ struct dimension<agl::circle::circle<PointCenter, TypeRadius>>{
 };
 
 template<typename PointCenter, typename TypeRadius>
-struct access_create<agl::circle::circle<PointCenter, TypeRadius>>{
+struct make<agl::circle::circle<PointCenter, TypeRadius>>{
     template<typename Point, typename Radius>
-    inline constexpr static auto get(Point &&point, Radius &&radius){
+    inline constexpr static auto apply(Point &&point, Point &&radius){
         using rm_point = std::remove_cvref_t<Point>;
-        auto center = agl::traits::access_create<PointCenter>::get(agl::traits::point::access_point<rm_point, 0>::get(std::forward<Point>(point)),
-                                                                   agl::traits::point::access_point<rm_point, 1>::get(std::forward<Point>(point)));
+        auto center = agl::traits::make<PointCenter>::apply(agl::traits::point::access_point<rm_point, 0>::get(std::forward<Point>(point)),
+                                                            agl::traits::point::access_point<rm_point, 1>::get(std::forward<Point>(point)));
         return agl::circle::circle<PointCenter, TypeRadius>(std::move(center),
-                                                            agl::traits::access_create<TypeRadius>::get(radius));
+                                                            agl::traits::make<TypeRadius>::apply(radius));
     }
 
-    inline constexpr static auto get(const PointCenter &point, const TypeRadius &radius){
-        return agl::circle::circle<PointCenter, TypeRadius>(std::forward<PointCenter>(point), std::forward<TypeRadius>(radius));
+    inline constexpr static auto apply(const PointCenter &point, const TypeRadius &radius){
+        return agl::circle::circle<PointCenter, TypeRadius>(point, radius);
     }
 };
 
