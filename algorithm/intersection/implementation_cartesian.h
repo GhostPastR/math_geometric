@@ -49,7 +49,8 @@ struct intersection<ElCircle,
     inline constexpr static auto get(const ElCircle &el_circle, const Line &line)
         -> std::pair<std::optional<PointOut>, std::optional<PointOut>>{
         using Point = agl::traits::circle::access_types<ElCircle>::center;
-        using Type = agl::traits::point::access_types<Point>::point;
+        // using Type = agl::traits::point::access_types<Point>::point;
+        using Type = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
         const auto &center = traits::circle::access_center<ElCircle>::get(el_circle);
         const auto &radius = traits::circle::access_radius<ElCircle>::get(el_circle);
         const auto &x = traits::point::access_point<Point, 0>::get(center);
@@ -184,20 +185,5 @@ struct intersection<Polygon,
 // };
 
 }
-
-
-namespace agl::algorithm::geometry::cartesian {
-
-template<typename Figure1,
-         typename Figure2,
-         typename PointOut>
-inline constexpr auto intersection(const Figure1 &figure1, const Figure2 &figure2){
-    return agl::algorithm::cartesian::d2::dispatch::intersection<Figure1,
-                                                                 Figure2,
-                                                                 PointOut>::get(figure1, figure2);
-}
-
-}
-
 
 #endif // AGL_ALGORITHM_INTERSECTION_CARTESIAN_IMPLEMENTATION_H

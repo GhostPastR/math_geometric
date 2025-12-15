@@ -39,12 +39,13 @@ public:
 template<typename Type>
 struct std::formatter<agl::point::decart::point2<Type>> {
     std::formatter<std::string> _formatter;
+
     constexpr auto parse(std::format_parse_context& parse_context) {
         return _formatter.parse(parse_context);
     }
 
     auto format(const agl::point::decart::point2<Type>& point, std::format_context& format_context) const {
-        return _formatter.format(std::format("Point(x={} y={})", point.x(), point.y()), format_context);
+        return _formatter.format(std::format("Point(x={}, y={})", point.x(), point.y()), format_context);
     }
 };
 

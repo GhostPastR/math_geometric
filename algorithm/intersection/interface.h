@@ -10,9 +10,9 @@ template<typename PointOut,
          typename Figure1,
          typename Figure2>
 inline constexpr auto intersection(const Figure1 &figure1, const Figure2 &figure2){
-    return geometry::intersection<Figure1,
+    return dispatch::intersection<Figure1,
                                   Figure2,
-                                  PointOut>(figure1, figure2);
+                                  PointOut>::get(figure1, figure2);
 }
 
 }

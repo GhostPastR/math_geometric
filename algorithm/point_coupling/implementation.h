@@ -4,44 +4,48 @@
 #include "algorithm/distance/interface.h"
 #include "algorithm/get_lines/interface.h"
 
-#include "algorithm/point_coupling/implementation_line.h"
-
 namespace agl::algorithm::dispatch {
 
 template<typename Figure,
-         typename Point,
-         typename CoordinateSystem,
-         std::size_t Dimension>
+         typename Point>
 struct point_coupling{
     inline constexpr static auto get(const Figure &figure, const Point &point, bool is_perpendicular){
         static_assert(false, "No '' calculations have been implemented for these objects.");
     }
 };
 
-template<c_group_line Line,
-         c_point_2d Point,
-         typename CoordinateSystem,
-         std::size_t Dimension>
+//Добавить для луча и прямой
+template<c_line_section Line,
+         c_point_2d Point>
+    requires c_cartesian_all<Line, Point> && c_demension_2_all<Line, Point>
 struct point_coupling<Line,
-                      Point,
-                      CoordinateSystem,
-                      Dimension>{
+                      Point>{
     inline constexpr static auto get(const Line &line, const Point &point, bool is_perpendicular) -> std::optional<Point>{
-        return agl::algorithm::dispatch::group_line::point_coupling<Line,
-                                                                    Point,
-                                                                    CoordinateSystem,
-                                                                    Dimension>(line, point, is_perpendicular);
+        using str_line = ::agl::traits::line_section::access_straight_line<Line>::type;
+        auto p_line = ::agl::algorithm::perpendicular<str_line>(line, point);
+        if(const auto int_point = ::agl::algorithm::intersection<Point>(line, p_line); int_point.has_value()){
+            return int_point;
+        }
+        const auto &start = ::agl::traits::line_section::access_start<Line>::get(line);
+        const auto &stop = ::agl::traits::line_section::access_stop<Line>::get(line);
+        if(is_perpendicular){
+            return std::nullopt;
+        }
+        auto d1 = ::agl::algorithm::distance(point, start);
+        auto d2 = ::agl::algorithm::distance(point, stop);
+        if(d1 < d2){
+            return start;
+        }
+        return stop;
     }
 };
 
 
-
 template<c_group_polygon Polygon,
          c_point_2d Point>
+    requires c_cartesian_all<Polygon, Point> && c_demension_2_all<Polygon, Point>
 struct point_coupling<Polygon,
-                      Point,
-                      agl::system_coordinat::cartesian,
-                      2>{
+                      Point>{
     inline constexpr static auto get(const Polygon &polygon, const Point &point, bool is_perpendicular) -> std::optional<Point>{
         using str_line = agl::traits::polygon::access_line_section<Polygon>::type;
         using point_polygon = agl::traits::polygon::access_types<Polygon>::point;
@@ -50,9 +54,7 @@ struct point_coupling<Polygon,
         c_points.reserve(lines.size() + 1);
         std::ranges::transform(lines, std::back_inserter(c_points), [point](const auto &line){
             return point_coupling<str_line,
-                                  Point,
-                                  agl::system_coordinat::cartesian,
-                                  2>::get(line, point, true);
+                                  Point>::get(line, point, true);
         });
         std::erase_if(c_points, [](const auto &item){
             return !item.has_value();
@@ -71,28 +73,5 @@ struct point_coupling<Polygon,
 };
 
 }
-
-
-namespace agl::algorithm::geometry {
-
-template<typename Figure,
-         typename Point>
-inline constexpr auto point_coupling(const Figure &figure, const Point &point, bool is_perpendicular){
-    using type_coordinate_system1 = traits::coordinate_system<Figure>::system;
-    using type_coordinate_system2 = traits::coordinate_system<Point>::system;
-    constexpr auto dimension1 = traits::dimension<Figure>::value();
-    constexpr auto dimension2 = traits::dimension<Point>::value();
-
-    static_assert(agl::assert::is_correct_compare<type_coordinate_system1, type_coordinate_system2>(), "Error!");
-    static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
-
-    return dispatch::point_coupling<Figure,
-                                    Point,
-                                    type_coordinate_system1,
-                                    dimension1>::get(figure, point, is_perpendicular);
-}
-
-}
-
 
 #endif // AGL_ALGORITHM_POINT_COUPLING_IMPLEMENTATION_H

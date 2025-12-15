@@ -16,14 +16,16 @@ struct center{
     }
 };
 
-template<typename Figure,
-         typename PointOut>
-    requires c_cartesian<Figure> && c_cartesian<PointOut>
+template<c_polygon Figure,
+         c_point_2d PointOut>
+    requires c_cartesian<Figure> && c_cartesian<PointOut> && c_demension_2<Figure>
 struct center<Figure,
               PointOut>{
     inline constexpr static auto get(const Figure &figure){
         using Point = agl::traits::polygon::access_types<Figure>::point;
-        using Type = agl::traits::point::access_types<Point>::point;
+        // using Type = agl::traits::point::access_types<Point>::point;
+        using Type = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
+
         const auto &points = agl::traits::polygon::access_points<Figure>::get(figure);
         const auto sum = std::accumulate(points.begin(), points.end(), std::pair<Type, Type>(),
                                    [](std::pair<Type, Type> sum, auto item){
@@ -36,5 +38,7 @@ struct center<Figure,
 };
 
 }
+
+//На будущие: добавить функции для 3D
 
 #endif // AGL_ALGORITHM_CENTER_IMPLEMENTATION_H

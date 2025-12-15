@@ -2,7 +2,6 @@
 #define AGL_ALGORITHM_CREATE_POLYGON_IMPLEMENTATION_H
 
 #include <cmath>
-#include "system/assert.h"
 #include "system/traits.h"
 #include "algorithm/tag_algoritm.h"
 #include "algorithm/rotate/interface.h"
@@ -16,8 +15,6 @@ class Temp;
 
 template<typename PolygonOut,
          typename Tag,
-         typename CoordinateSystem,
-         std::size_t Dimension,
          typename Strategy,
          typename ...Args>
 struct create_polygon{
@@ -28,11 +25,10 @@ struct create_polygon{
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::rectangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       agl::algorithm::strategy::create_rectangle_point_sides,
                       Point,
                       Distance,
@@ -50,11 +46,10 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::rectangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       agl::algorithm::strategy::create_rectangle_center_sides,
                       Point,
                       Distance,
@@ -66,8 +61,6 @@ struct create_polygon<PolygonOut,
         const auto &height = agl::traits::value<Distance>::get(h);
         return agl::algorithm::dispatch::create_polygon<PolygonOut,
                                                         agl::tag::polygon::rectangle,
-                                                        agl::system_coordinat::cartesian,
-                                                        2,
                                                         create_rectangle_point_sides,
                                                         Point,
                                                         Distance,
@@ -78,19 +71,16 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::regular,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_square_point_sides,
                       Point,
                       Distance>{
     inline constexpr static auto get(const Point &point, const Distance &w){
         return agl::algorithm::dispatch::create_polygon<PolygonOut,
                                                         agl::tag::polygon::rectangle,
-                                                        agl::system_coordinat::cartesian,
-                                                        2,
                                                         create_rectangle_point_sides,
                                                         Point,
                                                         Distance,
@@ -100,19 +90,16 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::regular,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_square_center_sides,
                       Point,
                       Distance>{
     inline constexpr static auto get(const Point &point, const Distance &w){
         return agl::algorithm::dispatch::create_polygon<PolygonOut,
                                                         agl::tag::polygon::rectangle,
-                                                        agl::system_coordinat::cartesian,
-                                                        2,
                                                         create_rectangle_center_sides,
                                                         Point,
                                                         Distance,
@@ -122,11 +109,10 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_triangle_point_sides,
                       Point,
                       Distance,
@@ -152,12 +138,11 @@ struct create_polygon<PolygonOut,
 //warning
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance,
-         typename Angle>
+         c_unit Distance,
+         c_unit Angle>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_triangle_point_sides_angle,
                       Point,
                       Distance,
@@ -179,12 +164,11 @@ struct create_polygon<PolygonOut,
 //warning
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance,
-         typename Angle>
+         c_unit Distance,
+         c_unit Angle>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_triangle_point_sides_angles,
                       Point,
                       Distance,
@@ -207,11 +191,10 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_triangle_rectangular_sides,
                       Point,
                       Distance,
@@ -229,12 +212,11 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance,
-         typename Angle>
+         c_unit Distance,
+         c_unit Angle>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_triangle_rectangular_sides_angles,
                       Point,
                       Distance,
@@ -255,11 +237,10 @@ struct create_polygon<PolygonOut,
 //throw
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_triangle_isosceles_sides,
                       Point,
                       Distance,
@@ -267,8 +248,6 @@ struct create_polygon<PolygonOut,
     inline constexpr static auto get(const Point &point, const Distance &a, const Distance &c){
         return agl::algorithm::dispatch::create_polygon<PolygonOut,
                                                         agl::tag::polygon::triangle,
-                                                        agl::system_coordinat::cartesian,
-                                                        2,
                                                         create_triangle_point_sides,
                                                         Point,
                                                         Distance,
@@ -279,12 +258,11 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance,
-         typename Angle>
+         c_unit Distance,
+         c_unit Angle>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_triangle_isosceles_sides_angles,
                       Point,
                       Distance,
@@ -292,8 +270,6 @@ struct create_polygon<PolygonOut,
     inline constexpr static auto get(const Point &point, const Distance &a, const Angle &angle){
         return agl::algorithm::dispatch::create_polygon<PolygonOut,
                                                         agl::tag::polygon::triangle,
-                                                        agl::system_coordinat::cartesian,
-                                                        2,
                                                         create_triangle_point_sides_angle,
                                                         Point,
                                                         Distance,
@@ -304,11 +280,10 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::triangle,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_triangle_regular,
                       Point,
                       Distance>{
@@ -326,11 +301,10 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::regular,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_triangle_regular,
                       Point,
                       Distance,
@@ -338,8 +312,6 @@ struct create_polygon<PolygonOut,
     inline constexpr static auto get(const Point &point, const Distance &a, int count){
         return agl::algorithm::dispatch::create_polygon<PolygonOut,
                                                         agl::tag::polygon::triangle,
-                                                        agl::system_coordinat::cartesian,
-                                                        2,
                                                         create_triangle_regular,
                                                         Point,
                                                         Distance>::get(point, a);
@@ -349,11 +321,10 @@ struct create_polygon<PolygonOut,
 
 template<c_create_polygon PolygonOut,
          c_point_2d Point,
-         typename Distance>
+         c_unit Distance>
+requires c_cartesian<PolygonOut> && c_cartesian<Point> && c_demension_2<PolygonOut>
 struct create_polygon<PolygonOut,
                       agl::tag::polygon::regular,
-                      agl::system_coordinat::cartesian,
-                      2,
                       create_polygon_regular,
                       Point,
                       Distance,
@@ -377,27 +348,6 @@ struct create_polygon<PolygonOut,
     }
 };
 
-
-}
-
-namespace agl::algorithm::geometry {
-
-template<typename PolygonOut,
-         typename Strategy,
-         typename ...Args>
-inline constexpr auto create_polygon(Args&& ...args){
-    using type_cs = traits::coordinate_system<PolygonOut>::system;
-    using Tag = agl::traits::polygon::access_tag<PolygonOut>::type_tag;
-    constexpr auto dimension = traits::dimension<PolygonOut>::value();
-    static_assert(agl::assert::is_correct<type_cs>(), "Error!");
-    static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
-    return dispatch::create_polygon<PolygonOut,
-                                    Tag,
-                                    type_cs,
-                                    dimension,
-                                    Strategy,
-                                    Args...>::get(std::forward<Args>(args)...);
-}
 
 }
 

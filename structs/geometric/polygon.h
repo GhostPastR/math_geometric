@@ -11,7 +11,7 @@ template<typename Point, typename Tag>
 class polygon{
 public:
     constexpr polygon() = default;
-    polygon(const std::vector<Point> &points, bool correctness_check = false) : points_(points){
+    constexpr polygon(const std::vector<Point> &points, bool correctness_check = false) : points_(points){
         if(correctness_check && !agl::algorithm::is_correct_polygon(*this)){
             throw std::logic_error("Couldn't create convex polygon!");
         }

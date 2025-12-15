@@ -13,8 +13,6 @@ namespace agl::algorithm::dispatch {
 template<typename Object,
          typename ObjectDirection,
          typename Point,
-         typename CoordinateSystem,
-         std::size_t Dimension,
          typename TypeObjectDirection>
 struct rotate{
     inline constexpr static auto get(const Object &, const ObjectDirection&, const Point&){
@@ -26,14 +24,14 @@ struct rotate{
 template<c_point_2d PointIn,
          typename ObjectDirection,
          c_point_2d Point>
+    requires c_cartesian_all<PointIn, Point> && c_demension_2_all<PointIn, Point>
 struct rotate<PointIn,
               ObjectDirection,
               Point,
-              system_coordinat::cartesian,
-              2,
               direction_angle>{
     inline constexpr static auto get(const PointIn &point_in, const ObjectDirection &direction, const Point &point){
-        using Type = traits::point::access_types<PointIn>::point;
+        using Type = std::tuple_element<0, typename agl::traits::point::access_types<PointIn>::types>::type;
+        // using Type = traits::point::access_types<PointIn>::point;
         const auto x = traits::point::access_point<Point, 0>::get(point_in);
         const auto y = traits::point::access_point<Point, 1>::get(point_in);
         const auto rx = traits::point::access_point<Point, 0>::get(point);
@@ -48,12 +46,11 @@ struct rotate<PointIn,
 
 template<c_polygon Polygon,
          typename ObjectDirection,
-         typename Point>
+         c_point_2d Point>
+    requires c_cartesian_all<Polygon, Point> && c_demension_2_all<Polygon, Point>
 struct rotate<Polygon,
               ObjectDirection,
               Point,
-              system_coordinat::cartesian,
-              2,
               direction_angle>{
     inline constexpr static auto get(const Polygon &polygon, const ObjectDirection &direction, const Point &point){
         using PointPolygon = agl::traits::polygon::access_types<Polygon>::point;
@@ -64,8 +61,6 @@ struct rotate<Polygon,
             return rotate<PointPolygon,
                           ObjectDirection,
                           Point,
-                          system_coordinat::cartesian,
-                          2,
                           direction_angle>::get(item, direction, point);
         });
         return agl::traits::make<Polygon>::get(std::move(new_points));
@@ -93,19 +88,13 @@ template<typename Object,
          typename ObjectDirection,
          typename Point>
 inline constexpr auto rotate(const Object &object, const ObjectDirection &direction, const Point &point){
-    using type_coordinate_system = traits::coordinate_system<Object>::system;
     using direction_object = direction_object<ObjectDirection>::type_direction_object;
-    constexpr auto dimension = traits::dimension<Object>::value();
 
-    static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
     static_assert(agl::assert::is_correct<direction_object>(), "Error!");
-    static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
     return dispatch::rotate<Object,
                             ObjectDirection,
                             Point,
-                            type_coordinate_system,
-                            dimension,
                             direction_object>::get(object, direction, point);
 }
 

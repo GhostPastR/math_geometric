@@ -9,18 +9,6 @@
 
 namespace agl::point_algo{
 
-// template<std::floating_point Type>
-// constexpr auto convert_polar(const Type &rx, const Type &ry, const Type &x, const Type &y) -> std::pair<Type,Type>{
-//     return {distance<Type, 2>({rx, ry}, {x, y}), angle(rx, ry, x, y)};
-// }
-
-
-// template<std::floating_point Type>
-// constexpr auto convert_decart(const Type &fi, const Type &psi, const Type &rx, const Type &ry) -> std::pair<Type,Type>{
-//     return new_point(rx, ry, fi, psi);
-// }
-
-
 // template<std::floating_point Type, size_t N> requires (N > 0)
 // constexpr bool is_co_directional(const std::array<Type, N> &v_r, const std::array<Type, N> &v_a, const std::array<Type, N> &v_b){
 //     std::array<Type, N> v1;

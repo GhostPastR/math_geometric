@@ -42,7 +42,7 @@ public:
 
 template<typename Type>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::decart::point3d<Type> &point){
-    os << std::format("x={} y={} z={}",
+    os << std::format("x={}, y={}, z={}",
                       agl::traits::value<Type>::get(point.x()),
                       agl::traits::value<Type>::get(point.y()),
                       agl::traits::value<Type>::get(point.z()));

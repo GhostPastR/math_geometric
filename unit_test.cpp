@@ -5,7 +5,6 @@
 #include <structs/geometric_object.h>
 
 #include "algorithm/approximation_algorithm.h"
-#include "algorithm/geo_algorithm.h"
 
 
 
@@ -20,15 +19,6 @@ using namespace agl;
 
 Unit_Test::Unit_Test(QObject *parent) : QObject{parent}{}
 
-
-void Unit_Test::test_point_algorithm()
-{
-    // {
-    //     auto value = convert_polar(point2d{10,10}, point2d{5,5});
-    //     QVERIFY(algorithm::compare(value.psi(), 5 * std::sqrt(2)));
-    //     QVERIFY(value.fi() == 225_deg);
-    // }
-}
 
 void Unit_Test::test_polygon_algorithm()
 {
@@ -85,130 +75,6 @@ void Unit_Test::test_polygon_algorithm()
 //         // }
 
 //     }
-}
-
-void Unit_Test::test_geo_algorithm()
-{
-//     {//common_survey_comp
-//         auto value = geo_algo::common_survey_comp(100'000., (0_deg).radian(), PointGeo(0_deg, 0_deg));
-//         QVERIFY(value.latitude() == 0.898316_deg);
-//         QVERIFY(value.longitude() == 0._deg);
-
-//         value = geo_algo::common_survey_comp(11'000'000., (0_deg).radian(), PointGeo(0_deg, 0_deg));
-//         QVERIFY(value.latitude() == 81.004577_deg);
-//         QVERIFY((value.longitude() == 180._deg) || (value.longitude() == -180._deg));
-
-//         value = geo_algo::common_survey_comp(1'000'000., (45_deg).radian(), PointGeo(0_deg, 0_deg));
-//         QVERIFY(value.latitude() == 6.338979_deg);
-//         QVERIFY(value.longitude() == 6.421122_deg);
-
-//         value = geo_algo::common_survey_comp(10'000'000., (67_deg).radian(), PointGeo(0_deg, 0_deg));
-//         QVERIFY(value.latitude() == 22.930826_deg);
-//         QVERIFY(value.longitude() == 90.399161_deg);
-
-//         value = geo_algo::common_survey_comp(5'000'000., (30_deg).radian(), PointGeo(10_deg, 20_deg));
-//         QVERIFY(value.latitude() == 46.492402_deg);
-//         QVERIFY(value.longitude() == 51.053114_deg);
-//     }
-
-//     {//geographic_inverse
-//         {
-//             auto value = geo_algo::geographic_inverse(PointGeo(0_deg, 0_deg), PointGeo(1_deg, 0_deg));
-//             polar2d polar(std::get<0>(value), std::get<1>(value));
-//             QVERIFY(algorithm::compare(polar.psi(), 111319.435509));
-//             QVERIFY(polar.fi() == 0._deg);
-//         }
-
-//         {
-//             auto value = geo_algo::geographic_inverse(PointGeo(10_deg, 10_deg), PointGeo(20_deg, 20_deg));
-//             polar2d polar(std::get<0>(value), std::get<1>(value));
-//             QVERIFY(algorithm::compare(polar.psi(), 1541490.960101));
-//             QVERIFY(polar.fi() == 42.635007_deg);
-//         }
-
-//         {
-//             auto value = geo_algo::geographic_inverse(PointGeo(10_deg, 170_deg), PointGeo(20_deg, -170_deg));
-//             polar2d polar(std::get<0>(value), std::get<1>(value));
-//             QVERIFY(algorithm::compare(polar.psi(), 2405529.167408));
-//             QVERIFY(polar.fi() == 60.130829_deg);
-//         }
-
-//         {
-//             auto value = geo_algo::geographic_inverse(PointGeo(0_deg, 0_deg), PointGeo(20_deg, -180_deg));
-//             polar2d polar(std::get<0>(value), std::get<1>(value));
-//             QVERIFY(algorithm::compare(polar.psi(), 17777834.212800));
-//             QVERIFY(polar.fi() == 360_deg);
-//         }
-//     }
-
-//     {//convert(point2d -> PointGeo)
-//         auto point = geo_algo::convert<point2d>(PointGeo(1_deg, 0_deg), PointGeo(0_deg, 0_deg));
-//         QVERIFY(point == point2d(0., 111319.435510));
-//     }
-//     {//convert(PointGeo -> point2d)
-//         auto point = geo_algo::convert(point2d(100000, 100000), PointGeo(0_deg, 0_deg));
-//         QVERIFY(point == PointGeo(0.0156779, 0.0157855));
-//     }
-//     {//convert(Polar -> PointGeo)
-//         auto point = geo_algo::convert(polar2d(500000., 90_deg), PointGeo(0_deg, 0_deg));
-//         QVERIFY(point == PointGeo(0., 0.0789211));
-//     }
-//     {//convert(PointGeo -> Polar)
-//         auto point = geo_algo::convert<polar2d>(PointGeo(1_deg, 2_deg), PointGeo(0_deg, 0_deg));
-//         QVERIFY(algorithm::compare(point.psi(), 247573.405637));
-//         QVERIFY(point.fi() == 1.104330);
-//     }
-//     {//convert(half_line -> half_line_geo)
-//         auto line = geo_algo::convert<HalfLine>(HalfLineGeo(PointGeo(5_deg, 2_deg), (45_deg).radian()), PointGeo(0_deg, 0_deg));
-//         QVERIFY(line == HalfLine(point2d(220583.762639, 556704.705610), 0.785398));
-//     }
-//     {//convert(half_line_geo -> half_line)
-//         auto line = geo_algo::convert<HalfLineGeo>(HalfLine(point2d(200000, 500000), (45_deg).radian()), PointGeo(0_deg, 0_deg));
-//         QVERIFY(line == HalfLineGeo(PointGeo(0.078380, 0.031633), 0.785398));
-//     }
-//     {//convert(line_section_geo -> line_section)
-//         auto line = geo_algo::convert<LineSection>(LineSectionGeo(PointGeo(5_deg, 2_deg), PointGeo(7_deg, 10_deg)), PointGeo(0_deg, 0_deg));
-//         QVERIFY(line == LineSection(point2d(220583.762639, 556704.705610), point2d(1100200.237985, 783151.054589)));
-//     }
-//     {//convert(line_section -> line_section_geo)
-//         auto line = geo_algo::convert<LineSectionGeo>(LineSection(point2d(1, 0), point2d(100000, 550000)), PointGeo(0_deg, 0_deg));
-//         QVERIFY(line == LineSectionGeo(PointGeo(0, 0), PointGeo(0.086229, 0.015823)));
-//     }
-
-//     {//convert(arc -> arc_geo)
-//         auto arc = geo_algo::convert<ArcGeo, Arc>(Arc(point2d(10000.,10000.), 1000., 5_deg, 34_deg), PointGeo(0_deg, 0_deg));
-//         QVERIFY(arc.center() == PointGeo(0.00156786, 0.00157842));
-//         QVERIFY(arc.radius() == 1000.);
-//         QVERIFY(arc.start_angle() == 5_deg);
-//         QVERIFY(arc.stop_angle() == 34_deg);
-//     }
-
-//     {//convert(arc_geo -> arc)
-//         auto arc = geo_algo::convert<Arc>(ArcGeo(PointGeo(0.00156786, 0.00157842), 1000., 5_deg, 34_deg), PointGeo(0_deg, 0_deg));
-//         QVERIFY(arc.center() == point2d(9999.847348,10000.028406));
-//         QVERIFY(arc.radius() == 1000.);
-//         QVERIFY(arc.start_angle() == 5_deg);
-//         QVERIFY(arc.stop_angle() == 34_deg);
-//     }
-
-//     {
-//         auto arc = geo_algo::convert<CircleGeo>(Circle(point2d(10000.,10000.), 1000.), PointGeo(0_deg, 0_deg));
-//     }
-
-//     {
-//         auto points = std::vector{point2d(0,0), point2d(0,10), point2d(10,10), point2d(10,0)};
-//         auto geo_points = geo_algo::convert<PointGeo>(points, PointGeo(0_deg, 0_deg));
-//     }
-
-//     {
-//         auto points = std::vector{LineSection{point2d(0,0), point2d(0,10)}, LineSection{point2d(10,10), point2d(10,0)}};
-//         auto geo_points = geo_algo::convert<LineSectionGeo>(points, PointGeo(0_deg, 0_deg));
-//     }
-}
-
-void Unit_Test::test_convert()
-{
-
 }
 
 void Unit_Test::test_approximation()

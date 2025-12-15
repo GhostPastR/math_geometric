@@ -10,9 +10,11 @@ template<typename PolygonOut,
          typename Strategy,
          typename ...Args>
 inline constexpr auto create_polygon(Args&& ...args){
-    return geometry::create_polygon<PolygonOut,
+    using Tag = agl::traits::polygon::access_tag<PolygonOut>::type_tag;
+    return dispatch::create_polygon<PolygonOut,
+                                    Tag,
                                     Strategy,
-                                    Args...>(std::forward<Args>(args)...);
+                                    Args...>::get(std::forward<Args>(args)...);
 }
 
 }

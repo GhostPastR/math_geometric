@@ -27,9 +27,7 @@ struct distance<ElCircle,
                 CoordinateSystem,
                 Dimension>{
     inline constexpr static auto get(const ElCircle &figure){
-        return distance_arc_algo::distance<ElCircle,
-                                           CoordinateSystem,
-                                           Dimension>::get(figure);
+        return distance_arc_algo::distance<ElCircle>::get(figure);
     }
 };
 
@@ -69,9 +67,7 @@ struct distance<Point,
                 CoordinateSystem,
                 Dimension>{
     inline constexpr static auto get(const Point &a, const Point &b){
-        return distance_point_algo::distance<Point,
-                                             CoordinateSystem,
-                                             Dimension>(a, b);
+        return distance_point_algo::distance<Point>(a, b);
     }
 };
 

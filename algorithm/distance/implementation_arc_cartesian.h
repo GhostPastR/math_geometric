@@ -8,9 +8,7 @@
 
 namespace agl::algorithm::dispatch::d1::distance_arc_algo {
 
-template<typename Figure,
-         typename CoordinateSystem,
-         std::size_t Dimension>
+template<typename Figure>
 struct distance{
     inline constexpr static auto get(const Figure &figure){
         static_assert(false, "No 'distance' calculations have been implemented for these points.");
@@ -18,9 +16,7 @@ struct distance{
 };
 
 template<c_arc Arc>
-struct distance<Arc,
-                system_coordinat::cartesian,
-                2>{
+struct distance<Arc>{
     inline constexpr static auto get(const Arc &arc){
         using Point = traits::arc::access_types<Arc>::center;
         using Angle = traits::arc::access_types<Arc>::angle;

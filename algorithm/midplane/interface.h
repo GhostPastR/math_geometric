@@ -6,14 +6,15 @@
 namespace agl::algorithm {
 
 //метод расчитывает координаты новой точки
-template<typename Object>
+template<typename ObjectOut, typename Object>
 inline constexpr auto midplane(const Object &a, const Object &b){
-    return geometry::midplane<Object>(a,b);
+    return dispatch::d2::midplane<Object,
+                                  ObjectOut>::get(a, b);
 }
 
 template<typename Figure>
 inline constexpr auto midplane(const Figure &figure){
-    return geometry::midplane<Figure>(figure);
+    return dispatch::d1::midplane<Figure>::get(figure);
 }
 
 }

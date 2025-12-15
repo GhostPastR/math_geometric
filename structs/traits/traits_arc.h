@@ -6,11 +6,6 @@
 
 namespace agl::traits {
 
-// template<typename PointCenter, typename TypeRadius, typename Angle>
-// struct tag<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
-//     using type_tag = agl::tag::elements_circle::arc;
-// };
-
 template<typename PointCenter, typename TypeRadius, typename Angle>
 struct coordinate_system<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
     using system = coordinate_system<PointCenter>::system;
@@ -22,6 +17,24 @@ struct dimension<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
         return 2;
     }
 };
+
+template<typename PointCenter, typename TypeRadius, typename Angle>
+struct make<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
+    template<typename Point, typename Radius, typename AngleArc>
+    inline constexpr static auto apply(const Point &center, const Radius &radius, const AngleArc &start, const AngleArc &stop){
+        auto new_center = agl::traits::make<PointCenter>::apply(agl::traits::point::access_point<Point, 0>::get(center),
+                                                                agl::traits::point::access_point<Point, 1>::get(center));
+        return ::agl::circle::arc<PointCenter, TypeRadius, Angle>(std::move(new_center),
+                                                                  agl::traits::make<TypeRadius>::apply(radius),
+                                                                  agl::traits::make<Angle>::apply(start),
+                                                                  agl::traits::make<Angle>::apply(stop));
+    }
+
+    inline constexpr static auto apply(const PointCenter &center, const TypeRadius &radius, const Angle &start, const Angle &stop){
+        return ::agl::circle::arc<PointCenter, TypeRadius, Angle>(center, radius, start, stop);
+    }
+};
+
 
 namespace arc {
 

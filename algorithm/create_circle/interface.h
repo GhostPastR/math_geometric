@@ -8,7 +8,10 @@ namespace agl::algorithm {
 //
 template<typename CircleOut, typename Strategy, typename ...Args>
 inline constexpr auto create_circle(Args ...args){
-    return geometry::create_circle<CircleOut, Strategy, Args...>(std::forward<Args>(args)...);
+    return dispatch::create_circle<CircleOut,
+                                   Strategy,
+                                   Args...>::get(std::forward<Args>(args)...);
+
 }
 
 }

@@ -6,9 +6,13 @@
 namespace agl::algorithm {
 
 //
-template<typename LineOut, typename Figure, typename Point>
+template<typename LineOut,
+         typename Figure,
+         typename Point>
 inline constexpr auto perpendicular(const Figure &figure, const Point &point){
-    return geometry::perpendicular<Figure, Point, LineOut>(figure, point);
+    return dispatch::perpendicular<Figure,
+                                   Point,
+                                   LineOut>::get(figure, point);
 }
 
 }

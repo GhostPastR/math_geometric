@@ -22,10 +22,9 @@ template<typename Type>
 struct make<agl::point::decart::point3d<Type>>{
     template<typename Value>
     inline constexpr static auto apply(const Value &value1, const Value &value2, const Value &value3){
-        using r_value = std::remove_cvref_t<Value>;
-        return agl::point::decart::point3d<Type>(agl::traits::value<r_value>::get(value1),
-                                                 agl::traits::value<r_value>::get(value2),
-                                                 agl::traits::value<r_value>::get(value3));
+        return agl::point::decart::point3d<Type>(agl::traits::make<Type>::apply(value1),
+                                                 agl::traits::make<Type>::apply(value2),
+                                                 agl::traits::make<Type>::apply(value3));
     }
 
     inline constexpr static auto apply(const Type &value1, const Type &value2, const Type &value3){
@@ -37,7 +36,8 @@ namespace point {
 
 template<typename Type>
 struct access_types<agl::point::decart::point3d<Type>>{
-    using point = Type;
+    using p_type = agl::traits::type<Type>::type_value;
+    using types = std::tuple<p_type, p_type, p_type>;
 };
 
 template<typename Type>

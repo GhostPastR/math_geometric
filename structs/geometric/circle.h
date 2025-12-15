@@ -53,7 +53,7 @@ struct std::formatter<agl::circle::circle<PointCenter, TypeRadius>> {
 
 template<typename PointCenter, typename TypeRadius>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::circle::circle<PointCenter, TypeRadius> &circle){
-    os << std::format("Circle(center={} radius={})", circle.center(), circle.radius());
+    os << std::format("{}", circle);
     return os;
 }
 

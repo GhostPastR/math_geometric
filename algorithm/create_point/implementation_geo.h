@@ -3,7 +3,6 @@
 
 #include "algorithm/math_algorithm.h"
 #include "algorithm/traits.h"
-#include <cstddef>
 
 //https://geoproj.ru/
 //https://racurs.ru/downloads/documentation/gost_r_32453-2017.pdf

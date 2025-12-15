@@ -18,5 +18,6 @@
 #include <algorithm/create_circle/interface.h>
 #include <algorithm/get_lines/interface.h>
 #include <algorithm/point_coupling/interface.h>
+#include <algorithm/convert/interface.h>
 
 #endif // ALGORITHM_H

@@ -45,12 +45,24 @@ protected:
 
 }
 
+template<typename Angle>
+struct std::formatter<agl::point::geo::point_geo2d<Angle>> {
+    std::formatter<std::string> _formatter;
+
+    constexpr auto parse(std::format_parse_context& parse_context) {
+        return _formatter.parse(parse_context);
+    }
+
+    auto format(const agl::point::geo::point_geo2d<Angle>& point, std::format_context& format_context) const {
+        return _formatter.format(std::format("PointGeo(latitude={}, longitude={})",
+                                             point.latitude(), point.longitude()), format_context);
+    }
+};
+
 
 template<typename Angle>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::geo::point_geo2d<Angle> &point){
-    os << std::format("latitude={} longitude={}",
-                      agl::traits::value<Angle>::get(point.latitude()),
-                      agl::traits::value<Angle>::get(point.longitude()));
+    os << std::format("{}", point);
     return os;
 }
 

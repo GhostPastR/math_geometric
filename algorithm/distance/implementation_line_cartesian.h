@@ -51,9 +51,7 @@ struct distance<Figure,
         using Point = traits::line_section::access_types<Figure>::point;
         const auto &a = traits::line_section::access_start<Figure>::get(figure);
         const auto &b = traits::line_section::access_stop<Figure>::get(figure);
-        return agl::algorithm::dispatch::d2::distance_point_algo::distance<Point,
-                                                                           CoordinateSystem,
-                                                                           Dimension>(a, b);
+        return agl::algorithm::dispatch::d2::distance_point_algo::distance<Point>(a, b);
     }
 };
 

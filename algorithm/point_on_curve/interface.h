@@ -6,9 +6,13 @@
 namespace agl::algorithm {
 
 //
-template<typename Point, typename Figure, typename TypeDistance>
+template<typename Point,
+         typename Figure,
+         typename TypeDistance>
 inline constexpr auto point_on_curve(const Figure &figure, const TypeDistance &distance){
-    return geometry::point_on_curve<Figure, TypeDistance, Point>(figure, distance);
+    return dispatch::point_on_curve<Figure,
+                                    TypeDistance,
+                                    Point>::get(figure, distance);
 }
 
 }

@@ -130,6 +130,10 @@ struct Value final{
         return Value(value1.value_ - value2.value_);
     }
 
+    friend constexpr Value operator-(const Value &value){
+        return Value(-value.value_);
+    }
+
     template<std::floating_point Type>
     friend constexpr Value operator+(const Value &value1, const Type &value2){
         return Value(value1.value_ + value2);
@@ -205,8 +209,8 @@ template<typename UnitValue, agl::unit::c_type_value TypeValue>
     requires agl::unit::c_unit_value<UnitValue,UnitValue::length,UnitValue::mass, UnitValue::time, UnitValue::temperature>
 struct agl::traits::make<agl::unit::Value<UnitValue, TypeValue>>{
     template<typename Value>
-    inline constexpr static auto apply(TypeValue&& value){
-        return agl::unit::Value<UnitValue, TypeValue>(std::forward<Value>(value));
+    inline constexpr static auto apply(const Value& value){
+        return agl::unit::Value<UnitValue, TypeValue>(value);
     }
 };
 

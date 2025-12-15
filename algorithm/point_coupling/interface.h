@@ -6,9 +6,11 @@
 namespace agl::algorithm {
 
 //
-template<typename Figure, typename Point>
+template<typename Figure,
+         typename Point>
 inline constexpr auto point_coupling(const Figure &figure, const Point &point, bool is_perpendicular = true){
-    return geometry::point_coupling<Figure, Point>(figure, point, is_perpendicular);
+    return dispatch::point_coupling<Figure,
+                                    Point>::get(figure, point, is_perpendicular);
 }
 
 }

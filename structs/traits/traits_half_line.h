@@ -19,11 +19,25 @@ struct dimension<agl::line::half_line<Point, Angle>>{
     }
 };
 
+template<typename Point, typename Angle>
+struct make<agl::line::half_line<Point, Angle>>{
+    inline constexpr static auto apply(const Point &point, const Angle &angle){
+        return agl::line::half_line<Point, Angle>{point, angle};
+    }
+
+    template<typename TPoint, typename TAngle>
+    inline constexpr static auto apply(const TPoint &point, const TAngle &angle){
+        auto new_point = agl::traits::make<Point>::apply(agl::traits::point::access_point<TPoint, 0>::get(point),
+                                                         agl::traits::point::access_point<TPoint, 1>::get(point));
+        return agl::line::half_line<Point, Angle>(std::move(new_point), agl::traits::make<Angle>::apply(angle));
+    }
+};
+
 namespace half_line {
 
 template<typename Point, typename Angle>
 struct access_straight_line<agl::line::half_line<Point, Angle>>{
-    using type = agl::line::straight_line<typename agl::traits::point::access_types<Point>::point,
+    using type = agl::line::straight_line<typename std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type,
                                           typename agl::traits::coordinate_system<agl::line::half_line<Point, Angle>>::system>;
 };
 

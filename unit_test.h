@@ -10,11 +10,8 @@ public:
     explicit Unit_Test(QObject *parent = nullptr);
 
 private slots:
-    void test_point_algorithm();
     void test_polygon_algorithm();
-    void test_geo_algorithm();
 
-    void test_convert();
     void test_approximation();
     void test_matrix();
     void test_vector();

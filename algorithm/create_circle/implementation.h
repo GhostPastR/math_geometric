@@ -5,7 +5,6 @@
 #include <optional>
 #include "system/system_concept.h"
 #include "system/traits.h"
-#include "system/assert.h"
 #include "algorithm/math_algorithm.h"
 #include "algorithm/tag_algoritm.h"
 #include "algorithm/create_point/interface.h"
@@ -15,8 +14,6 @@ namespace agl::algorithm::dispatch {
 
 template<typename CircleOut,
          typename Strategy,
-         typename CoordinateSystem,
-         std::size_t Dimension,
          typename ...Args>
 struct create_circle{
     inline constexpr static auto get(Args&& ...args){
@@ -25,13 +22,12 @@ struct create_circle{
 };
 
 template<c_create_circle CircleOut,
-         typename Angle,
+         c_unit Angle,
          c_point_2d Point,
-         typename Radius>
+         c_unit Radius>
+    requires c_cartesian<CircleOut> && c_cartesian<Point> && c_demension_2<CircleOut>
 struct create_circle<CircleOut,
                      agl::algorithm::strategy::create_circle_angle_point,
-                     agl::system_coordinat::cartesian,
-                     2,
                      Angle,
                      Point,
                      Radius>{
@@ -52,31 +48,9 @@ struct create_circle<CircleOut,
     }
 };
 
-}
 
-// create_circle
-
-
-
-
-namespace agl::algorithm::geometry {
-
-template<typename CircleOut,
-         typename Strategy,
-         typename ...Args>
-inline constexpr auto create_circle(Args ...args){
-    using type_cs = traits::coordinate_system<CircleOut>::system;
-    constexpr auto dimension = traits::dimension<CircleOut>::value();
-    static_assert(agl::assert::is_correct<type_cs>(), "Error!");
-    static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
-    return dispatch::create_circle<CircleOut,
-                                   Strategy,
-                                   type_cs,
-                                   dimension,
-                                   Args...>::get(std::forward<Args>(args)...);
-}
+//Построение окружности по 3-м точкам
 
 }
-
 
 #endif // AGL_ALGORITHM_CREATE_CIRCLE_IMPLEMENTATION_H

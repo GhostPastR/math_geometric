@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include "system/traits.h"
-#include "system/assert.h"
 #include "algorithm/tag_algoritm.h"
 #include "algorithm/distance/interface.h"
 #include "algorithm/direction/interface.h"
@@ -15,9 +14,7 @@ namespace agl::algorithm::dispatch {
 template<typename Circle,
          typename Object,
          typename LineSectionOut,
-         typename TagTangent,
-         typename CoordinateSystem,
-         std::size_t Dimension>
+         typename TagTangent>
 struct tangent_circle{
     inline constexpr static auto get(const Circle &circle, const Object &object, TagTangent tag){
         static_assert(false, "No '' calculations have been implemented for these objects.");
@@ -27,12 +24,11 @@ struct tangent_circle{
 template<c_circle Circle,
          typename Object,
          typename LineSectionOut>
+    requires c_cartesian_all<Circle, Object, LineSectionOut> && c_demension_2_all<Circle, Object, LineSectionOut>
 struct tangent_circle<Circle,
                       Object,
                       LineSectionOut,
-                      agl::algorithm::type_tangent::external,
-                      agl::system_coordinat::cartesian,
-                      2>{
+                      agl::algorithm::type_tangent::external>{
     inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::external tag)
         -> std::pair<std::optional<LineSectionOut>, std::optional<LineSectionOut>>{
         using Type = agl::traits::circle::access_types<Circle>::radius;
@@ -66,12 +62,11 @@ struct tangent_circle<Circle,
 template<c_circle Circle,
          typename Object,
          typename LineSectionOut>
+    requires c_cartesian_all<Circle, Object, LineSectionOut> && c_demension_2_all<Circle, Object, LineSectionOut>
 struct tangent_circle<Circle,
                       Object,
                       LineSectionOut,
-                      agl::algorithm::type_tangent::internal,
-                      agl::system_coordinat::cartesian,
-                      2>{
+                      agl::algorithm::type_tangent::internal>{
     inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::internal tag)
     -> std::pair<std::optional<LineSectionOut>, std::optional<LineSectionOut>>{
         using Type = agl::traits::circle::access_types<Circle>::radius;
@@ -108,12 +103,11 @@ struct tangent_circle<Circle,
 template<c_circle Circle,
          c_point_2d Point,
          c_create_line_section LineSectionOut>
+    requires c_cartesian_all<Circle, Point, LineSectionOut> && c_demension_2_all<Circle, Point, LineSectionOut>
 struct tangent_circle<Circle,
                       Point,
                       LineSectionOut,
-                      agl::algorithm::type_tangent::external,
-                      agl::system_coordinat::cartesian,
-                      2>{
+                      agl::algorithm::type_tangent::external>{
     inline constexpr static auto get(const Circle &circle, const Point &point, agl::algorithm::type_tangent::external tag)
     -> std::pair<std::optional<LineSectionOut>, std::optional<LineSectionOut>>{
         using Type = agl::traits::circle::access_types<Circle>::radius;
@@ -135,31 +129,5 @@ struct tangent_circle<Circle,
 };
 
 }
-
-
-namespace agl::algorithm::geometry {
-
-template<c_circle Circle,
-         typename Object,
-         typename LineSectionOut,
-         typename TagTangent>
-inline constexpr auto tangent_circle(const Circle &circle, const Object &object, TagTangent tag){
-    using type_cs1 = traits::coordinate_system<Circle>::system;
-    using type_cs2 = traits::coordinate_system<Object>::system;
-    constexpr auto dimension1 = traits::dimension<Circle>::value();
-    constexpr auto dimension2 = traits::dimension<Object>::value();
-
-    static_assert(agl::assert::is_correct_compare<type_cs1, type_cs2>(), "Error!");
-    static_assert(agl::assert::is_correct_dimension(dimension1, dimension2), "Error!");
-    return dispatch::tangent_circle<Circle,
-                                    Object,
-                                    LineSectionOut,
-                                    TagTangent,
-                                    type_cs1,
-                                    dimension1>::get(circle, object, tag);
-}
-
-}
-
 
 #endif // AGL_ALGORITHM_TANGENT_CIRCLE_IMPLEMENTATION_H

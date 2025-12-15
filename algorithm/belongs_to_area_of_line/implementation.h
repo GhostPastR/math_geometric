@@ -13,14 +13,26 @@ template<typename Line,
 struct belongs_to_area_of_line{
     inline constexpr static auto get(const Line &line,
                                      const Point &point){
-        static_assert(false, "No '' calculations have been implemented for these objects.");
+        static_assert(false, "No 'belongs_to_area_of_line' calculations have been implemented for these objects.");
     }
 };
 
 template<c_straight_line Line,
          c_point_2d Point>
     requires c_cartesian<Line> && c_cartesian<Point>
-struct belongs_to_area_of_line<Line, Point>{
+struct belongs_to_area_of_line<Line,
+                               Point>{
+    inline constexpr static bool get(const Line &line,
+                                     const Point &point){
+        return true;
+    }
+};
+
+template<c_straight_line_3 Line,
+         c_point_3d Point>
+    requires c_cartesian<Line> && c_cartesian<Point>
+struct belongs_to_area_of_line<Line,
+                               Point>{
     inline constexpr static bool get(const Line &line,
                                      const Point &point){
         return true;
@@ -62,7 +74,7 @@ struct belongs_to_area_of_line<Line, Point>{
 
 template<c_line_section Line,
          c_point_2d Point>
-    requires c_cartesian<Line> && c_cartesian<Point>
+    requires c_cartesian<Line> && c_cartesian<Point> && c_demension_2<Line>
 struct belongs_to_area_of_line<Line, Point>{
     inline constexpr static bool get(const Line &line,
                                      const Point &point){
@@ -81,6 +93,9 @@ struct belongs_to_area_of_line<Line, Point>{
         return flag_x && flag_y;
     }
 };
+
+// На будущие: добавить функции для 3D луча и отрезка
+
 
 }
 

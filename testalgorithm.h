@@ -25,7 +25,8 @@ private slots:
     void test_tangent_circle();
     void test_create_circle();
     void test_get_lines();
-    void point_coupling();
+    void test_point_coupling();
+    void test_convert();
 };
 
 #endif // TESTALGORITHM_H

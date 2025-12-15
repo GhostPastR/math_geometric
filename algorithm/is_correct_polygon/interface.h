@@ -8,7 +8,10 @@ namespace agl::algorithm {
 //
 template<typename Polygon>
 inline constexpr auto is_correct_polygon(const Polygon &polygon){
-    return geometry::is_correct_polygon<Polygon>(polygon);
+    using tag = traits::polygon::access_tag<Polygon>::type_tag;
+    static_assert(agl::assert::is_correct<tag>(), "Error!");
+    return dispatch::is_correct_polygon<Polygon,
+                                        tag>::get(polygon);
 }
 
 }

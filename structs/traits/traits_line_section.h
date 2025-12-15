@@ -9,13 +9,13 @@ namespace agl::traits {
 
 template<typename Point>
 struct coordinate_system<agl::line::line_section<Point>>{
-    using system = coordinate_system<Point>::system;;
+    using system = coordinate_system<Point>::system;
 };
 
 template<typename Point>
 struct dimension<agl::line::line_section<Point>>{
     inline static constexpr std::size_t value(){
-        return 2;
+        return agl::traits::dimension<Point>::value();
     }
 };
 
@@ -45,7 +45,9 @@ struct access_types<agl::line::line_section<Point>>{
 
 template<typename Point>
 struct access_straight_line<agl::line::line_section<Point>>{
-    using type = agl::line::straight_line<typename agl::traits::point::access_types<Point>::point,
+    // using TPoint = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
+
+    using type = agl::line::straight_line<typename std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type,
                                           typename agl::traits::coordinate_system<agl::line::line_section<Point>>::system>;
 };
 

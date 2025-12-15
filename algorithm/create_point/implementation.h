@@ -10,8 +10,6 @@
 namespace agl::algorithm::dispatch {
 
 template<typename OutPoint,
-         typename CoordinateSystem,
-         std::size_t Dimension,
          typename TypeObjectDirection,
          typename Point,
          typename Range,
@@ -27,8 +25,6 @@ template<c_create_point_2d OutPoint,
          typename Range,
          typename Turning>
 struct create_point<OutPoint,
-                    system_coordinat::cartesian,
-                    2,
                     direction_angle,
                     Point,
                     Range,
@@ -47,8 +43,6 @@ template<c_create_point_3d OutPoint,
          typename Range,
          typename Turning>
 struct create_point<OutPoint,
-                    system_coordinat::cartesian,
-                    3,
                     direction_angle,
                     Point,
                     Range,
@@ -131,8 +125,6 @@ inline constexpr auto create_point(const Point &point, const Range &range, const
     static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
 
     return dispatch::create_point<OutPoint,
-                                  type_coordinate_system,
-                                  dimension,
                                   direction_angle,
                                   Point,
                                   Range,

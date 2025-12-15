@@ -6,9 +6,11 @@
 namespace agl::algorithm {
 
 //метод расчитывает координаты новой точки
-template<typename Object, typename ObjectOut>
+template<typename ObjectOut,
+         typename Object>
 inline constexpr auto convert(const Object &object){
-    return geometry::convert<Object, ObjectOut>(object);
+    return dispatch::convert<Object,
+                             ObjectOut>::get(object);
 }
 
 }

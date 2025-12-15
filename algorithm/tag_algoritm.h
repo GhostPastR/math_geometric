@@ -1,7 +1,7 @@
 #ifndef AGL_ALGORITM_TAG_H
 #define AGL_ALGORITM_TAG_H
 
-#include "system/traits.h"
+#include "system/tag.h"
 
 namespace agl::algorithm {
 

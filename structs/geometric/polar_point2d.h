@@ -49,6 +49,7 @@ protected:
 template<typename TypePsi, typename TypeFi>
 struct std::formatter<agl::point::polar::polar2d<TypePsi, TypeFi>> {
     std::formatter<std::string> _formatter;
+
     constexpr auto parse(std::format_parse_context& parse_context) {
         return _formatter.parse(parse_context);
     }
@@ -58,10 +59,9 @@ struct std::formatter<agl::point::polar::polar2d<TypePsi, TypeFi>> {
     }
 };
 
-
 template<typename TypePsi, typename TypeFi>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::polar::polar2d<TypePsi, TypeFi> &point){
-    os << std::format("psi={} fi={}", point);
+    os << std::format("{}", point);
     return os;
 }
 

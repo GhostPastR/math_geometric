@@ -8,7 +8,8 @@ namespace agl::algorithm {
 //
 template<typename OutObject, typename Figure>
 inline constexpr auto get_lines(const Figure &figure){
-    return geometry::get_lines<Figure, OutObject>(figure);
+    return dispatch::get_lines<Figure,
+                               OutObject>::get(figure);
 }
 
 }

@@ -8,35 +8,40 @@
 
 namespace agl::algorithm::dispatch::d2 {
 
+template<typename T>
+class Temp;
+
 template<typename Object,
-         typename CoordinateSystem,
-         std::size_t Dimension>
+         typename ObjectOut>
 struct midplane{
     inline constexpr static auto get(const Object &a, const Object &b){
         static_assert(false, "No '' calculations have been implemented for these objects.");
     }
 };
 
-template<c_point_2d Object>
-struct midplane<Object,
-                system_coordinat::cartesian,
-                2>{
-    inline constexpr static auto get(const Object &a, const Object &b){
+template<c_point_2d Point,
+         c_create_point_2d PointOut>
+    requires c_cartesian_all<Point, PointOut> && c_demension_2_all<Point, PointOut>
+struct midplane<Point,
+                PointOut>{
+    inline constexpr static auto get(const Point &a, const Point &b){
         using namespace traits::point;
-        return Object{std::midpoint(access_point<Object, 0>::get(a), access_point<Object, 0>::get(b)),
-                      std::midpoint(access_point<Object, 1>::get(a), access_point<Object, 1>::get(b))};
+        return traits::make<PointOut>::apply(std::midpoint(access_point<Point, 0>::get(a), access_point<Point, 0>::get(b)),
+                                             std::midpoint(access_point<Point, 1>::get(a), access_point<Point, 1>::get(b)));
     }
 };
 
-template<c_point_3d Object>
-struct midplane<Object,
-                system_coordinat::cartesian,
-                3>{
-    inline constexpr static auto get(const Object &a, const Object &b){
+template<typename Point,
+         c_create_point_3d PointOut>
+    requires c_cartesian_all<Point, PointOut> && c_demension_3_all<Point, PointOut>
+struct midplane<Point,
+                PointOut>{
+    inline constexpr static auto get(const Point &a, const Point &b){
         using namespace traits::point;
-        return Object{std::midpoint(access_point<Object, 0>::get(a), access_point<Object, 0>::get(b)),
-                      std::midpoint(access_point<Object, 1>::get(a), access_point<Object, 1>::get(b)),
-                      std::midpoint(access_point<Object, 2>::get(a), access_point<Object, 2>::get(b))};
+
+        return traits::make<PointOut>::apply(std::midpoint(access_point<Point, 0>::get(a), access_point<Point, 0>::get(b)),
+                                             std::midpoint(access_point<Point, 1>::get(a), access_point<Point, 1>::get(b)),
+                                             std::midpoint(access_point<Point, 2>::get(a), access_point<Point, 2>::get(b)));
     }
 };
 
@@ -46,9 +51,7 @@ struct midplane<Object,
 
 namespace agl::algorithm::dispatch::d1 {
 
-template<typename Figure,
-         typename CoordinateSystem,
-         std::size_t Dimension>
+template<typename Figure>
 struct midplane{
     inline constexpr static auto get(const Figure &figure){
         static_assert(false, "No '' calculations have been implemented for these objects.");
@@ -56,12 +59,12 @@ struct midplane{
 };
 
 template<c_arc Figure>
-struct midplane<Figure,
-                system_coordinat::cartesian,
-                2>{
+    requires c_cartesian<Figure> && c_demension_2<Figure>
+struct midplane<Figure>{
     inline constexpr static auto get(const Figure &figure){
         using Point = traits::arc::access_types<Figure>::center;
-        using Type = traits::point::access_types<Point>::point;
+        // using Type = traits::point::access_types<Point>::point;
+        using Type = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
 
         const auto &start = traits::arc::access_angle<Figure, 0>::get(figure);
         const auto &stop = traits::arc::access_angle<Figure, 1>::get(figure);
@@ -76,38 +79,6 @@ struct midplane<Figure,
     }
 };
 
-
 }
-
-
-namespace agl::algorithm::geometry {
-
-template<typename Object>
-inline constexpr auto midplane(const Object &a, const Object &b){
-    using type_coordinate_system = traits::coordinate_system<Object>::system;
-    constexpr auto dimension = traits::dimension<Object>::value();
-
-    static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
-    static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
-
-    static_assert(!std::is_same_v<type_coordinate_system, agl::undefined>, "Error!");
-    static_assert((dimension > decltype(dimension){}), "Error!");
-
-    return dispatch::d2::midplane<Object, type_coordinate_system, dimension>::get(a, b);
-}
-
-template<typename Figure>
-inline constexpr auto midplane(const Figure &figure){
-    using type_coordinate_system = traits::coordinate_system<Figure>::system;
-    constexpr auto dimension = traits::dimension<Figure>::value();
-
-    static_assert(agl::assert::is_correct<type_coordinate_system>(), "Error!");
-    static_assert(agl::assert::is_correct_dimension(dimension), "Error!");
-
-    return dispatch::d1::midplane<Figure, type_coordinate_system, dimension>::get(figure);
-}
-
-}
-
 
 #endif // AGL_ALGORITHM_MIDPLANE_IMPLEMENTATION_H

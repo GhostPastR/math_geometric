@@ -12,12 +12,21 @@ using point3_d = agl::point::decart::point3d<double>;
 using polar2_d = agl::point::polar::polar2d<double, agl::unit::angle>;
 using polar3_d = agl::point::polar::polar3d<double, agl::unit::angle, double>;
 
+using point_geo2_d = agl::point::geo::point_geo2d<double>;
+using point_geo2_a = agl::point::geo::point_geo2d<agl::unit::angle>;
+
 using straight_line2_d = agl::line::straight_line<double>;
 using half_line2_d = agl::line::half_line<point2_d, agl::unit::angle>;
 using line_section2_d = agl::line::line_section<point2_d>;
 
+using half_line_geo2_d = agl::line::half_line<point_geo2_a, agl::unit::angle>;
+using line_section_geo2_d = agl::line::line_section<point_geo2_a>;
+
 using circle2_d = agl::circle::circle<agl::point2_d, double>;
 using arc2_d = agl::circle::arc<agl::point2_d, double, agl::unit::angle>;
+
+using circle_geo2_au = agl::circle::circle<point_geo2_a, agl::unit::distance>;
+using arc_geo2_ad = agl::circle::arc<agl::point_geo2_a, double, agl::unit::angle>;
 
 using non_convex_polygon = agl::figure::polygon<agl::point2_d, agl::tag::polygon::non_convex>;
 using polygon = agl::figure::polygon<agl::point2_d, agl::tag::polygon::convex>;
@@ -26,6 +35,8 @@ using regular = agl::figure::polygon<agl::point2_d, agl::tag::polygon::regular>;
 using triangle = agl::figure::polygon<agl::point2_d, agl::tag::polygon::triangle>;
 using triangle_regular = agl::figure::polygon<agl::point2_d, agl::tag::polygon::rectangular_triangle>;
 using rectangle = agl::figure::polygon<agl::point2_d, agl::tag::polygon::rectangle>;
+
+using polygon_geo = agl::figure::polygon<agl::point_geo2_a, agl::tag::polygon::convex>;
 
 
 // using Lenght = double;

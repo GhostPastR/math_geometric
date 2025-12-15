@@ -19,7 +19,7 @@ struct contain{
 
 template<c_group_line Line,
          c_point_2d Point>
-    requires c_cartesian<Line> && c_cartesian<Point> && c_demension_2<Line> && c_demension_2<Point>
+    requires c_cartesian<Line> && c_cartesian<Point> && c_demension_2<Line>
 struct contain<Line,
                Point>{
     inline constexpr static bool get(const Line &line, const Point &point){
@@ -35,7 +35,7 @@ struct contain<Line,
 
 template<c_circle Circle,
          c_point_2d Point>
-    requires c_cartesian<Circle> && c_cartesian<Point> && c_demension_2<Circle> && c_demension_2<Point>
+    requires c_cartesian<Circle> && c_cartesian<Point> && c_demension_2<Circle>
 struct contain<Circle,
                Point>{
     inline constexpr static bool get(const Circle &circle, const Point &point){
@@ -52,7 +52,7 @@ struct contain<Circle,
 
 }
 
-
+//На будущие: добавить функции для 3D
 
 
 
