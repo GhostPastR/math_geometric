@@ -21,22 +21,22 @@ struct tangent_circle{
     }
 };
 
-template<c_circle Circle,
-         typename Object,
-         typename LineSectionOut>
-    requires c_cartesian_all<Circle, Object, LineSectionOut> && c_demension_2_all<Circle, Object, LineSectionOut>
-struct tangent_circle<Circle,
-                      Object,
+template<c_circle Circle1,
+         c_circle Circle2,
+         c_create_line_section LineSectionOut>
+    requires c_cartesian_all<Circle1, Circle2, LineSectionOut> && c_demension_2_all<Circle1, Circle2, LineSectionOut>
+struct tangent_circle<Circle1,
+                      Circle2,
                       LineSectionOut,
                       agl::algorithm::type_tangent::external>{
-    inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::external tag)
+    inline constexpr static auto get(const Circle1 &circle1, const Circle2 &circle2, agl::algorithm::type_tangent::external tag)
         -> std::pair<std::optional<LineSectionOut>, std::optional<LineSectionOut>>{
-        using Type = agl::traits::circle::access_types<Circle>::radius;
+        using Type = agl::traits::circle::access_types<Circle1>::radius;
         using Point = agl::traits::line_section::access_types<LineSectionOut>::point;
-        const auto &center1 = traits::circle::access_center<Circle>::get(circle);
-        const auto &radius1 = traits::circle::access_radius<Circle>::get(circle);
-        const auto &center2 = traits::circle::access_center<Object>::get(object);
-        const auto &radius2 = traits::circle::access_radius<Object>::get(object);
+        const auto &center1 = traits::circle::access_center<Circle1>::get(circle1);
+        const auto &radius1 = traits::circle::access_radius<Circle1>::get(circle1);
+        const auto &center2 = traits::circle::access_center<Circle2>::get(circle2);
+        const auto &radius2 = traits::circle::access_radius<Circle2>::get(circle2);
 
         const auto _len = agl::algorithm::distance(center1, center2);
         if(agl::algorithm::compare(_len, 0.) || (fabs(radius1 - radius2) > _len)){
@@ -59,22 +59,22 @@ struct tangent_circle<Circle,
     }
 };
 
-template<c_circle Circle,
-         typename Object,
-         typename LineSectionOut>
-    requires c_cartesian_all<Circle, Object, LineSectionOut> && c_demension_2_all<Circle, Object, LineSectionOut>
-struct tangent_circle<Circle,
-                      Object,
+template<c_circle Circle1,
+         c_circle Circle2,
+         c_create_line_section LineSectionOut>
+    requires c_cartesian_all<Circle1, Circle2, LineSectionOut> && c_demension_2_all<Circle1, Circle2, LineSectionOut>
+struct tangent_circle<Circle1,
+                      Circle2,
                       LineSectionOut,
                       agl::algorithm::type_tangent::internal>{
-    inline constexpr static auto get(const Circle &circle, const Object &object, agl::algorithm::type_tangent::internal tag)
+    inline constexpr static auto get(const Circle1 &circle1, const Circle2 &circle2, agl::algorithm::type_tangent::internal tag)
     -> std::pair<std::optional<LineSectionOut>, std::optional<LineSectionOut>>{
-        using Type = agl::traits::circle::access_types<Circle>::radius;
+        using Type = agl::traits::circle::access_types<Circle1>::radius;
         using Point = agl::traits::line_section::access_types<LineSectionOut>::point;
-        const auto &center1 = traits::circle::access_center<Circle>::get(circle);
-        const auto &radius1 = traits::circle::access_radius<Circle>::get(circle);
-        const auto &center2 = traits::circle::access_center<Object>::get(object);
-        const auto &radius2 = traits::circle::access_radius<Object>::get(object);
+        const auto &center1 = traits::circle::access_center<Circle1>::get(circle1);
+        const auto &radius1 = traits::circle::access_radius<Circle1>::get(circle1);
+        const auto &center2 = traits::circle::access_center<Circle2>::get(circle2);
+        const auto &radius2 = traits::circle::access_radius<Circle2>::get(circle2);
 
         const auto _len = agl::algorithm::distance(center1, center2);
         if(agl::algorithm::compare(_len, 0.) || (fabs(radius1 + radius2) > _len)){

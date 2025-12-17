@@ -123,7 +123,7 @@ struct is_correct_polygon<Polygon,
                           agl::tag::polygon::regular>{
     inline constexpr static auto get(const Polygon &polygon){
         using Point = agl::traits::polygon::access_types<Polygon>::point;
-        using Type = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
+        using Type = agl::traits::point::element_point_v<Point, 0>;
 
         const auto &points = agl::traits::polygon::access_points<Polygon>::get(polygon);
         if(points.size() < 3){

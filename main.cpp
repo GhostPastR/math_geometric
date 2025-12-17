@@ -47,7 +47,6 @@ class Temp;
 
 
 
-
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -62,20 +61,6 @@ int main(int argc, char *argv[])
     // agl::polar2_d p_point(10., 2_deg);
     // func(point);
     // func(p_point);
-
-    // using tpoint = std::tuple<agl::undefined>;
-
-    // using t1 = decltype(agl::traits::point::access_point<agl::point_geo2_a, 0>::get(point));
-    // using t2 = std::remove_cvref_t<decltype(std::get<0>(std::declval<access_types<agl::point_geo2_a>::point>()))>;
-
-    // using t2 = std::tuple_element<0, access_types<agl::point_geo2_a>::point>::type;
-
-    // Temp<t1> q1;
-    // Temp<t2> q2;
-
-    // auto t = std::is_same_v<decltype(agl::traits::point::access_point<agl::point_geo2_a, 0>::get(point)),
-    //                         std::tuple_element<0, access_types<agl::point_geo2_a>::point>::type>;
-    // std::cout << t << std::endl;
 
 
     QTest::qExec(new TestUnit, argc, argv);

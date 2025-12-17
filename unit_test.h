@@ -12,7 +12,6 @@ public:
 private slots:
     void test_polygon_algorithm();
 
-    void test_approximation();
     void test_matrix();
     void test_vector();
 };

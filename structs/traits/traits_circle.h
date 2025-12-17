@@ -38,6 +38,16 @@ struct make<agl::circle::circle<PointCenter, TypeRadius>>{
     }
 };
 
+template<typename PointCenter, typename TypeRadius>
+struct access_propery<agl::circle::circle<PointCenter, TypeRadius>>{
+    inline constexpr static auto get(const agl::circle::circle<PointCenter, TypeRadius> &circle){
+        return std::tuple<PointCenter, TypeRadius>{
+            circle.center(), circle.radius()
+        };
+    }
+};
+
+
 namespace circle {
 
 template<typename PointCenter, typename TypeRadius>

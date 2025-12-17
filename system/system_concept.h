@@ -66,14 +66,15 @@ concept c_demension_3_all = (c_demension_3<Object> && ...);
 template<typename Object>
 concept c_unit = requires(Object object){
     {agl::traits::value<Object>::get(object)} -> std::floating_point;
-
 };
 
 
 template<typename Object, size_t N>
 concept c_property_point = requires(Object object){
     requires std::is_same_v<decltype(agl::traits::point::access_point<Object, N>::get(object)),
-                            typename std::tuple_element<N, typename agl::traits::point::access_types<Object>::types>::type>;
+                            agl::traits::point::element_point_v<Object, N>>;
+
+
 };
 
 template<typename Object>
@@ -147,12 +148,6 @@ concept c_half_line_2d = requires(Object object){
     {agl::traits::half_line::access_direction<Object>::get(object)} -> std::floating_point;
 };
 
-// template<typename Object>
-// concept c_half_line_to_straight_line_2d = requires(Object object){
-//     requires c_half_line_2d<Object>;
-//     requires c_not_undefined<typename agl::traits::half_line::access_straight_line<Object>::type>;
-// };
-
 template<typename Object>
 concept c_line_section = requires(Object object){
     requires c_geometric<Object>;
@@ -179,17 +174,17 @@ template<typename Object>
 concept c_create_point_2d = requires(Object object){
     requires c_point_2d<Object>;
     requires c_create<Object,
-                      typename std::tuple_element<0, typename agl::traits::point::access_types<Object>::types>::type,
-                      typename std::tuple_element<1, typename agl::traits::point::access_types<Object>::types>::type>;
+                      agl::traits::point::element_point_v<Object, 0>,
+                      agl::traits::point::element_point_v<Object, 1>>;
 };
 
 template<typename Object>
 concept c_create_point_3d = requires(Object object){
     requires c_point_3d<Object>;
     requires c_create<Object,
-                      typename std::tuple_element<0, typename agl::traits::point::access_types<Object>::types>::type,
-                      typename std::tuple_element<1, typename agl::traits::point::access_types<Object>::types>::type,
-                      typename std::tuple_element<2, typename agl::traits::point::access_types<Object>::types>::type>;
+                      agl::traits::point::element_point_v<Object, 0>,
+                      agl::traits::point::element_point_v<Object, 1>,
+                      agl::traits::point::element_point_v<Object, 2>>;
 };
 
 template<typename Object>

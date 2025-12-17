@@ -23,8 +23,7 @@ struct center<Figure,
               PointOut>{
     inline constexpr static auto get(const Figure &figure){
         using Point = agl::traits::polygon::access_types<Figure>::point;
-        // using Type = agl::traits::point::access_types<Point>::point;
-        using Type = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
+        using Type = agl::traits::point::element_point_v<Point, 0>;
 
         const auto &points = agl::traits::polygon::access_points<Figure>::get(figure);
         const auto sum = std::accumulate(points.begin(), points.end(), std::pair<Type, Type>(),

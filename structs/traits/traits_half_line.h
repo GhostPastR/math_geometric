@@ -37,7 +37,7 @@ namespace half_line {
 
 template<typename Point, typename Angle>
 struct access_straight_line<agl::line::half_line<Point, Angle>>{
-    using type = agl::line::straight_line<typename std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type,
+    using type = agl::line::straight_line<typename agl::traits::point::element_point_v<Point, 0>,
                                           typename agl::traits::coordinate_system<agl::line::half_line<Point, Angle>>::system>;
 };
 

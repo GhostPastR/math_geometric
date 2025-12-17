@@ -1126,3 +1126,78 @@ void TestAlgorithm::test_convert()
         QVERIFY(points[3] == agl::point2_d(686335.354325, 3680517.705607));
     }
 }
+
+void TestAlgorithm::test_approximation()
+{
+    // {
+    //     auto line_section = agl::line_section2_d(agl::point2_d{0,0},
+    //                                              agl::point2_d{4,3});
+    //     auto points = agl::algorithm::splitting(line_section, 5);
+    //     // for(auto i : points){
+    //     //     std::cout << i << std::endl;
+    //     // }
+    // }
+
+    // {
+    //     auto arc = agl::arc2_d({0,0}, 10, 0_deg, 90_deg);
+    //     auto points = agl::algorithm::splitting(arc, 5);
+    //     // for(auto i : points){
+    //     //     std::cout << i << std::endl;
+    //     // }
+    // }
+
+    // {
+    //     auto circle = agl::circle2_d{{0.,50.}, 10.};
+    //     auto points = agl::algorithm::splitting(circle, 4);
+    //     // for(auto i : points){
+    //     //     std::cout << i << std::endl;
+    //     // }
+    // }
+    // {
+    //     double prior = 0;
+    //     auto line = agl::line_section2_d(agl::point2_d{1,1}, agl::point2_d{41,31});
+    //     auto points = agl::algorithm::splitting(line, 5., prior);
+    //     // for(auto i : points){
+    //     //     std::cout << i << std::endl;
+    //     // }
+    //     // std::cout << prior << std::endl;
+    // }
+    {
+        // double prior = 0;
+        // auto arc = agl::arc2_d({0,0}, 50, 0_deg, 90_deg);
+        // auto points = agl::algorithm::splitting(arc, 5., prior);
+        // // for(auto i : points){
+        // //     std::cout << i << std::endl;
+        // // }
+        // // std::cout << prior << std::endl;
+
+        // Point(x=0, y=50)
+        // Point(x=4.991670832341407, y=49.75020826390129)
+        // Point(x=9.933466539753061, y=49.00332889206208)
+        // Point(x=14.77601033306698, y=47.7668244562803)
+        // Point(x=19.470917115432528, y=46.05304970014426)
+        // Point(x=23.971276930210152, y=43.879128094518634)
+        // Point(x=28.232123669751775, y=41.26678074548391)
+        // Point(x=32.21088436188456, y=38.24210936422442)
+        // Point(x=35.86780454497614, y=34.83533546735827)
+        // Point(x=39.16634548137417, y=31.08049841353322)
+        // Point(x=42.073549240394826, y=27.01511529340699)
+        // Point(x=44.56036800307177, y=22.679806071278865)
+        // Point(x=46.60195429836132, y=18.117887723833668)
+        // Point(x=48.17790927085965, y=13.374941431229367)
+        // Point(x=49.27248649942301, y=8.49835714501204)
+        // Point(x=49.874749330202725, y=3.5368600833851453)
+        // Point(x=49.27248649942301, y=8.49835714501204)
+        // Point(x=49.874749330202725, y=3.5368600833851453)
+        // 3.53982
+    }
+    {
+        double prior = 1;
+        auto arc = agl::arc2_d({0,0}, 50, 0_deg, 90_deg);
+        auto points = agl::algorithm::splitting(arc, 5., prior);
+        for(auto i : points){
+            std::cout << i << std::endl;
+        }
+        std::cout << prior << std::endl;
+    }
+}

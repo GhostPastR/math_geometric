@@ -150,6 +150,15 @@ struct Value final{
     template<typename D1, typename D2>
     friend auto operator/(Value<D1, TypeValue> value1, Value<D2, TypeValue> value2);
 
+    template<typename Type> requires (std::floating_point<Type> || std::integral<Type>)
+    friend constexpr Value operator*(const Value &value1, const Type &value2){
+        return Value(value1.value_ * value2);
+    }
+
+    template<typename Type> requires (std::floating_point<Type> || std::integral<Type>)
+    friend constexpr Value operator/(const Value &value1, const Type &value2){
+        return Value(value1.value_ / value2);
+    }
 
 private:
     TypeValue value_{};

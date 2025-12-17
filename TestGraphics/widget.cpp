@@ -6,7 +6,7 @@
 #include <ranges>
 
 #include "../../math_geometric/special_algorithms/navigation_route/algorithm_route.h"
-#include "../../math_geometric/algorithm/approximation_algorithm.h"
+// #include "../../math_geometric/algorithm/approximation_algorithm.h"
 #include "../../math_geometric/user_type.h"
 
 Widget::Widget(QWidget *parent)

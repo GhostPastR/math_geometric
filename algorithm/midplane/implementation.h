@@ -63,8 +63,7 @@ template<c_arc Figure>
 struct midplane<Figure>{
     inline constexpr static auto get(const Figure &figure){
         using Point = traits::arc::access_types<Figure>::center;
-        // using Type = traits::point::access_types<Point>::point;
-        using Type = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
+        using Type = agl::traits::point::element_point_v<Point, 0>;
 
         const auto &start = traits::arc::access_angle<Figure, 0>::get(figure);
         const auto &stop = traits::arc::access_angle<Figure, 1>::get(figure);

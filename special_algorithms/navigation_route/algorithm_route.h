@@ -4,30 +4,43 @@
 #include "figure_route.h"
 #include "../../structs/vector.h"
 
+#include "algorithm/distance/interface.h"
+
 namespace sa {
 
-// namespace {
+namespace {
 
-// agl::point2d get_center(const std::pair<agl::point2d, agl::point2d> &centrs, const agl::point2d &point){
-//     auto lenght1 = agl::point_algo::distance(centrs.first, point);
-//     auto lenght2 = agl::point_algo::distance(centrs.second, point);
-//     if(agl::algorithm::compare(lenght1, lenght2)){
-//         return centrs.first;
-//     }
-//     return (lenght1 < lenght2) ? centrs.first : centrs.second;
-// }
+template<agl::c_point_2d Point>
+Point get_center(const std::pair<Point, Point> &centrs, const Point &point){
+    const auto lenght1 = agl::algorithm::distance(centrs.first, point);
+    const auto lenght2 = agl::algorithm::distance(centrs.second, point);
+    if(agl::algorithm::compare(lenght1, lenght2)){
+        return centrs.first;
+    }
+    return (lenght1 < lenght2) ? centrs.first : centrs.second;
+}
 
-// double lenght_arc(const arc_stage &arc){
-//     if(arc.direct == agl::algorithm::direct::RIGHT){
-//         return agl::circle_algo::length_arc(arc.arc);
-//     }
-//     return agl::circle_algo::length_arc(agl::Arc(arc.arc.center(), arc.arc.radius(), arc.arc.stop(), arc.arc.start()));
-// }
+template<agl::c_arc Arc>
+auto lenght_arc(const arc_stage<Arc> &arc){
+    if(arc.direct == agl::algorithm::direct::RIGHT){
+        return agl::algorithm::distance(arc.arc);
+    }
+    return agl::algorithm::distance(agl::traits::make<Arc>::apply(arc.arc.center(), arc.arc.radius(),
+                                                                  arc.arc.stop(), arc.arc.start()));
+}
 
-// double lenght_stage(const arc_stage &arc1, const arc_stage &arc2, const agl::LineSection &line){
-//     return lenght_arc(arc1) + agl::line_algo::distance(view_line(line)) + lenght_arc(arc2);
-// }
+template<agl::c_arc Arc,
+         agl::c_line_section Line>
+double lenght_stage(const arc_stage<Arc> &arc1, const arc_stage<Arc> &arc2, const Line &line){
+    return lenght_arc(arc1) + agl::algorithm::distance(line) + lenght_arc(arc2);
+}
 
+}
+
+// std::vector<figure_route> line_stage(const agl::point2d &prior_point, const agl::point2d &next_point){
+//     std::vector<figure_route> figures;
+//     figures.push_back({agl::LineSection(prior_point, next_point)});
+//     return figures;
 // }
 
 
@@ -202,5 +215,28 @@ namespace sa {
 // }
 
 }
+
+
+
+// agl::point2d get_center(const std::pair<agl::point2d, agl::point2d> &centrs, const agl::point2d &point){
+//     auto lenght1 = agl::point_algo::distance(centrs.first, point);
+//     auto lenght2 = agl::point_algo::distance(centrs.second, point);
+//     if(agl::algorithm::compare(lenght1, lenght2)){
+//         return centrs.first;
+//     }
+//     return (lenght1 < lenght2) ? centrs.first : centrs.second;
+// }
+
+// double lenght_arc(const arc_stage &arc){
+//     if(arc.direct == agl::algorithm::direct::RIGHT){
+//         return agl::circle_algo::length_arc(arc.arc);
+//     }
+//     return agl::circle_algo::length_arc(agl::Arc(arc.arc.center(), arc.arc.radius(), arc.arc.stop(), arc.arc.start()));
+// }
+
+// double lenght_stage(const arc_stage &arc1, const arc_stage &arc2, const agl::LineSection &line){
+//     return lenght_arc(arc1) + agl::line_algo::distance(view_line(line)) + lenght_arc(arc2);
+// }
+
 
 #endif // ALGORITHM_ROUTE_H

@@ -49,8 +49,7 @@ struct intersection<ElCircle,
     inline constexpr static auto get(const ElCircle &el_circle, const Line &line)
         -> std::pair<std::optional<PointOut>, std::optional<PointOut>>{
         using Point = agl::traits::circle::access_types<ElCircle>::center;
-        // using Type = agl::traits::point::access_types<Point>::point;
-        using Type = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
+        using Type = agl::traits::point::element_point_v<Point, 0>;
         const auto &center = traits::circle::access_center<ElCircle>::get(el_circle);
         const auto &radius = traits::circle::access_radius<ElCircle>::get(el_circle);
         const auto &x = traits::point::access_point<Point, 0>::get(center);

@@ -51,8 +51,7 @@ struct point_on_curve<Figure,
         }
         const auto &start = traits::line_section::access_start<Figure>::get(figure);
         const auto &stop = traits::line_section::access_stop<Figure>::get(figure);
-        using Angle = std::tuple_element<0, typename agl::traits::point::access_types<typename Property::point>::types>::type;
-        // using Angle = traits::point::access_types<typename Property::point>::point;
+        using Angle = agl::traits::point::element_point_v<typename Property::point, 0>;
         return agl::algorithm::create_point<PointLine>(start, t_distance, agl::algorithm::direction<Angle>(start, stop));
     }
 };

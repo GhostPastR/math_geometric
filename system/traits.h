@@ -29,9 +29,12 @@ struct geo_coordinate_system{
 template<typename Object>
 struct make{
     template<typename ... Value>
-    inline constexpr static auto apply(Value... value){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto apply(Value... value){}
+};
+
+template<typename Object>
+struct access_propery{
+    inline constexpr static auto get(const Object &object){}
 };
 
 namespace point {
@@ -44,18 +47,11 @@ struct access_types{
 
 template<typename Object, std::size_t NumberPoint>
 struct access_point{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 template<typename Point, std::size_t N>
-struct element_point{
-    using type = std::tuple_element<N, typename agl::traits::point::access_types<Point>::types>::type;
-};
-
-template<typename Point, std::size_t N>
-using element_point_v = element_point<Point, N>::type;
+using element_point_v = std::tuple_element<N, typename agl::traits::point::access_types<Point>::types>::type;
 
 
 }
@@ -71,23 +67,22 @@ struct access_types{
 
 template<typename Object>
 struct access_center{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 template<typename Object>
 struct access_radius{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 template<typename Object, std::size_t NumberAngle>
 struct access_angle{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
+};
+
+template<typename Object>
+struct access_change{
+    inline constexpr static auto get(const Object &object){}
 };
 
 }
@@ -102,16 +97,12 @@ struct access_types{
 
 template<typename Object>
 struct access_center{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 template<typename Object>
 struct access_radius{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 }
@@ -127,9 +118,7 @@ struct access_types{
 
 template<typename Object, std::size_t NumberPoint>
 struct access_parameter{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 }
@@ -150,16 +139,12 @@ struct access_straight_line{
 
 template<typename Object>
 struct access_start{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 template<typename Object>
 struct access_direction{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 }
@@ -179,16 +164,12 @@ struct access_straight_line{
 
 template<typename Object>
 struct access_start{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 template<typename Object>
 struct access_stop{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 }
@@ -213,9 +194,7 @@ struct access_line_section{
 
 template<typename Object>
 struct access_points{
-    inline constexpr static auto get(const Object &object){
-        // static_assert(false, "Access is not implemented for this object.");
-    }
+    inline constexpr static auto get(const Object &object){}
 };
 
 }
@@ -245,9 +224,7 @@ template<> struct type<long double>{
 
 template<typename Type>
 struct value{
-    inline constexpr static auto get(const Type &){
-        // static_assert(false, "Error value!");
-    }
+    inline constexpr static auto get(const Type &){}
 };
 
 template<> struct value<int>{

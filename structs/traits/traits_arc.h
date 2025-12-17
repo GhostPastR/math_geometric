@@ -35,6 +35,16 @@ struct make<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
     }
 };
 
+template<typename PointCenter, typename TypeRadius, typename Angle>
+struct access_propery<agl::circle::arc<PointCenter, TypeRadius, Angle>>{
+    inline constexpr static auto get(const agl::circle::arc<PointCenter, TypeRadius, Angle> &arc){
+        return std::tuple<PointCenter, TypeRadius, Angle, Angle>{
+            arc.center(), arc.radius(), arc.start(), arc.stop()
+        };
+    }
+};
+
+
 
 namespace arc {
 
@@ -71,6 +81,13 @@ template<typename PointCenter, typename TypeRadius, typename Angle>
 struct access_angle<::agl::circle::arc<PointCenter, TypeRadius, Angle>, 1>{
     inline constexpr static auto get(const ::agl::circle::arc<PointCenter, TypeRadius, Angle> &arc){
         return agl::traits::value<Angle>::get(arc.stop());
+    }
+};
+
+template<typename PointCenter, typename TypeRadius, typename Angle>
+struct access_change<::agl::circle::arc<PointCenter, TypeRadius, Angle>>{
+    inline constexpr static auto get(const ::agl::circle::arc<PointCenter, TypeRadius, Angle> &arc){
+        return agl::circle::arc<PointCenter, TypeRadius, Angle>(arc.center(), arc.radius(), arc.stop(), arc.start());
     }
 };
 

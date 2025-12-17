@@ -30,8 +30,7 @@ struct rotate<PointIn,
               Point,
               direction_angle>{
     inline constexpr static auto get(const PointIn &point_in, const ObjectDirection &direction, const Point &point){
-        using Type = std::tuple_element<0, typename agl::traits::point::access_types<PointIn>::types>::type;
-        // using Type = traits::point::access_types<PointIn>::point;
+        using Type = agl::traits::point::element_point_v<PointIn, 0>;
         const auto x = traits::point::access_point<Point, 0>::get(point_in);
         const auto y = traits::point::access_point<Point, 1>::get(point_in);
         const auto rx = traits::point::access_point<Point, 0>::get(point);

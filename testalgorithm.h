@@ -27,6 +27,7 @@ private slots:
     void test_get_lines();
     void test_point_coupling();
     void test_convert();
+    void test_approximation();
 };
 
 #endif // TESTALGORITHM_H

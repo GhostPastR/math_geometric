@@ -35,6 +35,15 @@ struct make<agl::line::line_section<Point>>{
     }
 };
 
+template<typename Point>
+struct access_propery<agl::line::line_section<Point>>{
+    inline constexpr static auto get(const agl::line::line_section<Point> &line){
+        return std::tuple<Point, Point>{
+            line.start(), line.stop()
+        };
+    }
+};
+
 namespace line_section {
 
 template<typename Point>
@@ -45,9 +54,7 @@ struct access_types<agl::line::line_section<Point>>{
 
 template<typename Point>
 struct access_straight_line<agl::line::line_section<Point>>{
-    // using TPoint = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
-
-    using type = agl::line::straight_line<typename std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type,
+    using type = agl::line::straight_line<typename agl::traits::point::element_point_v<Point, 0>,
                                           typename agl::traits::coordinate_system<agl::line::line_section<Point>>::system>;
 };
 

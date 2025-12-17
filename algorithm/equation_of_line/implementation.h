@@ -51,8 +51,7 @@ struct equation_of_line<Object,
                         2>{
     inline constexpr static auto get(const Object &a, const Object &b){
         using namespace agl::traits::point;
-        // using Type = access_types<Object>::point;
-        using Type = std::tuple_element<0, typename access_types<Object>::types>::type;
+        using Type = agl::traits::point::element_point_v<Object, 0>;
         const auto &x1 = access_point<Object, 0>::get(a);
         const auto &y1 = access_point<Object, 1>::get(a);
         const auto &x2 = access_point<Object, 0>::get(b);
@@ -136,8 +135,7 @@ struct equation_of_line<Figure,
         const auto direction = agl::traits::half_line::access_direction<Figure>::get(figure);
 
         using Point = agl::traits::half_line::access_types<Figure>::start;
-        // using Type = agl::traits::point::access_types<Point>::point;
-        using Type = std::tuple_element<0, typename agl::traits::point::access_types<Point>::types>::type;
+        using Type = agl::traits::point::element_point_v<Point, 0>;
         const auto point = agl::algorithm::create_point<Point>(start, 1., direction);
         return agl::algorithm::dispatch::d2::default_data::equation_of_line<Point,
                                                                             system_coordinat::cartesian,

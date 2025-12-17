@@ -4,8 +4,6 @@
 #include "algorithm/math_algorithm.h"
 #include "system/system_concept.h"
 #include "system/traits.h"
-#include <algorithm>
-#include <iostream>
 
 //https://geoproj.ru/
 //https://racurs.ru/downloads/documentation/gost_r_32453-2017.pdf
@@ -190,110 +188,6 @@ constexpr auto polar_to_geo(const Range &range, const Omnibearing &omnibearing,
 //         static_assert(false, "Error release.");
 //     }
 // };
-
-}
-
-
-
-namespace agl::algorithm::dispatch::object {
-
-template<typename Object,
-         typename ObjectOut,
-         typename Predicate>
-struct convert{
-    inline constexpr static auto get(const Object &){
-        static_assert(false, "No 'agl::algorithm::dispatch::object::convert' calculations have been implemented for these objects.");
-    }
-};
-
-template<c_circle Circle,
-         c_create_circle CircleOut,
-         typename Predicate>
-struct convert<Circle,
-               CircleOut,
-               Predicate>{
-    inline constexpr static auto get(const Circle &circle, Predicate predicate){
-        using Center = traits::circle::access_types<Circle>::center;
-        using CenterOut = traits::circle::access_types<CircleOut>::center;
-        const auto center = traits::circle::access_center<Circle>::get(circle);
-        const auto radius = traits::circle::access_radius<Circle>::get(circle);
-        const auto new_center = predicate.template operator()<Center, CenterOut>(center);
-        return traits::make<CircleOut>::apply(new_center, radius);
-    }
-};
-
-template<c_arc Arc,
-         c_create_arc ArcOut,
-         typename Predicate>
-struct convert<Arc,
-               ArcOut,
-               Predicate>{
-    inline constexpr static auto get(const Arc &arc, Predicate predicate){
-        using Center = traits::arc::access_types<Arc>::center;
-        using CenterOut = traits::arc::access_types<ArcOut>::center;
-        const auto center = traits::arc::access_center<Arc>::get(arc);
-        const auto radius = traits::arc::access_radius<Arc>::get(arc);
-        const auto start = traits::arc::access_angle<Arc, 0>::get(arc);
-        const auto stop = traits::arc::access_angle<Arc, 1>::get(arc);
-        const auto new_center = predicate.template operator()<Center, CenterOut>(center);
-        return traits::make<ArcOut>::apply(new_center, radius, start, stop);
-    }
-};
-
-
-template<c_half_line_2d Line,
-         c_create_half_line_2d LineOut,
-         typename Predicate>
-struct convert<Line,
-               LineOut,
-               Predicate>{
-    inline constexpr static auto get(const Line &line, Predicate predicate){
-        using Point = traits::half_line::access_types<Line>::start;
-        using PointOut = traits::half_line::access_types<LineOut>::start;
-        const auto point = traits::half_line::access_start<Line>::get(line);
-        const auto direction = traits::half_line::access_direction<Line>::get(line);
-        const auto new_point = predicate.template operator()<Point, PointOut>(point);
-        return traits::make<LineOut>::apply(new_point, direction);
-    }
-};
-
-template<c_line_section Line,
-         c_create_line_section LineOut,
-         typename Predicate>
-struct convert<Line,
-               LineOut,
-               Predicate>{
-    inline constexpr static auto get(const Line &line, Predicate predicate){
-        using Point = traits::line_section::access_types<Line>::point;
-        using PointOut = traits::line_section::access_types<LineOut>::point;
-        const auto start = traits::line_section::access_start<Line>::get(line);
-        const auto stop = traits::line_section::access_stop<Line>::get(line);
-        const auto new_start = predicate.template operator()<Point, PointOut>(start);
-        const auto new_stop = predicate.template operator()<Point, PointOut>(stop);
-        return traits::make<LineOut>::apply(new_start, new_stop);
-    }
-};
-
-template<c_polygon Polygon,
-         c_create_polygon PolygonOut,
-         typename Predicate>
-struct convert<Polygon,
-               PolygonOut,
-               Predicate>{
-    inline constexpr static auto get(const Polygon &polygon, Predicate predicate){
-        using Point = traits::polygon::access_types<Polygon>::point;
-        using PointOut = traits::polygon::access_types<PolygonOut>::point;
-        const auto points = traits::polygon::access_points<Polygon>::get(polygon);
-        std::vector<PointOut> temp;
-        temp.reserve(points.size());
-        std::ranges::transform(points, std::back_inserter(temp), [&predicate](auto item){
-            return predicate.template operator()<Point, PointOut>(item);
-        });
-        return traits::make<PolygonOut>::apply(temp);
-    }
-};
-
-
 
 }
 

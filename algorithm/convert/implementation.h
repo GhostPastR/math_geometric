@@ -2,6 +2,7 @@
 #define AGL_ALGORITHM_CONVERT_IMPLEMENTATION_H
 
 #include "implementation_convert.h"
+#include <algorithm>
 
 namespace agl::algorithm::dispatch {
 
@@ -170,32 +171,18 @@ struct convert<Point,
     }
 };
 
-
-// template<c_geometric Object,
-//          c_geometric ObjectOut>
-//     requires (c_geographical<Object> && c_cartesian<ObjectOut>) || (c_geographical<ObjectOut> && c_cartesian<Object>)
-// struct convert<Object,
-//                ObjectOut>{
-//     inline constexpr static auto get(const Object &object){
-//         auto predicat = []<typename Point, typename PointOut>(Point point){
-//             return convert<Point, PointOut>::get(point);
-//         };
-//         return object::convert<Object, ObjectOut, decltype(predicat)>::get(object, predicat);
-//     }
-// };
-
-
-
 template<c_circle Circle,
          c_create_circle CircleOut>
     requires (c_geographical<Circle> && c_cartesian<CircleOut>) || (c_geographical<CircleOut> && c_cartesian<Circle>)
 struct convert<Circle,
                CircleOut>{
     inline constexpr static auto get(const Circle &circle){
-        auto predicat = []<typename Point, typename PointOut>(Point point){
-            return convert<Point, PointOut>::get(point);
-        };
-        return object::convert<Circle, CircleOut, decltype(predicat)>::get(circle, predicat);
+        using Center = traits::circle::access_types<Circle>::center;
+        using CenterOut = traits::circle::access_types<CircleOut>::center;
+        const auto center = traits::circle::access_center<Circle>::get(circle);
+        const auto radius = traits::circle::access_radius<Circle>::get(circle);
+        const auto new_center = convert<Center, CenterOut>::get(center);
+        return traits::make<CircleOut>::apply(new_center, radius);
     }
 };
 
@@ -205,10 +192,14 @@ template<c_arc Arc,
 struct convert<Arc,
                ArcOut>{
     inline constexpr static auto get(const Arc &arc){
-        auto predicat = []<typename Point, typename PointOut>(Point point){
-            return convert<Point, PointOut>::get(point);
-        };
-        return object::convert<Arc, ArcOut, decltype(predicat)>::get(arc, predicat);
+        using Center = traits::arc::access_types<Arc>::center;
+        using CenterOut = traits::arc::access_types<ArcOut>::center;
+        const auto center = traits::arc::access_center<Arc>::get(arc);
+        const auto radius = traits::arc::access_radius<Arc>::get(arc);
+        const auto start = traits::arc::access_angle<Arc, 0>::get(arc);
+        const auto stop = traits::arc::access_angle<Arc, 1>::get(arc);
+        const auto new_center = convert<Center, CenterOut>::get(center);
+        return traits::make<ArcOut>::apply(new_center, radius, start, stop);
     }
 };
 
@@ -218,10 +209,12 @@ template<c_half_line_2d Line,
 struct convert<Line,
                LineOut>{
     inline constexpr static auto get(const Line &line){
-        auto predicat = []<typename Point, typename PointOut>(Point point){
-            return convert<Point, PointOut>::get(point);
-        };
-        return object::convert<Line, LineOut, decltype(predicat)>::get(line, predicat);
+        using Point = traits::half_line::access_types<Line>::start;
+        using PointOut = traits::half_line::access_types<LineOut>::start;
+        const auto point = traits::half_line::access_start<Line>::get(line);
+        const auto direction = traits::half_line::access_direction<Line>::get(line);
+        const auto new_point = convert<Point, PointOut>::get(point);
+        return traits::make<LineOut>::apply(new_point, direction);
     }
 };
 
@@ -231,10 +224,13 @@ template<c_line_section Line,
 struct convert<Line,
                LineOut>{
     inline constexpr static auto get(const Line &line){
-        auto predicat = []<typename Point, typename PointOut>(Point point){
-            return convert<Point, PointOut>::get(point);
-        };
-        return object::convert<Line, LineOut, decltype(predicat)>::get(line, predicat);
+        using Point = traits::line_section::access_types<Line>::point;
+        using PointOut = traits::line_section::access_types<LineOut>::point;
+        const auto start = traits::line_section::access_start<Line>::get(line);
+        const auto stop = traits::line_section::access_stop<Line>::get(line);
+        const auto new_start = convert<Point, PointOut>::get(start);
+        const auto new_stop = convert<Point, PointOut>::get(stop);
+        return traits::make<LineOut>::apply(new_start, new_stop);
     }
 };
 
@@ -244,13 +240,17 @@ template<c_polygon Polygon,
 struct convert<Polygon,
                PolygonOut>{
     inline constexpr static auto get(const Polygon &polygon){
-        auto predicat = []<typename Point, typename PointOut>(Point point){
-            return convert<Point, PointOut>::get(point);
-        };
-        return object::convert<Polygon, PolygonOut, decltype(predicat)>::get(polygon, predicat);
+        using Point = traits::polygon::access_types<Polygon>::point;
+        using PointOut = traits::polygon::access_types<PolygonOut>::point;
+        const auto points = traits::polygon::access_points<Polygon>::get(polygon);
+        std::vector<PointOut> temp;
+        temp.reserve(points.size());
+        std::ranges::transform(points, std::back_inserter(temp), [](auto item){
+            return convert<Point, PointOut>::get(item);
+        });
+        return traits::make<PolygonOut>::apply(temp);
     }
 };
-
 
 
 }
