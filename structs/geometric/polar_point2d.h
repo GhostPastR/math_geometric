@@ -3,10 +3,11 @@
 
 #include <format>
 #include "algorithm/math_algorithm.h"
+#include "system/system_concept.h"
 
 namespace agl::point::polar {
 
-template<typename TypePsi, typename TypeFi>
+template<agl::c_value_point TypePsi, agl::c_value_point TypeFi>
 class polar2d{
 public:
     constexpr polar2d(){}
@@ -46,7 +47,7 @@ protected:
 
 
 
-template<typename TypePsi, typename TypeFi>
+template<agl::c_value_point TypePsi, agl::c_value_point TypeFi>
 struct std::formatter<agl::point::polar::polar2d<TypePsi, TypeFi>> {
     std::formatter<std::string> _formatter;
 
@@ -59,7 +60,7 @@ struct std::formatter<agl::point::polar::polar2d<TypePsi, TypeFi>> {
     }
 };
 
-template<typename TypePsi, typename TypeFi>
+template<agl::c_value_point TypePsi, agl::c_value_point TypeFi>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::polar::polar2d<TypePsi, TypeFi> &point){
     os << std::format("{}", point);
     return os;

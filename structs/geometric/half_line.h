@@ -1,11 +1,12 @@
 #ifndef AGL_STRUCT_HALF_LINE_H
 #define AGL_STRUCT_HALF_LINE_H
 
+#include "system/system_concept.h"
 #include <format>
 
 namespace agl::line {
 
-template<typename Point, typename Angle>
+template<typename Point, agl::c_value_point Angle>
 struct half_line final {
     constexpr half_line() = default;
     constexpr half_line(const Point &start, const Angle &angle) : start_(start), direction_(angle){}
@@ -37,7 +38,7 @@ private:
 
 
 
-template<typename Point, typename Angle>
+template<typename Point, agl::c_value_point Angle>
 struct std::formatter<agl::line::half_line<Point, Angle>> {
     std::formatter<std::string> _formatter;
     constexpr auto parse(std::format_parse_context& parse_context) {

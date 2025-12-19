@@ -27,8 +27,9 @@ struct direction<Point,
                  ObjectOut,
                  direction_angle>{
     inline constexpr static auto get(const Point &a, const Point &b){
-        ObjectOut temp(std::atan2(traits::point::access_point<Point, 0>::get(b) - traits::point::access_point<Point, 0>::get(a),
-                              traits::point::access_point<Point, 1>::get(b) - traits::point::access_point<Point, 1>::get(a)));
+        const auto[x1, y1] = agl::traits::access_propery<Point>::get(a);
+        const auto[x2, y2] = agl::traits::access_propery<Point>::get(b);
+        ObjectOut temp(std::atan2(x2 - x1, y2 - y1));
         using Type = agl::traits::type<ObjectOut>::type_value;
         if(temp < ObjectOut{}){
             return temp += agl::algorithm::pi_in_2<Type>;

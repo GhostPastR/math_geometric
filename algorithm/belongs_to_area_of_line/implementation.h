@@ -49,11 +49,8 @@ struct belongs_to_area_of_line<Line, Point>{
         using point_line = traits::half_line::access_types<Line>::start;
         const c_point_2d auto &start = traits::half_line::access_start<Line>::get(line);
         const auto &line_angle = traits::half_line::access_direction<Line>::get(line);
-        const auto &line_x = traits::point::access_point<point_line, 0>::get(start);
-        const auto &line_y = traits::point::access_point<point_line, 1>::get(start);
-        const auto &x = traits::point::access_point<Point, 0>::get(point);
-        const auto &y = traits::point::access_point<Point, 1>::get(point);
-
+        const auto[line_x, line_y] = agl::traits::access_propery<point_line>::get(start);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
         type angle{};
         type d = algorithm::pi_on_2<type>;
         if(algorithm::interval_left_strict(line_angle, std::exchange(angle, angle + d), angle)){
@@ -81,12 +78,9 @@ struct belongs_to_area_of_line<Line, Point>{
         using point_line = traits::line_section::access_types<Line>::point;
         const c_point_2d auto &start = traits::line_section::access_start<Line>::get(line);
         const c_point_2d auto &stop = traits::line_section::access_stop<Line>::get(line);
-        const auto &x1 = traits::point::access_point<point_line, 0>::get(start);
-        const auto &y1 = traits::point::access_point<point_line, 1>::get(start);
-        const auto &x2 = traits::point::access_point<point_line, 0>::get(stop);
-        const auto &y2 = traits::point::access_point<point_line, 1>::get(stop);
-        const auto &x = traits::point::access_point<Point, 0>::get(point);
-        const auto &y = traits::point::access_point<Point, 1>::get(point);
+        const auto[x1, y1] = agl::traits::access_propery<point_line>::get(start);
+        const auto[x2, y2] = agl::traits::access_propery<point_line>::get(stop);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
 
         bool flag_x = (x1 < x2) ? algorithm::interval_strict(x, x1, x2) : algorithm::interval_strict(x, x2, x1);
         bool flag_y = (y1 < y2) ? algorithm::interval_strict(y, y1, y2) : algorithm::interval_strict(y, y2, y1);

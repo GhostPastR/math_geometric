@@ -28,9 +28,8 @@ struct center<Figure,
         const auto &points = agl::traits::polygon::access_points<Figure>::get(figure);
         const auto sum = std::accumulate(points.begin(), points.end(), std::pair<Type, Type>(),
                                    [](std::pair<Type, Type> sum, auto item){
-            using x = agl::traits::point::access_point<Point, 0>;
-            using y = agl::traits::point::access_point<Point, 1>;
-            return std::pair<Type, Type>(sum.first + x::get(item), sum.second + y::get(item));
+            const auto[x, y] = agl::traits::access_propery<Point>::get(item);
+            return std::pair<Type, Type>(sum.first + x, sum.second + y);
         });
         return agl::traits::make<PointOut>::apply(sum.first / points.size(), sum.second / points.size());
     }

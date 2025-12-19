@@ -24,8 +24,8 @@ struct convert<Point,
         using Y = agl::traits::point::element_point_v<Point, 1>;
         using Range = agl::traits::point::element_point_v<PointOut, 0>;
         using Omnibearing = agl::traits::point::element_point_v<PointOut, 1>;
-        const auto x = traits::point::access_point<Point, 0>::get(point);
-        const auto y = traits::point::access_point<Point, 1>::get(point);
+
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
         auto [r, omn] = primitive::cartesian_to_polar<X,
                                                       Y,
                                                       X,
@@ -46,8 +46,8 @@ struct convert<Point,
         using Y = agl::traits::point::element_point_v<Point, 1>;
         using Range = agl::traits::point::element_point_v<PointOut, 0>;
         using Omnibearing = agl::traits::point::element_point_v<PointOut, 1>;
-        const auto range = traits::point::access_point<Point, 0>::get(point);
-        const auto omnibearing = traits::point::access_point<Point, 1>::get(point);
+
+        auto[range, omnibearing] = agl::traits::access_propery<Point>::get(point);
         auto [x, y] = primitive::polar_to_cartesian<Range,
                                                     Omnibearing,
                                                     X,
@@ -69,8 +69,8 @@ struct convert<Point,
         using Long = agl::traits::point::element_point_v<Point, 1>;
         using Range = agl::traits::point::element_point_v<PointOut, 0>;
         using Omnibearing = agl::traits::point::element_point_v<PointOut, 1>;
-        const auto latitude = traits::point::access_point<Point, 0>::get(point);
-        const auto longitude = traits::point::access_point<Point, 1>::get(point);
+
+        const auto[latitude, longitude] = agl::traits::access_propery<Point>::get(point);
         auto [r, omn] = primitive::geo_to_polar<Lat,
                                                 Long,
                                                 Lat,
@@ -94,8 +94,7 @@ struct convert<Point,
         using Lat = agl::traits::point::element_point_v<PointOut, 0>;
         using Long = agl::traits::point::element_point_v<PointOut, 1>;
 
-        const auto range = traits::point::access_point<Point, 0>::get(point);
-        const auto omnibearing = traits::point::access_point<Point, 1>::get(point);
+        const auto[range, omnibearing] = agl::traits::access_propery<Point>::get(point);
         auto [lat, lon] = primitive::polar_to_geo<Range,
                                                   Omnibearing,
                                                   Lat,
@@ -120,8 +119,8 @@ struct convert<Point,
         using Y = agl::traits::point::element_point_v<PointOut, 1>;
         using Range = X;
         using Omnibearing = Lat;
-        const auto latitude = traits::point::access_point<Point, 0>::get(point);
-        const auto longitude = traits::point::access_point<Point, 1>::get(point);
+
+        const auto[latitude, longitude] = agl::traits::access_propery<Point>::get(point);
         auto [r, omn] = primitive::geo_to_polar<Lat,
                                                 Long,
                                                 Lat,
@@ -152,8 +151,8 @@ struct convert<Point,
         using Long = agl::traits::point::element_point_v<PointOut, 1>;
         using Range = X;
         using Omnibearing = Lat;
-        const auto x = traits::point::access_point<Point, 0>::get(point);
-        const auto y = traits::point::access_point<Point, 1>::get(point);
+
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
         auto [r, omn] = primitive::cartesian_to_polar<X,
                                                       Y,
                                                       X,

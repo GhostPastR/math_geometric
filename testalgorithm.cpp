@@ -1129,47 +1129,45 @@ void TestAlgorithm::test_convert()
 
 void TestAlgorithm::test_approximation()
 {
-    // {
-    //     auto line_section = agl::line_section2_d(agl::point2_d{0,0},
-    //                                              agl::point2_d{4,3});
-    //     auto points = agl::algorithm::splitting(line_section, 5);
-    //     // for(auto i : points){
-    //     //     std::cout << i << std::endl;
-    //     // }
-    // }
-
-    // {
-    //     auto arc = agl::arc2_d({0,0}, 10, 0_deg, 90_deg);
-    //     auto points = agl::algorithm::splitting(arc, 5);
-    //     // for(auto i : points){
-    //     //     std::cout << i << std::endl;
-    //     // }
-    // }
-
-    // {
-    //     auto circle = agl::circle2_d{{0.,50.}, 10.};
-    //     auto points = agl::algorithm::splitting(circle, 4);
-    //     // for(auto i : points){
-    //     //     std::cout << i << std::endl;
-    //     // }
-    // }
-    // {
-    //     double prior = 0;
-    //     auto line = agl::line_section2_d(agl::point2_d{1,1}, agl::point2_d{41,31});
-    //     auto points = agl::algorithm::splitting(line, 5., prior);
-    //     // for(auto i : points){
-    //     //     std::cout << i << std::endl;
-    //     // }
-    //     // std::cout << prior << std::endl;
-    // }
     {
-        // double prior = 0;
-        // auto arc = agl::arc2_d({0,0}, 50, 0_deg, 90_deg);
-        // auto points = agl::algorithm::splitting(arc, 5., prior);
-        // // for(auto i : points){
-        // //     std::cout << i << std::endl;
-        // // }
-        // // std::cout << prior << std::endl;
+        auto line_section = agl::line_section2_d(agl::point2_d{0,0},
+                                                 agl::point2_d{4,3});
+        auto points = agl::algorithm::splitting(line_section, 5);
+        // for(auto i : points){
+        //     std::cout << i << std::endl;
+        // }
+    }
+    {
+        auto arc = agl::arc2_d({0,0}, 10, 0_deg, 90_deg);
+        auto points = agl::algorithm::splitting(arc, 5);
+        // for(auto i : points){
+        //     std::cout << i << std::endl;
+        // }
+    }
+    {
+        auto circle = agl::circle2_d{{0.,50.}, 10.};
+        auto points = agl::algorithm::splitting(circle, 4);
+        // for(auto i : points){
+        //     std::cout << i << std::endl;
+        // }
+    }
+    {
+        double prior = 0;
+        auto line = agl::line_section2_d(agl::point2_d{1,1}, agl::point2_d{41,31});
+        auto points = agl::algorithm::splitting(line, 5., prior);
+        // for(auto i : points){
+        //     std::cout << i << std::endl;
+        // }
+        // std::cout << prior << std::endl;
+    }
+    {
+        double prior = 0;
+        auto arc = agl::arc2_d({0,0}, 50, 0_deg, 90_deg);
+        auto points = agl::algorithm::splitting(arc, 5., prior);
+        // for(auto i : points){
+        //     std::cout << i << std::endl;
+        // }
+        // std::cout << prior << std::endl;
 
         // Point(x=0, y=50)
         // Point(x=4.991670832341407, y=49.75020826390129)
@@ -1195,9 +1193,9 @@ void TestAlgorithm::test_approximation()
         double prior = 1;
         auto arc = agl::arc2_d({0,0}, 50, 0_deg, 90_deg);
         auto points = agl::algorithm::splitting(arc, 5., prior);
-        for(auto i : points){
-            std::cout << i << std::endl;
-        }
-        std::cout << prior << std::endl;
+        // for(auto i : points){
+        //     std::cout << i << std::endl;
+        // }
+        // std::cout << prior << std::endl;
     }
 }

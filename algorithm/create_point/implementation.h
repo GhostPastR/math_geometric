@@ -30,10 +30,9 @@ struct create_point<OutPoint,
                     Range,
                     Turning>{
     inline constexpr static auto get(const Point &point, const Range &range, const Turning &turning){
-        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
-        const auto &r = agl::traits::value<Range>::get(range);
-        const auto &t = agl::traits::value<Turning>::get(turning);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
+        const auto r = agl::traits::value<Range>::get(range);
+        const auto t = agl::traits::value<Turning>::get(turning);
         return agl::traits::make<OutPoint>::apply(x + r * std::sin(t), y + r * std::cos(t));
     }
 };
@@ -49,9 +48,7 @@ struct create_point<OutPoint,
                     Turning,
                     Turning>{
     inline constexpr static auto get(const Point &point, const Range &range, const Turning &turning1, const Turning &turning2){
-        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
-        const auto &z = agl::traits::point::access_point<Point, 2>::get(point);
+        const auto[x, y, z] = agl::traits::access_propery<Point>::get(point);
         const auto &r = agl::traits::value<Range>::get(range);
         const auto &t1 = agl::traits::value<Turning>::get(turning1);
         const auto &t2 = agl::traits::value<Turning>::get(turning2);

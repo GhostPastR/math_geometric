@@ -32,6 +32,16 @@ struct make<agl::point::polar::polar2d<TypePsi, TypeFi>>{
     }
 };
 
+template<typename TypePsi, typename TypeFi>
+struct access_propery<agl::point::polar::polar2d<TypePsi, TypeFi>>{
+    inline constexpr static auto get(const agl::point::polar::polar2d<TypePsi, TypeFi> &point){
+        return std::make_tuple(
+            agl::traits::value<TypePsi>::get(point.psi()),
+            agl::traits::value<TypeFi>::get(point.fi())
+        );
+    }
+};
+
 namespace point {
 
 template<typename TypePsi, typename TypeFi>

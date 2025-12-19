@@ -3,10 +3,11 @@
 
 #include <format>
 #include "algorithm/math_algorithm.h"
+#include "system/system_concept.h"
 
 namespace agl::circle {
 
-template<typename PointCenter, typename TypeRadius, typename Angle>
+template<typename PointCenter, agl::c_value_point TypeRadius, agl::c_value_point Angle>
 struct arc final {
     constexpr arc(const PointCenter &center, const TypeRadius &radius, const Angle &start, const Angle &stop)
         : center_(center), radius_(radius), start_(start), stop_(stop){}
@@ -41,7 +42,7 @@ private:
 
 
 
-template<typename PointCenter, typename TypeRadius, typename Angle>
+template<typename PointCenter, agl::c_value_point TypeRadius, agl::c_value_point Angle>
 struct std::formatter<agl::circle::arc<PointCenter, TypeRadius, Angle>> {
     std::formatter<std::string> _formatter;
     constexpr auto parse(std::format_parse_context& parse_context) {
@@ -53,7 +54,7 @@ struct std::formatter<agl::circle::arc<PointCenter, TypeRadius, Angle>> {
     }
 };
 
-template<typename PointCenter, typename TypeRadius, typename Angle>
+template<typename PointCenter, agl::c_value_point TypeRadius, agl::c_value_point Angle>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::circle::arc<PointCenter, TypeRadius, Angle> &arc){
     os << std::format("{}", arc);
     return os;

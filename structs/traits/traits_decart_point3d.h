@@ -32,6 +32,17 @@ struct make<agl::point::decart::point3d<Type>>{
     }
 };
 
+template<typename Type>
+struct access_propery<agl::point::decart::point3d<Type>>{
+    inline constexpr static auto get(const agl::point::decart::point3d<Type> &point){
+        return std::make_tuple(
+            agl::traits::value<Type>::get(point.x()),
+            agl::traits::value<Type>::get(point.y()),
+            agl::traits::value<Type>::get(point.z())
+        );
+    }
+};
+
 namespace point {
 
 template<typename Type>

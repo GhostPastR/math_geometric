@@ -37,11 +37,14 @@ struct is_correct_polygon<Polygon,
             return false;
         }
         auto calc_direct = [](const Point &p1, const Point &p2, const Point &p3){
-            using x = agl::traits::point::access_point<Point, 0>;
-            using y = agl::traits::point::access_point<Point, 1>;
-            const Point v1 = {x::get(p2) - x::get(p1), y::get(p2) - y::get(p1)};
-            const Point v2 = {x::get(p3) - x::get(p2), y::get(p3) - y::get(p2)};
-            return algorithm::determine(x::get(v1), y::get(v1), x::get(v2), y::get(v2));
+            const auto[x1, y1] = agl::traits::access_propery<Point>::get(p1);
+            const auto[x2, y2] = agl::traits::access_propery<Point>::get(p2);
+            const auto[x3, y3] = agl::traits::access_propery<Point>::get(p3);
+            const auto v1 = agl::traits::make<Point>::apply(x2 - x1, y2 - y1);
+            const auto v2 = agl::traits::make<Point>::apply(x3 - x2, y3 - y2);
+            const auto[vx1, vy1] = agl::traits::access_propery<Point>::get(v1);
+            const auto[vx2, vy2] = agl::traits::access_propery<Point>::get(v2);
+            return algorithm::determine(vx1, vy1, vx2, vy2);
         };
         std::size_t direct = calc_direct(*std::prev(points.end()), *points.begin(), *std::next(points.begin())) > 0 ? 1 : -1;
         for(auto begin = std::next(points.begin()), end = std::prev(points.end()); begin != end; ++begin ){
@@ -92,11 +95,14 @@ struct is_correct_polygon<Polygon,
         }
         if((agl::algorithm::distance(points[0], points[1]) == agl::algorithm::distance(points[2], points[3]))
             && (agl::algorithm::distance(points[1], points[2]) == agl::algorithm::distance(points[0], points[3]))){
-            using x = agl::traits::point::access_point<Point, 0>;
-            using y = agl::traits::point::access_point<Point, 1>;
-            const Point point1 = {x::get(points[0]) - x::get(points[1]), y::get(points[0]) - y::get(points[1])};
-            const Point point2 = {x::get(points[2]) - x::get(points[1]), y::get(points[2]) - y::get(points[1])};
-            return algorithm::compare(algorithm::determine(x::get(point1), y::get(point1), y::get(point2), x::get(point2)), 0.);
+            const auto[x1, y1] = agl::traits::access_propery<Point>::get(points[0]);
+            const auto[x2, y2] = agl::traits::access_propery<Point>::get(points[1]);
+            const auto[x3, y3] = agl::traits::access_propery<Point>::get(points[2]);
+            const auto point1 = agl::traits::make<Point>::apply(x1 - x2, y1 - y2);
+            const auto point2 = agl::traits::make<Point>::apply(x3 - x2, y3 - y2);
+            const auto[px1, py1] = agl::traits::access_propery<Point>::get(point1);
+            const auto[px2, py2] = agl::traits::access_propery<Point>::get(point2);
+            return algorithm::compare(algorithm::determine(px1, py1, py2, px2), 0.);
         }
         return false;
     }

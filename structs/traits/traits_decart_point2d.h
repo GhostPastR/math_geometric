@@ -31,6 +31,16 @@ struct make<agl::point::decart::point2<Type>>{
     }
 };
 
+template<typename Type>
+struct access_propery<agl::point::decart::point2<Type>>{
+    inline constexpr static auto get(const agl::point::decart::point2<Type> &point){
+        return std::make_tuple(
+            agl::traits::value<Type>::get(point.x()),
+            agl::traits::value<Type>::get(point.y())
+        );
+    }
+};
+
 namespace point {
 
 template<typename Type>
@@ -39,19 +49,19 @@ struct access_types<agl::point::decart::point2<Type>>{
     using types = std::tuple<p_type, p_type>;
 };
 
-template<typename Type>
-struct access_point<agl::point::decart::point2<Type>, 0>{
-    inline constexpr static auto get(const agl::point::decart::point2<Type> &point){
-        return agl::traits::value<Type>::get(point.x());
-    }
-};
+// template<typename Type>
+// struct access_point<agl::point::decart::point2<Type>, 0>{
+//     inline constexpr static auto get(const agl::point::decart::point2<Type> &point){
+//         return agl::traits::value<Type>::get(point.x());
+//     }
+// };
 
-template<typename Type>
-struct access_point<agl::point::decart::point2<Type>, 1>{
-    inline constexpr static auto get(const agl::point::decart::point2<Type> &point){
-        return agl::traits::value<Type>::get(point.y());
-    }
-};
+// template<typename Type>
+// struct access_point<agl::point::decart::point2<Type>, 1>{
+//     inline constexpr static auto get(const agl::point::decart::point2<Type> &point){
+//         return agl::traits::value<Type>::get(point.y());
+//     }
+// };
 
 }
 

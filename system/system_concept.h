@@ -65,16 +65,18 @@ concept c_demension_3_all = (c_demension_3<Object> && ...);
 
 template<typename Object>
 concept c_unit = requires(Object object){
-    {agl::traits::value<Object>::get(object)} -> std::floating_point;
+    requires (std::is_floating_point_v<typename agl::traits::type<Object>::type_value> ||
+             std::is_integral_v<typename agl::traits::type<Object>::type_value>);
 };
+
+template<typename Point>
+concept c_value_point = c_value<Point> || c_unit<Point>;
 
 
 template<typename Object, size_t N>
 concept c_property_point = requires(Object object){
     requires std::is_same_v<decltype(agl::traits::point::access_point<Object, N>::get(object)),
                             agl::traits::point::element_point_v<Object, N>>;
-
-
 };
 
 template<typename Object>

@@ -7,15 +7,26 @@
 
 namespace agl {
 
+template<typename T>
+class Temp;
+
+
+template<typename T, typename ...Args>
+void type(T t, Args &&...value ){
+    Temp<T> tt;
+}
+
 template<typename Type,
          typename CoordinateSystem,
          std::size_t Dimension>
 class model_point{
 public:
     constexpr model_point() = default;
-    constexpr model_point(const std::array<Type, Dimension> &value) : value_(value){}
-    constexpr model_point(std::initializer_list<Type> value){
-        std::move(value.begin(), value.end(), value_.begin());
+
+    template<typename ...Args>
+    constexpr model_point(Args &&...value){
+        std::array<Type, Dimension> temp{std::move(value)...};
+        std::swap(value_, temp);
     }
 
     template<std::size_t N>

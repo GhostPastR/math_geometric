@@ -28,8 +28,7 @@ struct perpendicular<Line,
     inline constexpr static auto get(const Line &line, const Point &point){
         using namespace traits::point;
         const auto [a,b,c] = agl::algorithm::equation_of_line(line);
-        const auto x = agl::traits::point::access_point<Point, 0>::get(point);
-        const auto y = agl::traits::point::access_point<Point, 1>::get(point);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
 
         using array = std::array<std::remove_const_t<decltype(a)>,3>;
         const auto [na,nb,nc] = agl::algorithm::normalized(array{b, -a, algorithm::determine(a, b, x, y)});

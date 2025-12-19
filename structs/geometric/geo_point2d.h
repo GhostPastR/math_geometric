@@ -3,12 +3,12 @@
 
 #include <format>
 #include "algorithm/math_algorithm.h"
-#include "system/traits.h"
+#include "system/system_concept.h"
 
 
 namespace agl::point::geo {
 
-template<typename Angle>
+template<agl::c_value_point Angle>
 class point_geo2d{
 public:
     constexpr point_geo2d(){}
@@ -45,7 +45,9 @@ protected:
 
 }
 
-template<typename Angle>
+
+
+template<agl::c_value_point Angle>
 struct std::formatter<agl::point::geo::point_geo2d<Angle>> {
     std::formatter<std::string> _formatter;
 
@@ -59,8 +61,7 @@ struct std::formatter<agl::point::geo::point_geo2d<Angle>> {
     }
 };
 
-
-template<typename Angle>
+template<agl::c_value_point Angle>
 constexpr std::ostream& operator<<(std::ostream& os, const agl::point::geo::point_geo2d<Angle> &point){
     os << std::format("{}", point);
     return os;

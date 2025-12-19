@@ -44,6 +44,12 @@
 template <typename T>
 class Temp;
 
+template <typename Point>
+void foo(const Point &point){
+    auto[x1, y1] = agl::traits::access_propery<Point>::get(point);
+    std::cout << x1 << std::endl;
+    std::cout << y1 << std::endl;
+}
 
 
 
@@ -51,16 +57,16 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    // auto lamda = []<typename T, typename R>(T a){
-    //     func<T, R>(a);
-    // };
+    // agl::point2_d p1(1.,10.);
+    // agl::point2_d p2(2.,20.);
 
-    // lamda.template operator()<double, double>(1);
+    // agl::point::decart::point2<agl::point2_d> p(std::move(p1), std::move(p2));
+    // std::cout << "----------------" <<std::endl;
+    // foo(p);
 
-    // agl::point_geo2_a point(1_deg, 2_deg);
-    // agl::polar2_d p_point(10., 2_deg);
-    // func(point);
-    // func(p_point);
+    // agl::point::decart::point2<agl::point2_d> p(agl::point2_d(1.,10.), agl::point2_d(2.,20.));
+    // std::cout << "----------------" <<std::endl;
+    // foo(p);
 
 
     QTest::qExec(new TestUnit, argc, argv);

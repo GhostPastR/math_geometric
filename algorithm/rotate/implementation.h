@@ -31,10 +31,8 @@ struct rotate<PointIn,
               direction_angle>{
     inline constexpr static auto get(const PointIn &point_in, const ObjectDirection &direction, const Point &point){
         using Type = agl::traits::point::element_point_v<PointIn, 0>;
-        const auto x = traits::point::access_point<Point, 0>::get(point_in);
-        const auto y = traits::point::access_point<Point, 1>::get(point_in);
-        const auto rx = traits::point::access_point<Point, 0>::get(point);
-        const auto ry = traits::point::access_point<Point, 1>::get(point);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point_in);
+        const auto[rx, ry] = agl::traits::access_propery<Point>::get(point);
 
         const auto sinAngle = -std::sin(traits::value<ObjectDirection>::get(direction));
         const auto cosAngle = std::cos(traits::value<ObjectDirection>::get(direction));

@@ -52,8 +52,7 @@ struct intersection<ElCircle,
         using Type = agl::traits::point::element_point_v<Point, 0>;
         const auto &center = traits::circle::access_center<ElCircle>::get(el_circle);
         const auto &radius = traits::circle::access_radius<ElCircle>::get(el_circle);
-        const auto &x = traits::point::access_point<Point, 0>::get(center);
-        const auto &y = traits::point::access_point<Point, 1>::get(center);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(center);
 
         const auto [a,b,c] = agl::algorithm::equation_of_line(line);
         const auto value = c + b * y;
@@ -96,14 +95,12 @@ struct intersection<ElCircle1,
         using Point1 = agl::traits::circle::access_types<ElCircle1>::center;
         const auto &center1 = traits::circle::access_center<ElCircle1>::get(el_circle1);
         const auto &radius1 = traits::circle::access_radius<ElCircle1>::get(el_circle1);
-        const auto &x1 = traits::point::access_point<Point1, 0>::get(center1);
-        const auto &y1 = traits::point::access_point<Point1, 1>::get(center1);
+        const auto[x1, y1] = agl::traits::access_propery<Point1>::get(center1);
 
         using Point2 = agl::traits::circle::access_types<ElCircle2>::center;
         const auto &center2 = traits::circle::access_center<ElCircle2>::get(el_circle2);
         const auto &radius2 = traits::circle::access_radius<ElCircle2>::get(el_circle2);
-        const auto &x2 = traits::point::access_point<Point2, 0>::get(center2);
-        const auto &y2 = traits::point::access_point<Point2, 1>::get(center2);
+        const auto[x2, y2] = agl::traits::access_propery<Point2>::get(center2);
 
         const auto d = std::sqrt(std::pow(x1 - x2, 2.) + std::pow(y1 - y2, 2.));
         if(algorithm::compare(d, 0.)){
@@ -148,10 +145,8 @@ struct intersection<Polygon,
                     | std::ranges::views::transform([](const auto &p){ return p.value(); });
         std::vector<PointOut> points(temp.begin(), temp.end());
         std::sort(points.begin(), points.end(), [](const auto &p1, const auto &p2){
-            const auto &x1 = traits::point::access_point<PointOut, 0>::get(p1);
-            const auto &y1 = traits::point::access_point<PointOut, 1>::get(p1);
-            const auto &x2 = traits::point::access_point<PointOut, 0>::get(p2);
-            const auto &y2 = traits::point::access_point<PointOut, 1>::get(p2);
+            const auto[x1, y1] = agl::traits::access_propery<PointOut>::get(p1);
+            const auto[x2, y2] = agl::traits::access_propery<PointOut>::get(p2);
             return (x1 < x2) || (x1 == x2) && (y1 < y2);
         });
         auto ret = std::ranges::unique(points);

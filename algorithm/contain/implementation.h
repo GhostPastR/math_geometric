@@ -24,8 +24,7 @@ struct contain<Line,
                Point>{
     inline constexpr static bool get(const Line &line, const Point &point){
         const auto [a,b,c] = agl::algorithm::equation_of_line(line);
-        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
         if(algorithm::compare(algorithm::determine(a, -b, y, x) + c, 0.)){
             return agl::algorithm::belongs_to_area_of_line(line, point);
         }
@@ -42,10 +41,8 @@ struct contain<Circle,
         using Center = agl::traits::circle::access_types<Circle>::center;
         const auto &center = agl::traits::circle::access_center<Circle>::get(circle);
         const auto &radius = agl::traits::circle::access_radius<Circle>::get(circle);
-        const auto &c_x = agl::traits::point::access_point<Center, 0>::get(center);
-        const auto &c_y = agl::traits::point::access_point<Center, 1>::get(center);
-        const auto &x = agl::traits::point::access_point<Point, 0>::get(point);
-        const auto &y = agl::traits::point::access_point<Point, 1>::get(point);
+        const auto[c_x, c_y] = agl::traits::access_propery<Center>::get(center);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
         return algorithm::less_than_equal(std::pow(x - c_x, 2) + std::pow(y - c_y, 2), std::pow(radius, 2));
     }
 };

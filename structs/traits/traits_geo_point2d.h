@@ -31,6 +31,16 @@ struct make<agl::point::geo::point_geo2d<Type>>{
     }
 };
 
+template<typename Type>
+struct access_propery<agl::point::geo::point_geo2d<Type>>{
+    inline constexpr static auto get(const agl::point::geo::point_geo2d<Type> &point){
+        return std::make_tuple(
+            agl::traits::value<Type>::get(point.latitude()),
+            agl::traits::value<Type>::get(point.longitude())
+        );
+    }
+};
+
 namespace point {
 
 template<typename Type>

@@ -31,8 +31,7 @@ struct distance<Point,
         const auto a = agl::traits::straight_line::access_parameter<Line, 0>::get(object);
         const auto b = agl::traits::straight_line::access_parameter<Line, 1>::get(object);
         const auto c = agl::traits::straight_line::access_parameter<Line, 2>::get(object);
-        const auto x = agl::traits::point::access_point<Point, 0>::get(point);
-        const auto y = agl::traits::point::access_point<Point, 1>::get(point);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
         return std::abs(algorithm::determine(a, -b, y, x) + c) / sqrt(algorithm::determine(a, -b, b, a));
     }
 };
@@ -45,8 +44,7 @@ struct distance<Point,
     inline constexpr static auto get(const Point &point, const Line &object){
         using str_line = agl::traits::half_line::access_straight_line<Line>::type;
         const auto line = agl::algorithm::equation_of_line<str_line>(object);
-        const auto x = agl::traits::point::access_point<Point, 0>::get(point);
-        const auto y = agl::traits::point::access_point<Point, 1>::get(point);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
         const auto p_line = agl::algorithm::perpendicular<str_line>(line, point);
         if(agl::algorithm::intersection<Point>(object, p_line).has_value()){
             const auto &a = agl::traits::straight_line::access_parameter<str_line, 0>::get(line);
@@ -67,8 +65,7 @@ struct distance<Point,
     inline constexpr static auto get(const Point &point, const Line &object){
         using str_line = agl::traits::line_section::access_straight_line<Line>::type;
         const auto line = agl::algorithm::equation_of_line<str_line>(object);
-        const auto x = agl::traits::point::access_point<Point, 0>::get(point);
-        const auto y = agl::traits::point::access_point<Point, 1>::get(point);
+        const auto[x, y] = agl::traits::access_propery<Point>::get(point);
         const auto p_line = agl::algorithm::perpendicular<str_line>(line, point);
         if(agl::algorithm::intersection<Point>(object, p_line).has_value()){
             const auto &a = agl::traits::straight_line::access_parameter<str_line, 0>::get(line);

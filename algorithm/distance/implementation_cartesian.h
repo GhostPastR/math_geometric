@@ -20,10 +20,8 @@ template<c_point_2d Point>
     requires c_cartesian<Point>
 struct distance<Point>{
     inline constexpr static auto get(const Point &a, const Point &b){
-        const auto x1 = traits::point::access_point<Point, 0>::get(a);
-        const auto y1 = traits::point::access_point<Point, 1>::get(a);
-        const auto x2 = traits::point::access_point<Point, 0>::get(b);
-        const auto y2 = traits::point::access_point<Point, 1>::get(b);
+        const auto[x1, y1] = agl::traits::access_propery<Point>::get(a);
+        const auto[x2, y2] = agl::traits::access_propery<Point>::get(b);
         return std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2);
     }
 };
@@ -32,12 +30,8 @@ template<c_point_3d Point>
     requires c_cartesian<Point>
 struct distance<Point>{
     inline constexpr static auto get(const Point &a, const Point &b){
-        const auto x1 = traits::point::access_point<Point, 0>::get(a);
-        const auto y1 = traits::point::access_point<Point, 1>::get(a);
-        const auto z1 = traits::point::access_point<Point, 2>::get(a);
-        const auto x2 = traits::point::access_point<Point, 0>::get(b);
-        const auto y2 = traits::point::access_point<Point, 1>::get(b);
-        const auto z2 = traits::point::access_point<Point, 2>::get(b);
+        const auto[x1, y1, z1] = agl::traits::access_propery<Point>::get(a);
+        const auto[x2, y2, z2] = agl::traits::access_propery<Point>::get(b);
         return std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2) + std::pow(z2 - z1, 2);
     }
 };
@@ -46,10 +40,8 @@ template<c_point_2d Point>
     requires c_polar<Point>
 struct distance<Point>{
     inline constexpr static auto get(const Point &a, const Point &b){
-        const auto r1 = traits::point::access_point<Point, 0>::get(a);
-        const auto q1 = traits::point::access_point<Point, 1>::get(a);
-        const auto r2 = traits::point::access_point<Point, 0>::get(b);
-        const auto q2 = traits::point::access_point<Point, 1>::get(b);
+        const auto[r1, q1] = agl::traits::access_propery<Point>::get(a);
+        const auto[r2, q2] = agl::traits::access_propery<Point>::get(b);
         return std::pow(r1, 2) + std::pow(r2, 2) - 2 * r1 * r2 * std::cos(q1 - q2);
     }
 };
@@ -58,12 +50,8 @@ template<c_point_3d Point>
     requires c_polar<Point>
 struct distance<Point>{
     inline constexpr static auto get(const Point &a, const Point &b){
-        const auto r1 = traits::point::access_point<Point, 0>::get(a);
-        const auto q1 = traits::point::access_point<Point, 1>::get(a);
-        const auto h1 = traits::point::access_point<Point, 2>::get(a);
-        const auto r2 = traits::point::access_point<Point, 0>::get(b);
-        const auto q2 = traits::point::access_point<Point, 1>::get(b);
-        const auto h2 = traits::point::access_point<Point, 2>::get(b);
+        const auto[r1, q1, h1] = agl::traits::access_propery<Point>::get(a);
+        const auto[r2, q2, h2] = agl::traits::access_propery<Point>::get(b);
         return std::pow(r1, 2) + std::pow(r2, 2) - 2 * r1 * r2 * std::cos(q1 - q2) + std::pow(h2 - h1, 2);
     }
 };

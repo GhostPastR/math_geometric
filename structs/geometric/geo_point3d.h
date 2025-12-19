@@ -7,7 +7,7 @@
 
 namespace agl::point::geo {
 
-template<typename Angle, typename TypeAltitude>
+template<agl::c_value_point Angle, agl::c_value_point TypeAltitude>
 class point_geo3d : public point_geo2d<Angle>{
 public:
     constexpr point_geo3d() : point_geo2d<Angle>(){}

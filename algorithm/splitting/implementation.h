@@ -25,10 +25,8 @@ struct splitting{
         if(count_point < 2){
             return {start, stop};
         }
-        const auto x1 = agl::traits::point::access_point<Point, 0>::get(start);
-        const auto y1 = agl::traits::point::access_point<Point, 1>::get(start);
-        const auto x2 = agl::traits::point::access_point<Point, 0>::get(stop);
-        const auto y2 = agl::traits::point::access_point<Point, 1>::get(stop);
+        const auto[x1, y1] = agl::traits::access_propery<Point>::get(start);
+        const auto[x2, y2] = agl::traits::access_propery<Point>::get(stop);
         const auto dx = (x2 - x1) / count_point;
         const auto dy = (y2 - y1) / count_point;
         std::vector<Point> points;
@@ -51,10 +49,8 @@ struct splitting{
             prior_remains -= dist;
             return {};
         }
-        const auto x1 = agl::traits::point::access_point<Point, 0>::get(start);
-        const auto y1 = agl::traits::point::access_point<Point, 1>::get(start);
-        const auto x2 = agl::traits::point::access_point<Point, 0>::get(stop);
-        const auto y2 = agl::traits::point::access_point<Point, 1>::get(stop);
+        const auto[x1, y1] = agl::traits::access_propery<Point>::get(start);
+        const auto[x2, y2] = agl::traits::access_propery<Point>::get(stop);
 
         Type count_point;
         Point point;
@@ -65,8 +61,9 @@ struct splitting{
         }
 
         std::modf(agl::algorithm::distance(point, stop) / interval, &count_point);
-        const auto dx = (x2 - agl::traits::point::access_point<Point, 0>::get(point)) / count_point;
-        const auto dy = (y2 - agl::traits::point::access_point<Point, 1>::get(point)) / count_point;
+        const auto[px, py] = agl::traits::access_propery<Point>::get(point);
+        const auto dx = (x2 - px) / count_point;
+        const auto dy = (y2 - py) / count_point;
 
         std::vector<Point> points;
         const auto numbers = std::ranges::iota_view{size_t(), count_point};
@@ -162,6 +159,9 @@ struct splitting<Line,
     }
 };
 
+template<typename T>
+class Temp;
+
 template<c_arc Arc,
          std::floating_point Type>
 struct splitting<Arc,
@@ -182,7 +182,7 @@ struct splitting<Arc,
         if(!algorithm::compare(prior_remains, 0.)){
             const auto da = (interval - prior_remains) / radius;
             auto point = agl::algorithm::create_point<Point>(center, radius, start + da);
-            angle_start = agl::algorithm::direction<Angle>(center, point);
+            angle_start = agl::algorithm::direction<decltype(angle_start)>(center, point);
         }
         const auto new_arc = agl::traits::make<Arc>::apply(center, radius, angle_start, temp_stop);
         std::modf((agl::algorithm::distance(new_arc) - prior_remains) / interval, &count_point);
@@ -194,7 +194,7 @@ struct splitting<Arc,
             return agl::algorithm::create_point<Point>(center, radius, start + da * i);
         });
         const auto temp_arc = agl::traits::make<Arc>::apply(center, radius,
-                                                            agl::algorithm::direction<Angle>(center, points.back()), temp_stop);
+                                                            agl::algorithm::direction<decltype(angle_start)>(center, points.back()), temp_stop);
         prior_remains = agl::algorithm::distance(temp_arc);
         return points;
     }
