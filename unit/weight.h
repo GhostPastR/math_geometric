@@ -1,7 +1,7 @@
-#ifndef WEIGHT_H
-#define WEIGHT_H
+#ifndef AGL_UNIT_WEIGHT_H
+#define AGL_UNIT_WEIGHT_H
 
-#include "../system/system_unit.h"
+#include "unit/unit.h"
 
 namespace agl::unit {
 
@@ -72,4 +72,4 @@ constexpr agl::unit::weight operator *(const agl::unit::weight &value1, const do
 }
 
 
-#endif // WEIGHT_H
+#endif // AGL_UNIT_WEIGHT_H

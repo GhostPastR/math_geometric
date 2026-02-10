@@ -78,10 +78,10 @@ inline constexpr bool interval_slack(const Value &value, const Value &left, cons
 template<std::floating_point Value>
 inline constexpr bool compare_common(const Value &value1, const Value &value2, const Value &epsilon){
     static_assert(std::is_floating_point_v<typename std::remove_reference<Value>::type>, "Not floating point type");
-    // if((value1 == 0) || (value2 == 0)){
+    if((value1 == 0) || (value2 == 0)){
         return std::abs(value1 - value2) < epsilon;
-    // }
-    // return std::abs((value1 - value2) / value2) < epsilon;
+    }
+    return std::abs((value1 - value2) / value2) < epsilon;
 }
 
 template<std::floating_point Value1, std::integral Value2>
@@ -100,6 +100,24 @@ template<std::floating_point Value1, std::integral Value2>
 inline constexpr bool compare(const Value1& value1, const Value2& value2) {
     return algorithm::compare_common(value1, value2, algorithm::epsilon<Value1>);
 }
+
+template<typename Value1, typename Value2>
+inline constexpr bool compare(const Value1& value1, const Value2& value2) {
+    if constexpr(std::is_same_v<Value1, Value2> && std::is_floating_point_v<Value1>){
+        return algorithm::compare_common(value1, value2, algorithm::epsilon<Value1>);
+    }
+    else if constexpr(std::is_floating_point_v<Value1> && std::is_integral_v<Value2>){
+        return algorithm::compare_common(value1, value2, algorithm::epsilon<Value1>);
+    }
+    else if constexpr(std::is_floating_point_v<Value2> && std::is_integral_v<Value1>){
+        return algorithm::compare_common(value2, value1, algorithm::epsilon<Value1>);
+    }
+    else{
+        return value1 == value2;
+    }
+}
+
+
 
 template<compare_intervel Value>
 inline constexpr bool less_than_equal(const Value& value1, const Value& value2) {
@@ -153,40 +171,6 @@ constexpr roots_equation<Type> get_roots_equation(const quadratic<Type> &equatio
     return {(equations.b - std::sqrt(d)) / (2. * equations.a),
             (equations.b + std::sqrt(d)) / (2. * equations.a)};
 }
-
-
-template<std::floating_point Type>
-struct function_angle{
-    inline constexpr static Type sin(Type value) {
-        return std::sin(value);
-    }
-    inline constexpr static Type cos(Type value) {
-        return std::cos(value);
-    }
-    inline constexpr static Type tan(Type value){
-        return std::tan(value);
-    }
-    inline constexpr static Type ctan(Type value){
-        return 1.0 / std::tan(value);
-    }
-    inline constexpr static Type atan2(Type value1, Type value2){
-        return std::atan2(value1, value2);
-    }
-
-    inline constexpr static Type asin(Type value){
-        return std::asin(value);
-    }
-    inline constexpr static Type acos(Type value){
-        return std::acos(value);
-    }
-    inline constexpr static Type atan(Type value){
-        return std::atan(value);
-    }
-    inline constexpr static Type actan(Type value){
-        algorithm::pi_on_2<Type> - std::atan(value);
-    }
-};
-
 
 }
 

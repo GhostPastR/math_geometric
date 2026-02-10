@@ -2,15 +2,19 @@
 #define FIGURE_ROUTE_H
 
 #include <variant>
-#include "../../user_type.h"
-#include "../../algorithm/approximation_algorithm.h"
+#include <vector>
+#include "algorithm/math_algorithm.h"
+#include "system/system_concept.h"
+// #include "../../user_type.h"
+// #include "../../algorithm/approximation_algorithm.h"
 
 #include <iostream>
 
 namespace sa {
 
+template<agl::c_arc Arc>
 struct arc_stage{
-    agl::Arc arc;
+    Arc arc;
     agl::algorithm::direct direct;
 };
 
@@ -25,14 +29,17 @@ struct figure_route_impl{
     std::variant<Args...> figure;
 };
 
+template<agl::c_arc Arc,
+         agl::c_line_section Line>
+struct figure_route : figure_route_impl<Line, arc_stage<Arc>>{
+    using Point = agl::traits::line_section::access_types<Line>::point;
 
-struct figure_route : figure_route_impl<agl::LineSection, arc_stage>{
-    std::vector<agl::Point> draw_point() const{
-        std::vector<agl::Point> points;
+    std::vector<Point> draw_point() const{
+        std::vector<Point> points;
         std::visit(overloaded{[](auto arg) {
                                   static_assert(false, "non-exhaustive visitor!");
                               },
-                              [&points](const agl::LineSection &object) {
+                              [&points](const Line &object) {
                                   std::cout << "line" << std::endl;
                                   std::cout << object.start() << std::endl;
                                   std::cout << object.stop() << std::endl;
@@ -40,16 +47,16 @@ struct figure_route : figure_route_impl<agl::LineSection, arc_stage>{
                                   points.push_back(object.start());
                                   points.push_back(object.stop());
                               },
-                              [&points](const arc_stage &object) {
+                              [&points](const arc_stage<Arc> &object) {
                                   std::cout << "arc" << std::endl;
                                   std::cout << object.arc << std::endl;
                                   std::cout << (int)object.direct << std::endl;
-                                  auto point = agl::approximation_algo::splitting_evenly(object.arc, 20, object.direct);
-                                  for(auto &i : point){
-                                      points.push_back(i);
-                                  }
+                                  // auto point = agl::approximation_algo::splitting_evenly(object.arc, 20, object.direct);
+                                  // for(auto &i : point){
+                                  //     points.push_back(i);
+                                  // }
                               }
-                   }, figure);
+                   }, this->figure);
         return points;
     }
 };

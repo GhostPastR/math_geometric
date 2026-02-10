@@ -84,7 +84,7 @@ constexpr auto normal(const Vector<Type, N> &vector) -> Vector<Type, N>{
     if(algorithm::compare(m,0)){
         return {};
     }
-    Vector<Type, 3> temp;
+    Vector<Type, N> temp;
     std::ranges::transform(vector, temp.begin(), [m](const auto &i){
         return i / m;
     });

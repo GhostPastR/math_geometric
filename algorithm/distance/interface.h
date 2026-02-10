@@ -1,0 +1,21 @@
+#ifndef AGL_ALGORITHM_DISTANCE_INTERFACE_H
+#define AGL_ALGORITHM_DISTANCE_INTERFACE_H
+
+#include "implementation.h"
+
+namespace agl::algorithm {
+
+template<typename Object1, typename Object2>
+inline constexpr auto distance(const Object1 &a, const Object2 &b){
+    return geometry::distance<Object1, Object2>(a, b);
+}
+
+template<typename Figure>
+inline constexpr auto distance(const Figure &figure){
+    return geometry::distance<Figure>(figure);
+}
+
+}
+
+
+#endif // AGL_ALGORITHM_DISTANCE_INTERFACE_H

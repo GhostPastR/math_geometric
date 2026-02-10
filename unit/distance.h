@@ -1,7 +1,8 @@
-#ifndef DISTANCE_H
-#define DISTANCE_H
+#ifndef AGL_UNIT_DISTANCE_H
+#define AGL_UNIT_DISTANCE_H
 
-#include "../system/system_unit.h"
+#include "system/traits.h"
+#include "unit/unit.h"
 
 namespace agl::unit {
 
@@ -84,6 +85,38 @@ constexpr agl::unit::distance operator *(const agl::unit::distance &value1, cons
 }
 
 
+
+template<> struct std::formatter<agl::unit::distance> {
+    std::string attributes;
+
+    constexpr auto parse(std::format_parse_context& parse_context) {
+        auto it = std::ranges::find(parse_context, '}');
+        attributes = std::string(parse_context.begin(), it);
+        return it;
+    }
+
+    auto format(const agl::unit::distance& value, std::format_context& format_context) const {
+        auto out = format_context.out();
+        CASE_VALUE("mm", mm, agl::unit::millimeter)
+        CASE_VALUE("cm", cm, agl::unit::centimeter)
+        CASE_VALUE("dm", dm, agl::unit::decimeter)
+        CASE_VALUE("m", m, agl::unit::meter)
+        CASE_VALUE("km", km, agl::unit::kilometer)
+        CASE_VALUE("in", in, agl::unit::inches)
+        CASE_VALUE("ft", ft, agl::unit::foot)
+        CASE_VALUE("ft_usa", ft_usa, agl::unit::foot_usa)
+        CASE_VALUE("mile", mile, agl::unit::mile)
+        CASE_VALUE("mile_ov", mile_ov, agl::unit::mile_overland)
+        CASE_VALUE("mile_usa", mile_usa, agl::unit::mile_usa)
+        CASE_VALUE("mile_n", mile_n, agl::unit::mile_nautical)
+        CASE_VALUE("mile_bn", mile_bn, agl::unit::mile_britain_n)
+        CASE_VALUE("yd", yd, agl::unit::yard)
+
+        out = std::format_to(out, "{}_m", value.value());
+        return out;
+    }
+};
+
 /* Для добавления новой единицы измерения:
  * using <name> = measure_unit<_length, <value>>; value - на сколько нужно умножить чтобы получились метры
  * В list_prefix новый тип
@@ -91,4 +124,4 @@ constexpr agl::unit::distance operator *(const agl::unit::distance &value1, cons
  * */
 
 
-#endif // DISTANCE_H
+#endif // AGL_UNIT_DISTANCE_H
